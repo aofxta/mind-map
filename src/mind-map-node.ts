@@ -1,3 +1,15 @@
+
+interface NodeData {
+    view?: NodeView;
+}
+
+interface NodeView {
+    abs_x: string;
+    abs_y: string;
+    height: string;
+    width: string;
+}
+
 class MindMapNode {
     id: string;
     index: string;
@@ -9,7 +21,7 @@ class MindMapNode {
     direction;
     expanded: boolean;
     children: Array<any>;
-    _data: Object;
+    _data: NodeData;
 
     static compare;
     static inherited;
@@ -52,7 +64,6 @@ class MindMapNode {
         };
     }
 
-,
     get_size() {
         const vd = this._data.view;
         return {
