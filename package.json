@@ -13,6 +13,8 @@
   },
   "devDependencies": {},
   "scripts": {
+    "lint": "npm run tslint \"src/**/*.ts\"",
+    "tslint": "tslint",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
