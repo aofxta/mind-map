@@ -1,8 +1,8 @@
 class MindMapDataProvider {
-    mindMap: any;
+    jm: any;
 
-    constructor(mindMap) {
-        this.mindMap = mindMap;
+    constructor(jm) {
+        this.jm = jm;
     }
 
     init() {
