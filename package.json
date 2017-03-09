@@ -8,6 +8,7 @@
     "example": "example"
   },
   "dependencies": {
+    "lodash": "4.17.4",
     "tslint": "4.5.1",
     "typescript": "2.2.1"
   },
