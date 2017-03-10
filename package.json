@@ -1,8 +1,8 @@
 {
   "name": "mind-map",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "mind-map for typescript",
-  "main": "index.js",
+  "main": "/src",
   "directories": {
     "doc": "docs",
     "example": "example"
