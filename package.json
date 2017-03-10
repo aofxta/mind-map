@@ -8,6 +8,10 @@
     "tslint": "4.5.1",
     "typescript": "2.2.1"
   },
+  "files": [
+    "dist",
+    "src"
+  ],
   "devDependencies": {},
   "scripts": {
     "lint": "npm run tslint \"src/**/*.ts\"",
