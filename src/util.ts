@@ -1,9 +1,10 @@
 import { logger, $c, $d } from './config';
+import { MindMapNode } from './mind-map-node';
 const $w = window;
 
 export const customizeUtil = {
     is_node: function (node) {
-        return node instanceof jm.node;
+        return node instanceof MindMapNode;
     },
     ajax: {
         _xhr: function () {
