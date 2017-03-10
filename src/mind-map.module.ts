@@ -105,8 +105,17 @@ class MindMapModule {
     view;
     shortcut;
 
+    static plugin;
+    static plugins;
+    static register_plugin;
+    static init_plugins;
+    static _init_plugins;
+    static show;
 
-    constructor() {
+
+    constructor(options) {
+        jm.util.json.merge(this.opts, DEFAULT_OPTIONS);
+        jm.util.json.merge(this.opts, options);
         if (this.opts.container == null || this.opts.container.length == 0) {
             logger.error('the options.container should not be empty.');
             return;
@@ -710,3 +719,39 @@ class MindMapModule {
 }
 
 
+MindMapModule.plugin = function(name,init){
+    this.name = name;
+    this.init = init;
+};
+
+MindMapModule.plugins = [];
+
+MindMapModule.register_plugin = function(plugin){
+    if(plugin instanceof MindMapModule.plugin){
+        MindMapModule.plugins.push(plugin);
+    }
+};
+
+MindMapModule.init_plugins = function(sender){
+    $w.setTimeout(function(){
+        MindMapModule._init_plugins(sender);
+    },0);
+};
+
+MindMapModule._init_plugins = function(sender){
+    let l = MindMapModule.plugins.length;
+    let fn_init = null;
+    for(let i=0;i<l;i++){
+        fn_init = MindMapModule.plugins[i].init;
+        if(typeof fn_init === 'function'){
+            fn_init(sender);
+        }
+    }
+};
+
+// quick way
+MindMapModule.show = function(options,mind){
+    let _jm = new MindMapModule(options);
+    _jm.show(mind);
+    return _jm;
+};
