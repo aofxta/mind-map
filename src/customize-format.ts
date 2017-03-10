@@ -311,7 +311,7 @@ export const customizeFormat = {
             let node = null;
             let root = null;
             let n = null;
-            for (const i = 0; i < nodes.length; i++) {
+            for (let i = 0; i < nodes.length; i++) {
                 n = nodes[i];
                 if (n.nodeType == 1 && n.tagName == 'map') {
                     node = n;
