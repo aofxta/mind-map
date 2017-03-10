@@ -1,4 +1,7 @@
-class LayoutProvider {
+import { logger } from './config';
+import { MindMapModule } from './mind-map.module';
+
+export class LayoutProvider {
     opts;
     jm;
     isside;
@@ -42,22 +45,22 @@ class LayoutProvider {
         }
         const children = node.children;
         const children_count = children.length;
-        layout_data.direction = jm.direction.center;
+        layout_data.direction = MindMapModule.direction.center;
         layout_data.side_index = 0;
         if (this.isside) {
             let i = children_count;
             while (i--) {
-                this._layout_direction_side(children[i], jm.direction.right, i);
+                this._layout_direction_side(children[i], MindMapModule.direction.right, i);
             }
         } else {
             let i = children_count;
             let subnode = null;
             while (i--) {
                 subnode = children[i];
-                if (subnode.direction == jm.direction.left) {
-                    this._layout_direction_side(subnode, jm.direction.left, i);
+                if (subnode.direction == MindMapModule.direction.left) {
+                    this._layout_direction_side(subnode, MindMapModule.direction.left, i);
                 } else {
-                    this._layout_direction_side(subnode, jm.direction.right, i);
+                    this._layout_direction_side(subnode, MindMapModule.direction.right, i);
                 }
             }
             /*
@@ -106,7 +109,7 @@ class LayoutProvider {
         let subnode = null;
         while (i--) {
             subnode = children[i];
-            if (subnode._data.layout.direction == jm.direction.right) {
+            if (subnode._data.layout.direction == MindMapModule.direction.right) {
                 right_nodes.unshift(subnode);
             } else {
                 left_nodes.unshift(subnode);
@@ -239,7 +242,7 @@ class LayoutProvider {
         const view_data = node._data.view;
         const offset_p = this.get_node_offset(node);
         //logger.debug(offset_p);
-        let p = {};
+        let p = { x: '', y: '' };
         p.x = offset_p.x + view_data.width * (node._data.layout.direction - 1) / 2;
         p.y = offset_p.y - view_data.height / 2;
         //logger.debug(p);
@@ -277,8 +280,8 @@ class LayoutProvider {
 
     get_expander_point(node) {
         const p = this.get_node_point_out(node);
-        const ex_p = {};
-        if (node._data.layout.direction == jm.direction.right) {
+        const ex_p = { x: '', y: '' };
+        if (node._data.layout.direction == MindMapModule.direction.right) {
             ex_p.x = p.x - this.opts.pspace;
         } else {
             ex_p.x = p.x;
@@ -393,7 +396,7 @@ class LayoutProvider {
                 root_layout_data.outer_height_right = this._layout_offset_subnodes_height(root_layout_data.right_nodes);
                 root_layout_data.outer_height_left = this._layout_offset_subnodes_height(root_layout_data.left_nodes);
             } else {
-                if (node._data.layout.direction == jm.direction.right) {
+                if (node._data.layout.direction == MindMapModule.direction.right) {
                     root_layout_data.outer_height_right
                         = this._layout_offset_subnodes_height(root_layout_data.right_nodes);
                 } else {

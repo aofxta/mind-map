@@ -1,3 +1,4 @@
+import { logger, $c, $d } from './config';
 const $w = window;
 
 export const customizeUtil = {
@@ -35,7 +36,7 @@ export const customizeUtil = {
                 if (xhr.readyState == 4) {
                     if (xhr.status == 200 || xhr.status == 0) {
                         if (typeof callback === 'function') {
-                            let data = jm.util.json.string2json(xhr.responseText);
+                            let data = customizeUtil.json.string2json(xhr.responseText);
                             if (data != null) {
                                 callback(data);
                             } else {

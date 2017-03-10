@@ -1,16 +1,17 @@
 
+import { logger } from './config';
 interface NodeData {
     view?: NodeView;
 }
 
-interface NodeView {
+export interface NodeView {
     abs_x: string;
     abs_y: string;
     height: string;
     width: string;
 }
 
-class MindMapNode {
+export class MindMapNode {
     id: string;
     index: string;
     topic: string;
@@ -26,7 +27,7 @@ class MindMapNode {
     static compare;
     static inherited;
 
-    constructor(sId, iIndex, sTopic, oData, bIsRoot, oParent, eDirection, bExpanded, selectedType) {
+    constructor(sId, iIndex, sTopic, oData, bIsRoot, oParent?, eDirection?, bExpanded?, selectedType?) {
         if (!sId) {
             logger.error('invalid nodeid');
             return;

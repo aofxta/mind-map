@@ -1,22 +1,9 @@
-// view provider
-jm.view_provider = function (jm, options) {
-    this.opts = options;
-    this.jm = jm;
-    this.layout = jm.layout;
 
-    this.container = null;
-    this.e_panel = null;
-    this.e_nodes = null;
-    this.e_canvas = null;
+import { logger, $g, $c, $d, $t, $h } from './config';
+import { customizeUtil } from './util';
+import { MindMapModule } from './mind-map.module';
 
-    this.canvas_ctx = null;
-    this.size = { w: 0, h: 0 };
-
-    this.selected_node = null;
-    this.editing_node = null;
-};
-
-class ViewProvider {
+export class ViewProvider {
     opts: any;
     jm: any;
     layout: any;
@@ -85,24 +72,24 @@ class ViewProvider {
         this.maxZoom = 2;
 
         const v = this;
-        jm.util.dom.add_event(this.e_nodes, 'click', function (e) {
+        customizeUtil.dom.add_event(this.e_nodes, 'click', function (e) {
             v.edit_node_end();
         });
-        jm.util.dom.add_event(this.e_editor, 'keydown', function (e) {
+        customizeUtil.dom.add_event(this.e_editor, 'keydown', function (e) {
             const evt = e || event;
             if (evt.keyCode == 13) {
                 v.edit_node_end();
                 evt.stopPropagation();
             }
         });
-        jm.util.dom.add_event(this.e_editor, 'blur', function (e) {
+        customizeUtil.dom.add_event(this.e_editor, 'blur', function (e) {
             v.edit_node_end();
         });
-        jm.util.dom.add_event(this.e_editor, 'click', function (e) {
+        customizeUtil.dom.add_event(this.e_editor, 'click', function (e) {
             const evt = e || event;
             evt.stopPropagation();
         });
-        jm.util.dom.add_event(this.e_select, 'click', function (e) {
+        customizeUtil.dom.add_event(this.e_select, 'click', function (e) {
             const evt = e || event;
             evt.stopPropagation();
         });
@@ -113,7 +100,7 @@ class ViewProvider {
     }
 
     add_event(obj, event_name, event_handle) {
-        jm.util.dom.add_event(this.e_nodes, event_name, function (e) {
+        customizeUtil.dom.add_event(this.e_nodes, event_name, function (e) {
             const evt = e || event;
             event_handle.call(obj, evt);
         });
@@ -355,8 +342,8 @@ class ViewProvider {
             element.style.zIndex = 'auto';
             element.removeChild(this.e_editor);
             element.removeChild(this.e_select);
-            if (jm.util.text.is_empty(topic) ||
-                jm.util.text.is_empty(selected_type) ||
+            if (customizeUtil.text.is_empty(topic) ||
+                customizeUtil.text.is_empty(selected_type) ||
                 (node.topic === topic && node.selected_type === selected_type)) {
                 if (this.opts.support_html) {
                     $h(element, node.show());
@@ -394,7 +381,7 @@ class ViewProvider {
         this.show_nodes();
         this.show_lines();
         //this.layout.cache_valid = true;
-        this.jm.invoke_event_handle(jm.event_type.resize, { data: [] });
+        this.jm.invoke_event_handle(MindMapModule.event_type.resize, { data: [] });
     }
 
     zoomIn() {
@@ -595,10 +582,10 @@ class ViewProvider {
 
     clear_lines(canvas_ctx?) {
         const ctx = canvas_ctx || this.canvas_ctx;
-        jm.util.canvas.clear(ctx, 0, 0, this.size.w, this.size.h);
+        customizeUtil.canvas.clear(ctx, 0, 0, this.size.w, this.size.h);
     }
 
-    show_lines(canvas_ctx) {
+    show_lines(canvas_ctx?) {
         this.clear_lines(canvas_ctx);
         const nodes = this.jm.mind.nodes;
         let node = null;
@@ -621,7 +608,7 @@ class ViewProvider {
         ctx.lineWidth = this.opts.line_width;
         ctx.lineCap = 'round';
 
-        jm.util.canvas.bezierto(
+        customizeUtil.canvas.bezierto(
             ctx,
             pin.x + offset.x,
             pin.y + offset.y,

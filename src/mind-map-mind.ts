@@ -1,4 +1,9 @@
-class MindMapMind {
+import { logger } from './config';
+import { MindMapNode } from './mind-map-node';
+import { customizeUtil } from './util';
+import { MindMapModule } from './mind-map.module';
+
+export class MindMapMind {
     name = null;
     author = null;
     version = null;
@@ -21,16 +26,16 @@ class MindMapMind {
 
     set_root(nodeid, topic, data) {
         if (this.root == null) {
-            this.root = new jm.node(nodeid, 0, topic, data, true);
+            this.root = new MindMapNode(nodeid, 0, topic, data, true);
             this._put_node(this.root);
         } else {
             logger.error('root node is already exist');
         }
     }
 
-    add_node(parent_node, nodeid, topic, data, idx, direction, expanded) {
+    add_node(parent_node, nodeid, topic, data, idx, direction?, expanded?) {
         console.log('3');
-        if (!jm.util.is_node(parent_node)) {
+        if (!customizeUtil.is_node(parent_node)) {
             return this.add_node(this.get_node(parent_node), nodeid, topic, data, idx, direction, expanded);
         }
         const nodeindex = idx || -1;
@@ -41,7 +46,7 @@ class MindMapMind {
             //logger.debug(parent_node);
             let node = null;
             if (parent_node.isroot) {
-                let d = jm.direction.right;
+                let d = MindMapModule.direction.right;
                 if (isNaN(direction)) {
                     logger.info('direction :', direction);
                     const children = parent_node.children;
@@ -49,15 +54,17 @@ class MindMapMind {
                     const children_len = children.length;
                     let r = 0;
                     // for(var i=0;i<children_len;i++){if(children[i].direction === jm.direction.left){r--;}else{r++;}}
-                    d = jm.direction.right
+                    d = MindMapModule.direction.right
                 } else {
                     logger.info('direction :', direction);
-                    d = (direction != jm.direction.left) ? jm.direction.right : jm.direction.left;
+                    d = (direction != MindMapModule.direction.left) ?
+                        MindMapModule.direction.right :
+                        MindMapModule.direction.left;
                 }
-                node = new jm.node(nodeid, nodeindex, topic, data, false, parent_node, d, expanded, selectedType);
+                node = new MindMapNode(nodeid, nodeindex, topic, data, false, parent_node, d, expanded, selectedType);
             } else {
                 node
-                    = new jm.node(nodeid, nodeindex, topic, data, false, parent_node, parent_node.direction, expanded, selectedType);
+                    = new MindMapNode(nodeid, nodeindex, topic, data, false, parent_node, parent_node.direction, expanded, selectedType);
             }
             if (this._put_node(node)) {
                 parent_node.children.push(node);
@@ -74,7 +81,7 @@ class MindMapMind {
     }
 
     insert_node_before(node_before, nodeid, topic, data) {
-        if (!jm.util.is_node(node_before)) {
+        if (!customizeUtil.is_node(node_before)) {
             return this.insert_node_before(this.get_node(node_before), nodeid, topic, data);
         }
         if (!!node_before) {
@@ -89,7 +96,7 @@ class MindMapMind {
 
     get_node_before(node) {
         if (!node) {return null;}
-        if (!jm.util.is_node(node)) {
+        if (!customizeUtil.is_node(node)) {
             return this.get_node_before(this.get_node(node));
         }
         if (node.isroot) {return null;}
@@ -103,7 +110,7 @@ class MindMapMind {
 
 
     insert_node_after(node_after, nodeid, topic, data) {
-        if (!jm.util.is_node(node_after)) {
+        if (!customizeUtil.is_node(node_after)) {
             return this.insert_node_after(this.get_node(node_after), nodeid, topic, data);
         }
         if (!!node_after) {
@@ -117,7 +124,7 @@ class MindMapMind {
 
     get_node_after(node) {
         if (!node) {return null;}
-        if (!jm.util.is_node(node)) {
+        if (!customizeUtil.is_node(node)) {
             return this.get_node_after(this.get_node(node));
         }
         if (node.isroot) {return null;}
@@ -131,7 +138,7 @@ class MindMapMind {
     }
 
     move_node(node, beforeid, parentid, direction) {
-        if (!jm.util.is_node(node)) {
+        if (!customizeUtil.is_node(node)) {
             return this.move_node(this.get_node(node), beforeid, parentid, direction);
         }
         if (!parentid) {
@@ -140,7 +147,7 @@ class MindMapMind {
         return this._move_node(node, beforeid, parentid, direction);
     }
 
-    _flow_node_direction(node, direction) {
+    _flow_node_direction(node, direction?) {
         if (typeof direction === 'undefined') {
             direction = node.direction;
         } else {
@@ -189,10 +196,10 @@ class MindMapMind {
             }
 
             if (node.parent.isroot) {
-                if (direction == jsMind.direction.left) {
+                if (direction == MindMapModule.direction.left) {
                     node.direction = direction;
                 } else {
-                    node.direction = jm.direction.right;
+                    node.direction = MindMapModule.direction.right;
                 }
             } else {
                 node.direction = node.parent.direction;
@@ -204,7 +211,7 @@ class MindMapMind {
     }
 
     remove_node(node) {
-        if (!jm.util.is_node(node)) {
+        if (!customizeUtil.is_node(node)) {
             return this.remove_node(this.get_node(node));
         }
         if (!node) {
@@ -258,8 +265,8 @@ class MindMapMind {
     }
 
     _reindex(node) {
-        if (node instanceof jm.node) {
-            node.children.sort(jm.node.compare);
+        if (node instanceof MindMapNode) {
+            node.children.sort(MindMapNode.compare);
             const length = node.children.length;
             for (let i = 0; i < length; i++) {
                 node.children[i].index = i + 1;

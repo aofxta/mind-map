@@ -1,5 +1,7 @@
 import { __name__, __author__, __version__, logger } from './config';
 import { MindMapModule } from './mind-map.module';
+import { MindMapMind } from './mind-map-mind';
+import { MindMapNode } from './mind-map-node';
 
 export const customizeFormat = {
     node_tree: {

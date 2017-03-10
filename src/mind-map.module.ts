@@ -1,75 +1,11 @@
-const $w = window;
+import { customizeUtil } from './util';
+import { ShortcutProvider } from './shortcut-provider';
+import { __version__, DEFAULT_OPTIONS, logger, $w } from './config';
+import { MindMapDataProvider } from './data-provider';
+import { LayoutProvider } from './layout-provider';
+import { customizeFormat } from './customize-format';
+import { ViewProvider } from './view-provider';
 
-const __name__: string = 'jsMind';
-// library version
-const __version__: string = '0.4a';
-// author
-const __author__ = 'wfsovereign';
-
-// an noop function define
-let _noop = function () {
-};
-const logger = console;
-
-// check global constiables
-// if (typeof $w[__name__] != 'undefined') {
-//     logger.log(__name__ + ' has been already exist.');
-//     return;
-// }
-
-const DEFAULT_OPTIONS = {
-    container: '',   // id of the container
-    editable: false, // you can change it in your options
-    theme: null,
-    mode: 'full',     // full or side
-    support_html: true,
-
-    view: {
-        hmargin: 100,
-        vmargin: 50,
-        line_width: 2,
-        line_color: '#555'
-    },
-    layout: {
-        hspace: 30,
-        vspace: 20,
-        pspace: 13
-    },
-    default_event_handle: {
-        enable_mousedown_handle: true,
-        enable_click_handle: true,
-        enable_dblclick_handle: true
-    },
-    shortcut: {
-        enable: true,
-        handles: {},
-        mapping: {
-            addchild: 45, // Insert
-            addbrother: 13, // Enter
-            editnode: 113,// F2
-            delnode: 46, // Delete
-            toggle: 32, // Space
-            left: 37, // Left
-            up: 38, // Up
-            right: 39, // Right
-            down: 40, // Down
-        }
-    },
-};
-
-const $d = $w.document;
-const $g = function (id) {
-    return $d.getElementById(id);
-};
-const $c = function (tag) {
-    return $d.createElement(tag);
-};
-const $t = function (n, t) {
-    if (n.hasChildNodes()) { n.firstChild.nodeValue = t; } else { n.appendChild($d.createTextNode(t)); }
-};
-const $h = function (n, t) {
-    n.innerHTML = t;
-};
 if (typeof String.prototype.startsWith !== 'function') {
     String.prototype.startsWith = function (p) {
         return this.slice(0, p.length) === p;
@@ -77,7 +13,7 @@ if (typeof String.prototype.startsWith !== 'function') {
 }
 
 
-interface MindMapModuleOpts {
+export interface MindMapModuleOpts {
     container?: Array<any>;
     mode?: any;
     layout?: any;
@@ -90,7 +26,7 @@ interface MindMapModuleOpts {
 }
 
 
-class MindMapModule {
+export class MindMapModule {
 
     version: string = __version__;
     opts: MindMapModuleOpts = {};
@@ -114,8 +50,8 @@ class MindMapModule {
 
 
     constructor(options) {
-        jm.util.json.merge(this.opts, DEFAULT_OPTIONS);
-        jm.util.json.merge(this.opts, options);
+        customizeUtil.json.merge(this.opts, DEFAULT_OPTIONS);
+        customizeUtil.json.merge(this.opts, options);
         if (this.opts.container == null || this.opts.container.length == 0) {
             logger.error('the options.container should not be empty.');
             return;
@@ -144,10 +80,10 @@ class MindMapModule {
             line_color: opts.view.line_color
         };
         // create instance of function provider
-        this.data = new jm.data_provider(this);
-        this.layout = new jm.layout_provider(this, opts_layout);
-        this.view = new jm.view_provider(this, opts_view);
-        this.shortcut = new jm.shortcut_provider(this, opts.shortcut);
+        this.data = new MindMapDataProvider(this);
+        this.layout = new LayoutProvider(this, opts_layout);
+        this.view = new ViewProvider(this, opts_view);
+        this.shortcut = new ShortcutProvider(this, opts.shortcut);
 
         this.data.init();
         this.layout.init();
@@ -156,7 +92,7 @@ class MindMapModule {
 
         this._event_bind();
 
-        jm.init_plugins(this);
+        MindMapModule.init_plugins(this);
     }
 
     enable_edit() {
@@ -239,7 +175,7 @@ class MindMapModule {
     }
 
     begin_edit(node) {
-        if (!jm.util.is_node(node)) {
+        if (!customizeUtil.is_node(node)) {
             return this.begin_edit(this.get_node(node));
         }
         if (this.get_editable()) {
@@ -259,7 +195,7 @@ class MindMapModule {
     }
 
     toggle_node(node) {
-        if (!jm.util.is_node(node)) {
+        if (!customizeUtil.is_node(node)) {
             return this.toggle_node(this.get_node(node));
         }
         if (!!node) {
@@ -274,7 +210,7 @@ class MindMapModule {
     }
 
     expand_node(node) {
-        if (!jm.util.is_node(node)) {
+        if (!customizeUtil.is_node(node)) {
             return this.expand_node(this.get_node(node));
         }
         if (!!node) {
@@ -289,7 +225,7 @@ class MindMapModule {
     }
 
     collapse_node(node) {
-        if (!jm.util.is_node(node)) {
+        if (!customizeUtil.is_node(node)) {
             return this.collapse_node(this.get_node(node));
         }
         if (!!node) {
@@ -325,7 +261,7 @@ class MindMapModule {
     }
 
     _show(mind) {
-        const m = mind || jm.format.node_array.example;
+        const m = mind || customizeFormat.node_array.example;
 
         this.mind = this.data.load(m);
         if (!this.mind) {
@@ -344,7 +280,7 @@ class MindMapModule {
         this.view.show(true);
         logger.debug('view.show ok');
 
-        this.invoke_event_handle(jm.event_type.show, { data: [mind] });
+        this.invoke_event_handle(MindMapModule.event_type.show, { data: [mind] });
     }
 
     show(mind) {
@@ -384,7 +320,7 @@ class MindMapModule {
                 this.view.show(false);
                 this.view.reset_node_custom_style(node);
                 this.expand_node(parent_node);
-                this.invoke_event_handle(jm.event_type.edit, {
+                this.invoke_event_handle(MindMapModule.event_type.edit, {
                     evt: 'add_node',
                     data: [parent_node.id, nodeid, topic, data],
                     node: nodeid
@@ -399,13 +335,13 @@ class MindMapModule {
 
     insert_node_before(node_before, nodeid, topic, data) {
         if (this.get_editable()) {
-            const beforeid = jm.util.is_node(node_before) ? node_before.id : node_before;
+            const beforeid = customizeUtil.is_node(node_before) ? node_before.id : node_before;
             const node = this.mind.insert_node_before(node_before, nodeid, topic, data);
             if (!!node) {
                 this.view.add_node(node);
                 this.layout.layout();
                 this.view.show(false);
-                this.invoke_event_handle(jm.event_type.edit, {
+                this.invoke_event_handle(MindMapModule.event_type.edit, {
                     evt: 'insert_node_before',
                     data: [beforeid, nodeid, topic, data],
                     node: nodeid
@@ -425,7 +361,7 @@ class MindMapModule {
                 this.view.add_node(node);
                 this.layout.layout();
                 this.view.show(false);
-                this.invoke_event_handle(jm.event_type.edit, {
+                this.invoke_event_handle(MindMapModule.event_type.edit, {
                     evt: 'insert_node_after',
                     data: [node_after.id, nodeid, topic, data],
                     node: nodeid
@@ -439,7 +375,7 @@ class MindMapModule {
     }
 
     remove_node(node) {
-        if (!jm.util.is_node(node)) {
+        if (!customizeUtil.is_node(node)) {
             return this.remove_node(this.get_node(node));
         }
         if (this.get_editable()) {
@@ -457,7 +393,7 @@ class MindMapModule {
                 this.layout.layout();
                 this.view.show(false);
                 this.view.restore_location(parent_node);
-                this.invoke_event_handle(jm.event_type.edit, { evt: 'remove_node', data: [nodeid], node: parentid });
+                this.invoke_event_handle(MindMapModule.event_type.edit, { evt: 'remove_node', data: [nodeid], node: parentid });
             } else {
                 logger.error('fail, node can not be found');
                 return false;
@@ -470,7 +406,7 @@ class MindMapModule {
 
     update_node(nodeid, topic, selected_type) {
         if (this.get_editable()) {
-            if (jm.util.text.is_empty(topic)) {
+            if (customizeUtil.text.is_empty(topic)) {
                 logger.warn('fail, topic can not be empty');
                 return;
             }
@@ -486,7 +422,7 @@ class MindMapModule {
                 this.view.update_node(node);
                 this.layout.layout();
                 this.view.show(false);
-                this.invoke_event_handle(jm.event_type.edit, {
+                this.invoke_event_handle(MindMapModule.event_type.edit, {
                     evt: 'update_node',
                     data: [nodeid, topic],
                     node: nodeid
@@ -505,7 +441,7 @@ class MindMapModule {
                 this.view.update_node(node);
                 this.layout.layout();
                 this.view.show(false);
-                this.invoke_event_handle(jm.event_type.edit, {
+                this.invoke_event_handle(MindMapModule.event_type.edit, {
                     evt: 'move_node',
                     data: [nodeid, beforeid, parentid, direction],
                     node: nodeid
@@ -518,7 +454,7 @@ class MindMapModule {
     }
 
     select_node(node) {
-        if (!jm.util.is_node(node)) {
+        if (!customizeUtil.is_node(node)) {
             return this.select_node(this.get_node(node));
         }
         if (!node || !this.layout.is_visible(node)) {
@@ -550,7 +486,7 @@ class MindMapModule {
     }
 
     find_node_before(node) {
-        if (!jm.util.is_node(node)) {
+        if (!customizeUtil.is_node(node)) {
             return this.find_node_before(this.get_node(node));
         }
         if (!node || node.isroot) {return null;}
@@ -575,7 +511,7 @@ class MindMapModule {
     }
 
     find_node_after(node) {
-        if (!jm.util.is_node(node)) {
+        if (!customizeUtil.is_node(node)) {
             return this.find_node_after(this.get_node(node));
         }
         if (!node || node.isroot) {return null;}

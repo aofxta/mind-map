@@ -1,4 +1,7 @@
-class MindMapDataProvider {
+import { logger } from './config';
+import { customizeFormat } from './customize-format';
+
+export class MindMapDataProvider {
     jm: any;
 
     constructor(jm) {
@@ -27,11 +30,11 @@ class MindMapDataProvider {
         }
 
         if (df == 'node_array') {
-            mind = jm.format.node_array.get_mind(mind_data);
+            mind = customizeFormat.node_array.get_mind(mind_data);
         } else if (df == 'node_tree') {
-            mind = jm.format.node_tree.get_mind(mind_data);
+            mind = customizeFormat.node_tree.get_mind(mind_data);
         } else if (df == 'freemind') {
-            mind = jm.format.freemind.get_mind(mind_data);
+            mind = customizeFormat.freemind.get_mind(mind_data);
         } else {
             logger.warn('unsupported format');
         }
@@ -41,11 +44,11 @@ class MindMapDataProvider {
     get_data(data_format) {
         let data = null;
         if (data_format == 'node_array') {
-            data = jm.format.node_array.get_data(this.jm.mind);
+            data = customizeFormat.node_array.get_data(this.jm.mind);
         } else if (data_format == 'node_tree') {
-            data = jm.format.node_tree.get_data(this.jm.mind);
+            data = customizeFormat.node_tree.get_data(this.jm.mind);
         } else if (data_format == 'freemind') {
-            data = jm.format.freemind.get_data(this.jm.mind);
+            data = customizeFormat.freemind.get_data(this.jm.mind);
         } else {
             logger.error('unsupported ' + data_format + ' format');
         }

@@ -1,7 +1,9 @@
 import { customizeUtil } from './util';
+import { $d } from './config';
+import { MindMapModule } from './mind-map.module';
 
 
-class ShortcutProvider {
+export class ShortcutProvider {
     jm;
     opts;
     mapping;
