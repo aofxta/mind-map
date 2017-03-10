@@ -56,6 +56,7 @@ export class MindMapModule {
             logger.error('the options.container should not be empty.');
             return;
         }
+        this.init();
     }
 
 
