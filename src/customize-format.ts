@@ -1,4 +1,4 @@
-import { __name__, __author__, __version__, logger } from './config';
+import { __name__, __author__, __version__, logger, $w } from './config';
 import { MindMapMain } from './mind-map-main';
 import { MindMapMind } from './mind-map-mind';
 import { MindMapNode } from './mind-map-node';
@@ -295,7 +295,7 @@ export const customizeFormat = {
 
         _parse_xml: function (xml) {
             let xml_doc = null;
-            if (window.DOMParser) {
+            if ($w.DOMParser) {
                 const parser = new DOMParser();
                 xml_doc = parser.parseFromString(xml, 'text/xml');
             } else { // Internet Explorer
@@ -349,7 +349,7 @@ export const customizeFormat = {
                     }
                 }
             }
-            const node_data = df._load_attributes(xml_node);
+            const node_data: { expanded?: string } = df._load_attributes(xml_node);
             const node_expanded = ('expanded' in node_data) ? (node_data.expanded == 'true') : true;
             delete node_data.expanded;
 

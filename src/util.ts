@@ -1,6 +1,5 @@
-import { logger, $c, $d } from './config';
+import { logger, $c, $d, $w } from './config';
 import { MindMapNode } from './mind-map-node';
-const $w = window;
 
 export const customizeUtil = {
     is_node: function (node) {
@@ -9,7 +8,7 @@ export const customizeUtil = {
     ajax: {
         _xhr: function () {
             let xhr = null;
-            if (window.XMLHttpRequest) {
+            if ($w.XMLHttpRequest) {
                 xhr = new XMLHttpRequest();
             } else {
                 try {

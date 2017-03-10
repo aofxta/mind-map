@@ -242,7 +242,7 @@ export class LayoutProvider {
         const view_data = node._data.view;
         const offset_p = this.get_node_offset(node);
         //logger.debug(offset_p);
-        let p = { x: '', y: '' };
+        let p = { x: 0, y: 0 };
         p.x = offset_p.x + view_data.width * (node._data.layout.direction - 1) / 2;
         p.y = offset_p.y - view_data.height / 2;
         //logger.debug(p);
@@ -280,7 +280,7 @@ export class LayoutProvider {
 
     get_expander_point(node) {
         const p = this.get_node_point_out(node);
-        const ex_p = { x: '', y: '' };
+        const ex_p = { x: 0, y: 0 };
         if (node._data.layout.direction == MindMapMain.direction.right) {
             ex_p.x = p.x - this.opts.pspace;
         } else {

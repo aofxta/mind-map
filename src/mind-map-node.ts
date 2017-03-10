@@ -13,16 +13,16 @@ export interface NodeView {
 
 export class MindMapNode {
     id: string;
-    index: string;
+    index: any;
     topic: string;
     selected_type: string;
     data: Object;
     isroot: boolean;
-    parent: Object;
+    parent: MindMapNode;
     direction;
     expanded: boolean;
     children: Array<any>;
-    _data: NodeData;
+    private _data: NodeData;
 
     static compare;
     static inherited;

@@ -1,6 +1,6 @@
 
 
-export const $w = window;
+export const $w: {[propName: string]: any} = window;
 
 export const __name__: string = 'jsMind';
 // library version

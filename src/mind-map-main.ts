@@ -6,11 +6,11 @@ import { LayoutProvider } from './layout-provider';
 import { customizeFormat } from './customize-format';
 import { ViewProvider } from './view-provider';
 
-if (typeof String.prototype.startsWith !== 'function') {
-    String.prototype.startsWith = function (p) {
-        return this.slice(0, p.length) === p;
-    };
-}
+// if (typeof String.prototype.startsWith !== 'function') {
+//     String.prototype.startsWith = function (p) {
+//         return this.slice(0, p.length) === p;
+//     };
+// }
 
 
 export interface MindMapModuleOpts {
