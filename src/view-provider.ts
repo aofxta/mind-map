@@ -1,7 +1,7 @@
 
 import { logger, $g, $c, $d, $t, $h } from './config';
 import { customizeUtil } from './util';
-import { MindMapModule } from './mind-map.module';
+import { MindMapMain } from './mind-map-main';
 
 export class ViewProvider {
     opts: any;
@@ -381,7 +381,7 @@ export class ViewProvider {
         this.show_nodes();
         this.show_lines();
         //this.layout.cache_valid = true;
-        this.jm.invoke_event_handle(MindMapModule.event_type.resize, { data: [] });
+        this.jm.invoke_event_handle(MindMapMain.event_type.resize, { data: [] });
     }
 
     zoomIn() {

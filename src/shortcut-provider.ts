@@ -1,6 +1,6 @@
 import { customizeUtil } from './util';
 import { $d } from './config';
-import { MindMapModule } from './mind-map.module';
+import { MindMapMain } from './mind-map-main';
 
 
 export class ShortcutProvider {
@@ -143,11 +143,11 @@ export class ShortcutProvider {
     }
 
     handle_left(_jm, e) {
-        this._handle_direction(_jm, e, MindMapModule.direction.left);
+        this._handle_direction(_jm, e, MindMapMain.direction.left);
     }
 
     handle_right(_jm, e) {
-        this._handle_direction(_jm, e, MindMapModule.direction.right);
+        this._handle_direction(_jm, e, MindMapMain.direction.right);
     }
 
     _handle_direction(_jm, e, d) {

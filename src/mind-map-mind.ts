@@ -1,7 +1,7 @@
 import { logger } from './config';
 import { MindMapNode } from './mind-map-node';
 import { customizeUtil } from './util';
-import { MindMapModule } from './mind-map.module';
+import { MindMapMain } from './mind-map-main';
 
 export class MindMapMind {
     name = null;
@@ -46,7 +46,7 @@ export class MindMapMind {
             //logger.debug(parent_node);
             let node = null;
             if (parent_node.isroot) {
-                let d = MindMapModule.direction.right;
+                let d = MindMapMain.direction.right;
                 if (isNaN(direction)) {
                     logger.info('direction :', direction);
                     const children = parent_node.children;
@@ -54,12 +54,12 @@ export class MindMapMind {
                     const children_len = children.length;
                     let r = 0;
                     // for(var i=0;i<children_len;i++){if(children[i].direction === jm.direction.left){r--;}else{r++;}}
-                    d = MindMapModule.direction.right
+                    d = MindMapMain.direction.right
                 } else {
                     logger.info('direction :', direction);
-                    d = (direction != MindMapModule.direction.left) ?
-                        MindMapModule.direction.right :
-                        MindMapModule.direction.left;
+                    d = (direction != MindMapMain.direction.left) ?
+                        MindMapMain.direction.right :
+                        MindMapMain.direction.left;
                 }
                 node = new MindMapNode(nodeid, nodeindex, topic, data, false, parent_node, d, expanded, selectedType);
             } else {
@@ -196,10 +196,10 @@ export class MindMapMind {
             }
 
             if (node.parent.isroot) {
-                if (direction == MindMapModule.direction.left) {
+                if (direction == MindMapMain.direction.left) {
                     node.direction = direction;
                 } else {
-                    node.direction = MindMapModule.direction.right;
+                    node.direction = MindMapMain.direction.right;
                 }
             } else {
                 node.direction = node.parent.direction;

@@ -26,7 +26,7 @@ export interface MindMapModuleOpts {
 }
 
 
-export class MindMapModule {
+export class MindMapMain {
 
     version: string = __version__;
     opts: MindMapModuleOpts = {};
@@ -93,7 +93,7 @@ export class MindMapModule {
 
         this._event_bind();
 
-        MindMapModule.init_plugins(this);
+        MindMapMain.init_plugins(this);
     }
 
     enable_edit() {
@@ -281,7 +281,7 @@ export class MindMapModule {
         this.view.show(true);
         logger.debug('view.show ok');
 
-        this.invoke_event_handle(MindMapModule.event_type.show, { data: [mind] });
+        this.invoke_event_handle(MindMapMain.event_type.show, { data: [mind] });
     }
 
     show(mind) {
@@ -321,7 +321,7 @@ export class MindMapModule {
                 this.view.show(false);
                 this.view.reset_node_custom_style(node);
                 this.expand_node(parent_node);
-                this.invoke_event_handle(MindMapModule.event_type.edit, {
+                this.invoke_event_handle(MindMapMain.event_type.edit, {
                     evt: 'add_node',
                     data: [parent_node.id, nodeid, topic, data],
                     node: nodeid
@@ -342,7 +342,7 @@ export class MindMapModule {
                 this.view.add_node(node);
                 this.layout.layout();
                 this.view.show(false);
-                this.invoke_event_handle(MindMapModule.event_type.edit, {
+                this.invoke_event_handle(MindMapMain.event_type.edit, {
                     evt: 'insert_node_before',
                     data: [beforeid, nodeid, topic, data],
                     node: nodeid
@@ -362,7 +362,7 @@ export class MindMapModule {
                 this.view.add_node(node);
                 this.layout.layout();
                 this.view.show(false);
-                this.invoke_event_handle(MindMapModule.event_type.edit, {
+                this.invoke_event_handle(MindMapMain.event_type.edit, {
                     evt: 'insert_node_after',
                     data: [node_after.id, nodeid, topic, data],
                     node: nodeid
@@ -394,7 +394,7 @@ export class MindMapModule {
                 this.layout.layout();
                 this.view.show(false);
                 this.view.restore_location(parent_node);
-                this.invoke_event_handle(MindMapModule.event_type.edit, { evt: 'remove_node', data: [nodeid], node: parentid });
+                this.invoke_event_handle(MindMapMain.event_type.edit, { evt: 'remove_node', data: [nodeid], node: parentid });
             } else {
                 logger.error('fail, node can not be found');
                 return false;
@@ -423,7 +423,7 @@ export class MindMapModule {
                 this.view.update_node(node);
                 this.layout.layout();
                 this.view.show(false);
-                this.invoke_event_handle(MindMapModule.event_type.edit, {
+                this.invoke_event_handle(MindMapMain.event_type.edit, {
                     evt: 'update_node',
                     data: [nodeid, topic],
                     node: nodeid
@@ -442,7 +442,7 @@ export class MindMapModule {
                 this.view.update_node(node);
                 this.layout.layout();
                 this.view.show(false);
-                this.invoke_event_handle(MindMapModule.event_type.edit, {
+                this.invoke_event_handle(MindMapMain.event_type.edit, {
                     evt: 'move_node',
                     data: [nodeid, beforeid, parentid, direction],
                     node: nodeid
@@ -655,33 +655,33 @@ export class MindMapModule {
 
 }
 
-MindMapModule.direction = { left: -1, center: 0, right: 1 };
-MindMapModule.event_type = { show: 1, resize: 2, edit: 3, select: 4 };
+MindMapMain.direction = { left: -1, center: 0, right: 1 };
+MindMapMain.event_type = { show: 1, resize: 2, edit: 3, select: 4 };
 
-MindMapModule.plugin = function(name,init){
+MindMapMain.plugin = function(name, init){
     this.name = name;
     this.init = init;
 };
 
-MindMapModule.plugins = [];
+MindMapMain.plugins = [];
 
-MindMapModule.register_plugin = function(plugin){
-    if(plugin instanceof MindMapModule.plugin){
-        MindMapModule.plugins.push(plugin);
+MindMapMain.register_plugin = function(plugin){
+    if(plugin instanceof MindMapMain.plugin){
+        MindMapMain.plugins.push(plugin);
     }
 };
 
-MindMapModule.init_plugins = function(sender){
+MindMapMain.init_plugins = function(sender){
     $w.setTimeout(function(){
-        MindMapModule._init_plugins(sender);
+        MindMapMain._init_plugins(sender);
     },0);
 };
 
-MindMapModule._init_plugins = function(sender){
-    let l = MindMapModule.plugins.length;
+MindMapMain._init_plugins = function(sender){
+    let l = MindMapMain.plugins.length;
     let fn_init = null;
     for(let i=0;i<l;i++){
-        fn_init = MindMapModule.plugins[i].init;
+        fn_init = MindMapMain.plugins[i].init;
         if(typeof fn_init === 'function'){
             fn_init(sender);
         }
@@ -689,8 +689,8 @@ MindMapModule._init_plugins = function(sender){
 };
 
 // quick way
-MindMapModule.show = function(options,mind){
-    let _jm = new MindMapModule(options);
+MindMapMain.show = function(options, mind){
+    let _jm = new MindMapMain(options);
     _jm.show(mind);
     return _jm;
 };

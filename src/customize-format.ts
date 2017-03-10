@@ -1,5 +1,5 @@
 import { __name__, __author__, __version__, logger } from './config';
-import { MindMapModule } from './mind-map.module';
+import { MindMapMain } from './mind-map-main';
 import { MindMapMind } from './mind-map-mind';
 import { MindMapNode } from './mind-map-node';
 
@@ -64,7 +64,7 @@ export const customizeFormat = {
             const data = df._extract_data(node_json);
             let d = null;
             if (node_parent.isroot) {
-                d = node_json.direction == 'left' ? MindMapModule.direction.left : MindMapModule.direction.right;
+                d = node_json.direction == 'left' ? MindMapMain.direction.left : MindMapMain.direction.right;
             }
             const node = mind.add_node(node_parent, node_json.id, node_json.topic, data, null, d, node_json.expanded);
             if ('children' in node_json) {
@@ -86,7 +86,7 @@ export const customizeFormat = {
                 expanded: node.expanded
             };
             if (!!node.parent && node.parent.isroot) {
-                o.direction = node.direction == MindMapModule.direction.left ? 'left' : 'right';
+                o.direction = node.direction == MindMapMain.direction.left ? 'left' : 'right';
             }
             if (node.data != null) {
                 const node_data = node.data;
@@ -187,7 +187,7 @@ export const customizeFormat = {
                     let d = null;
                     const node_direction = node_json.direction;
                     if (!!node_direction) {
-                        d = node_direction == 'left' ? MindMapModule.direction.left : MindMapModule.direction.right;
+                        d = node_direction == 'left' ? MindMapMain.direction.left : MindMapMain.direction.right;
                     }
                     mind.add_node(parentid, node_json.id, node_json.topic, data, null, d, node_json.expanded);
                     node_array.splice(i, 1);
@@ -237,7 +237,7 @@ export const customizeFormat = {
                 o.isroot = true;
             }
             if (!!node.parent && node.parent.isroot) {
-                o.direction = node.direction == MindMapModule.direction.left ? 'left' : 'right';
+                o.direction = node.direction == MindMapMain.direction.left ? 'left' : 'right';
             }
             if (node.data != null) {
                 const node_data = node.data;
@@ -356,7 +356,7 @@ export const customizeFormat = {
             const node_position = xml_node.getAttribute('POSITION');
             let node_direction = null;
             if (!!node_position) {
-                node_direction = node_position == 'left' ? MindMapModule.direction.left : MindMapModule.direction.right;
+                node_direction = node_position == 'left' ? MindMapMain.direction.left : MindMapMain.direction.right;
             }
             //logger.debug(node_position +':'+ node_direction);
             if (!!parent_id) {
@@ -391,7 +391,7 @@ export const customizeFormat = {
             const df = customizeFormat.freemind;
             let pos = null;
             if (!!node.parent && node.parent.isroot) {
-                pos = node.direction === MindMapModule.direction.left ? 'left' : 'right';
+                pos = node.direction === MindMapMain.direction.left ? 'left' : 'right';
             }
             xmllines.push('<node');
             xmllines.push('ID=\"' + node.id + '\"');
