@@ -1,3 +1,6 @@
+import { customizeUtil } from './util';
+
+
 class ShortcutProvider {
     jm;
     opts;
@@ -13,7 +16,7 @@ class ShortcutProvider {
     }
 
     init() {
-        jm.util.dom.add_event($d, 'keydown', this.handler.bind(this));
+        customizeUtil.dom.add_event($d, 'keydown', this.handler.bind(this));
 
         this.handles['addchild'] = this.handle_addchild;
         this.handles['addbrother'] = this.handle_addbrother;
@@ -53,7 +56,7 @@ class ShortcutProvider {
     handle_addchild(_jm, e) {
         const selected_node = _jm.get_selected_node();
         if (!!selected_node) {
-            const nodeid = jm.util.uuid.newid();
+            const nodeid = customizeUtil.uuid.newid();
             const node = _jm.add_node(selected_node, nodeid, 'New Node');
             if (!!node) {
                 _jm.select_node(nodeid);
@@ -65,7 +68,7 @@ class ShortcutProvider {
     handle_addbrother(_jm, e) {
         const selected_node = _jm.get_selected_node();
         if (!!selected_node && !selected_node.isroot) {
-            const nodeid = jm.util.uuid.newid();
+            const nodeid = customizeUtil.uuid.newid();
             const node = _jm.insert_node_after(selected_node, nodeid, 'New Node');
             if (!!node) {
                 _jm.select_node(nodeid);
@@ -138,11 +141,11 @@ class ShortcutProvider {
     }
 
     handle_left(_jm, e) {
-        this._handle_direction(_jm, e, jm.direction.left);
+        this._handle_direction(_jm, e, MindMapModule.direction.left);
     }
 
     handle_right(_jm, e) {
-        this._handle_direction(_jm, e, jm.direction.right);
+        this._handle_direction(_jm, e, MindMapModule.direction.right);
     }
 
     _handle_direction(_jm, e, d) {
@@ -153,7 +156,7 @@ class ShortcutProvider {
             if (selected_node.isroot) {
                 const c = selected_node.children;
                 const children = [];
-                for (const i = 0; i < c.length; i++) {
+                for (let i = 0; i < c.length; i++) {
                     if (c[i].direction === d) {
                         children.push(i)
                     }

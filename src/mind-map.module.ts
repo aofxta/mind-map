@@ -98,8 +98,8 @@ class MindMapModule {
     inited = false;
     mind = null;
     event_handles = [];
-    direction = { left: -1, center: 0, right: 1 };
-    event_type = { show: 1, resize: 2, edit: 3, select: 4 };
+    static direction;
+    static event_type;
     data;
     layout;
     view;
@@ -718,6 +718,8 @@ class MindMapModule {
 
 }
 
+MindMapModule.direction = { left: -1, center: 0, right: 1 };
+MindMapModule.event_type = { show: 1, resize: 2, edit: 3, select: 4 };
 
 MindMapModule.plugin = function(name,init){
     this.name = name;
