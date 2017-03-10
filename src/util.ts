@@ -20,7 +20,7 @@ export const customizeUtil = {
         _eurl: function (url) {
             return encodeURIComponent(url);
         },
-        request: function (url, param, method, callback, fail_callback) {
+        request: function (url, param, method, callback, fail_callback?) {
             let a = customizeUtil.ajax;
             let p = null;
             let tmp_param = [];
