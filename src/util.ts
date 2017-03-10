@@ -1,6 +1,6 @@
+const $w = window;
 
-
-const util = {
+export const customizeUtil = {
     is_node: function (node) {
         return node instanceof jm.node;
     },
@@ -20,7 +20,7 @@ const util = {
             return encodeURIComponent(url);
         },
         request: function (url, param, method, callback, fail_callback) {
-            let a = jm.util.ajax;
+            let a = customizeUtil.ajax;
             let p = null;
             let tmp_param = [];
             for (let k in param) {
@@ -62,10 +62,10 @@ const util = {
             }
         },
         get: function (url, callback) {
-            return jm.util.ajax.request(url, {}, 'GET', callback);
+            return customizeUtil.ajax.request(url, {}, 'GET', callback);
         },
         post: function (url, param, callback) {
-            return jm.util.ajax.request(url, param, 'POST', callback);
+            return customizeUtil.ajax.request(url, param, 'POST', callback);
         }
     },
 
@@ -170,9 +170,8 @@ const util = {
             for (let o in a) {
                 if (o in b) {
                     if (typeof b[o] === 'object' &&
-                        Object.prototype.toString.call(b[o]).toLowerCase() == '[object object]' &&
-                        !b[o].length) {
-                        jm.util.json.merge(b[o], a[o]);
+                        Object.prototype.toString.call(b[o]).toLowerCase() == '[object object]' && !b[o].length) {
+                        customizeUtil.json.merge(b[o], a[o]);
                     } else {
                         b[o] = a[o];
                     }
@@ -196,4 +195,4 @@ const util = {
             return s.replace(/\s*/, '').length == 0;
         }
     }
-}
+};
