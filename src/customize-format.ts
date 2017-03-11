@@ -6,13 +6,13 @@ import { MindMapNode } from './mind-map-node';
 export const customizeFormat = {
     node_tree: {
         example: {
-            "meta": {
-                "name": NAME,
-                "author": AUTHOR,
-                "version": VERSION
+            meta: {
+                name: NAME,
+                author: AUTHOR,
+                version: VERSION
             },
-            "format": "node_tree",
-            "data": { "id": "root", "topic": "利星⾏(北京)汽车有限公司" }
+            format: "node_tree",
+            data: { id: "root", topic: "利星⾏(北京)汽车有限公司" }
         },
         get_mind: function (source) {
             const df = customizeFormat.node_tree;
@@ -107,14 +107,14 @@ export const customizeFormat = {
 
     node_array: {
         example: {
-            "meta": {
-                "name": NAME,
-                "author": AUTHOR,
-                "version": VERSION
+            meta: {
+                name: NAME,
+                author: AUTHOR,
+                version: VERSION
             },
-            "format": "node_array",
-            "data": [
-                { "id": "root", "topic": "利星⾏(北京)汽车有限公司", "isroot": true }
+            format: "node_array",
+            data: [
+                { id: "root", topic: "利星⾏(北京)汽车有限公司", isroot: true }
             ]
         },
 
@@ -255,13 +255,13 @@ export const customizeFormat = {
 
     freemind: {
         example: {
-            "meta": {
-                "name": NAME,
-                "author": AUTHOR,
-                "version": VERSION
+            meta: {
+                name: NAME,
+                author: AUTHOR,
+                version: VERSION
             },
-            "format": "freemind",
-            "data": "<map version=\"1.0.1\"><node ID=\"root\" TEXT=\"freemind Example\"/></map>"
+            format: "freemind",
+            data: "<map version=\"1.0.1\"><node ID=\"root\" TEXT=\"freemind Example\"/></map>"
         },
         get_mind: function (source) {
             const df = customizeFormat.freemind;
