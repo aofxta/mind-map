@@ -1,5 +1,5 @@
 import { customizeUtil } from './util';
-import { $d } from './config';
+import { $document } from './config';
 import { MindMapMain } from './mind-map-main';
 
 
@@ -18,7 +18,7 @@ export class ShortcutProvider {
     }
 
     init() {
-        customizeUtil.dom.add_event($d, 'keydown', this.handler.bind(this));
+        customizeUtil.dom.add_event($document, 'keydown', this.handler.bind(this));
 
         this.handles['addchild'] = this.handle_addchild;
         this.handles['addbrother'] = this.handle_addbrother;

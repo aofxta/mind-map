@@ -1,4 +1,4 @@
-export const $w: { [propName: string]: any } = window;
+export const $win: { [propName: string]: any } = window;
 
 export const NAME: string = 'jsMind';
 export const VERSION: string = '0.0.7';
@@ -46,18 +46,18 @@ export const DEFAULT_OPTIONS = {
     },
 };
 
-export const $d = $w.document;
+export const $document = $win.document;
 
-export const $g = (id) => $d.getElementById(id);
+export const $get = (id) => $document.getElementById(id);
 
-export const $c = (tag) => $d.createElement(tag);
+export const $create = (tag) => $document.createElement(tag);
 
-export const $t = (n, t) => {
-    if (n.hasChildNodes()) {
-        n.firstChild.nodeValue = t;
+export const $text = (node, text) => {
+    if (node.hasChildNodes()) {
+        node.firstChild.nodeValue = text;
     } else {
-        n.appendChild($d.createTextNode(t));
+        node.appendChild($document.createTextNode(text));
     }
 };
 
-export const $h = (n, t) => n.innerHTML = t;
+export const $html = (node, text) => node.innerHTML = text;

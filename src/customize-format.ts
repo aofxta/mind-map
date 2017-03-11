@@ -1,4 +1,4 @@
-import { NAME, AUTHOR, VERSION, logger, $w } from './config';
+import { NAME, AUTHOR, VERSION, logger, $win } from './config';
 import { MindMapMain } from './mind-map-main';
 import { MindMapMind } from './mind-map-mind';
 import { MindMapNode } from './mind-map-node';
@@ -295,7 +295,7 @@ export const customizeFormat = {
 
         _parse_xml: function (xml) {
             let xml_doc = null;
-            if ($w.DOMParser) {
+            if ($win.DOMParser) {
                 const parser = new DOMParser();
                 xml_doc = parser.parseFromString(xml, 'text/xml');
             } else { // Internet Explorer

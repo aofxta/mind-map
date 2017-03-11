@@ -1,6 +1,6 @@
 import { customizeUtil } from './util';
 import { ShortcutProvider } from './shortcut-provider';
-import { VERSION, DEFAULT_OPTIONS, logger, $w } from './config';
+import { VERSION, DEFAULT_OPTIONS, logger, $win } from './config';
 import { MindMapDataProvider } from './data-provider';
 import { LayoutProvider } from './layout-provider';
 import { customizeFormat } from './customize-format';
@@ -641,7 +641,7 @@ export class MindMapMain {
 
     invoke_event_handle(type, data) {
         const j = this;
-        $w.setTimeout(function () {
+        $win.setTimeout(function () {
             j._invoke_event_handle(type, data);
         }, 0);
     }
@@ -672,7 +672,7 @@ MindMapMain.register_plugin = function(plugin){
 };
 
 MindMapMain.init_plugins = function(sender){
-    $w.setTimeout(function(){
+    $win.setTimeout(function(){
         MindMapMain._init_plugins(sender);
     },0);
 };

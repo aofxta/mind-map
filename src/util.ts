@@ -1,4 +1,4 @@
-import { logger, $c, $d, $w } from './config';
+import { logger, $create, $document, $win } from './config';
 import { MindMapNode } from './mind-map-node';
 
 export const customizeUtil = {
@@ -8,7 +8,7 @@ export const customizeUtil = {
     ajax: {
         _xhr: function () {
             let xhr = null;
-            if ($w.XMLHttpRequest) {
+            if ($win.XMLHttpRequest) {
                 xhr = new XMLHttpRequest();
             } else {
                 try {
@@ -112,10 +112,10 @@ export const customizeUtil = {
 
         save: function (file_data, type, name) {
             let blob;
-            if (typeof $w.Blob === 'function') {
+            if (typeof $win.Blob === 'function') {
                 blob = new Blob([file_data], { type: type });
             } else {
-                let BlobBuilder = $w.BlobBuilder || $w.MozBlobBuilder || $w.WebKitBlobBuilder || $w.MSBlobBuilder;
+                let BlobBuilder = $win.BlobBuilder || $win.MozBlobBuilder || $win.WebKitBlobBuilder || $win.MSBlobBuilder;
                 let bb = new BlobBuilder();
                 bb.append(file_data);
                 blob = bb.getBlob(type);
@@ -123,18 +123,18 @@ export const customizeUtil = {
             if (navigator.msSaveBlob) {
                 navigator.msSaveBlob(blob, name);
             } else {
-                let URL = $w.URL || $w.webkitURL;
+                let URL = $win.URL || $win.webkitURL;
                 let bloburl = URL.createObjectURL(blob);
-                let anchor = $c('a');
+                let anchor = $create('a');
                 if ('download' in anchor) {
                     anchor.style.visibility = 'hidden';
                     anchor.href = bloburl;
                     anchor.download = name;
-                    $d.body.appendChild(anchor);
-                    let evt = $d.createEvent('MouseEvents');
+                    $document.body.appendChild(anchor);
+                    let evt = $document.createEvent('MouseEvents');
                     evt.initEvent('click', true, true);
                     anchor.dispatchEvent(evt);
-                    $d.body.removeChild(anchor);
+                    $document.body.removeChild(anchor);
                 } else {
                     location.href = bloburl;
                 }

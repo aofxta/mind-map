@@ -1,5 +1,5 @@
 
-import { logger, $g, $c, $d, $t, $h } from './config';
+import { logger, $get, $create, $document, $text, $html } from './config';
 import { customizeUtil } from './util';
 import { MindMapMain } from './mind-map-main';
 
@@ -32,21 +32,21 @@ export class ViewProvider {
     init() {
         logger.debug('view.init');
 
-        this.container = $g(this.opts.container);
+        this.container = $get(this.opts.container);
         if (!this.container) {
             logger.error('the options.view.container was not be found in dom');
             return;
         }
-        this.e_panel = $c('div');
-        this.e_canvas = $c('canvas');
-        this.e_nodes = $c('jmnodes');
-        this.e_editor = $c('input');
+        this.e_panel = $create('div');
+        this.e_canvas = $create('canvas');
+        this.e_nodes = $create('jmnodes');
+        this.e_editor = $create('input');
 
-        this.e_select = $c('select');
+        this.e_select = $create('select');
         const get_select_option = (value) => {
-            const e_option = $c('option');
+            const e_option = $create('option');
             e_option.value = value;
-            e_option.appendChild($d.createTextNode(value));
+            e_option.appendChild($document.createTextNode(value));
             return e_option;
         };
 
@@ -179,7 +179,7 @@ export class ViewProvider {
 
     init_nodes() {
         const nodes = this.jm.mind.nodes;
-        const doc_frag = $d.createDocumentFragment();
+        const doc_frag = $document.createDocumentFragment();
         for (let nodeid in nodes) {
             this.create_node_element(nodes[nodeid], doc_frag);
         }
@@ -203,12 +203,12 @@ export class ViewProvider {
             node._data.view = view_data;
         }
 
-        const d = $c('jmnode');
+        const d = $create('jmnode');
         if (node.isroot) {
             d.className = 'root';
         } else {
-            let d_e = $c('jmexpander');
-            $t(d_e, '-');
+            let d_e = $create('jmexpander');
+            $text(d_e, '-');
             d_e.setAttribute('nodeid', node.id);
             d_e.style.visibility = 'hidden';
             parent_node.appendChild(d_e);
@@ -216,9 +216,9 @@ export class ViewProvider {
         }
         if (!!node.topic) {
             if (this.opts.support_html) {
-                $h(d, node.show());
+                $html(d, node.show());
             } else {
-                $t(d, node.show());
+                $text(d, node.show());
             }
         }
         console.log('node :', node);
@@ -226,7 +226,7 @@ export class ViewProvider {
         d.style.visibility = 'hidden';
         console.log('dd :', d);
         this._reset_node_custom_style(d, node.data);
-        // var p = $c('button');
+        // var p = $create('button');
         // p.className = 'btn btn-primary';
         // p.innerHTML = 'add';
         // var nodeView = node._data.view;
@@ -273,9 +273,9 @@ export class ViewProvider {
         console.log('update : ', node);
         if (!!node.topic) {
             if (this.opts.support_html) {
-                $h(element, node.show());
+                $html(element, node.show());
             } else {
-                $t(element, node.show());
+                $text(element, node.show());
             }
         }
         view_data.width = element.clientWidth;
@@ -346,9 +346,9 @@ export class ViewProvider {
                 customizeUtil.text.is_empty(selected_type) ||
                 (node.topic === topic && node.selected_type === selected_type)) {
                 if (this.opts.support_html) {
-                    $h(element, node.show());
+                    $html(element, node.show());
                 } else {
-                    $t(element, node.show());
+                    $text(element, node.show());
                 }
             } else {
                 this.jm.update_node(node.id, topic, selected_type);
@@ -504,7 +504,7 @@ export class ViewProvider {
                 expander.style.top = (_offset.y + p_expander.y) + 'px';
                 expander.style.display = '';
                 expander.style.visibility = 'visible';
-                $t(expander, expander_text);
+                $text(expander, expander_text);
             }
             if (!node.isroot) {
 
@@ -549,7 +549,7 @@ export class ViewProvider {
                 const img = new Image();
 
                 img.onload = function () {
-                    const c = $c('canvas');
+                    const c = $create('canvas');
                     c.width = node_element.clientWidth;
                     c.height = node_element.clientHeight;
                     const img = this;
