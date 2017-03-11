@@ -47,15 +47,17 @@ export const DEFAULT_OPTIONS = {
 };
 
 export const $d = $w.document;
-export const $g = function (id) {
-    return $d.getElementById(id);
+
+export const $g = (id) => $d.getElementById(id);
+
+export const $c = (tag) => $d.createElement(tag);
+
+export const $t = (n, t) => {
+    if (n.hasChildNodes()) {
+        n.firstChild.nodeValue = t;
+    } else {
+        n.appendChild($d.createTextNode(t));
+    }
 };
-export const $c = function (tag) {
-    return $d.createElement(tag);
-};
-export const $t = function (n, t) {
-    if (n.hasChildNodes()) { n.firstChild.nodeValue = t; } else { n.appendChild($d.createTextNode(t)); }
-};
-export const $h = function (n, t) {
-    n.innerHTML = t;
-};
+
+export const $h = (n, t) => n.innerHTML = t;
