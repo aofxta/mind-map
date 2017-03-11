@@ -1,20 +1,10 @@
+export const $w: { [propName: string]: any } = window;
 
-
-export const $w: {[propName: string]: any} = window;
-
-export const __name__: string = 'jsMind';
-// library version
-export const __version__: string = '0.4a';
-// author
-export const __author__ = 'wfsovereign';
+export const NAME: string = 'jsMind';
+export const VERSION: string = '0.0.7';
+export const AUTHOR = '';
 
 export const logger = console;
-
-// check global constiables
-// if (typeof $w[__name__] != 'undefined') {
-//     logger.log(__name__ + ' has been already exist.');
-//     return;
-// }
 
 export const DEFAULT_OPTIONS = {
     container: '',   // id of the container

@@ -1,4 +1,4 @@
-import { __name__, __author__, __version__, logger, $w } from './config';
+import { NAME, AUTHOR, VERSION, logger, $w } from './config';
 import { MindMapMain } from './mind-map-main';
 import { MindMapMind } from './mind-map-mind';
 import { MindMapNode } from './mind-map-node';
@@ -7,9 +7,9 @@ export const customizeFormat = {
     node_tree: {
         example: {
             "meta": {
-                "name": __name__,
-                "author": __author__,
-                "version": __version__
+                "name": NAME,
+                "author": AUTHOR,
+                "version": VERSION
             },
             "format": "node_tree",
             "data": { "id": "root", "topic": "利星⾏(北京)汽车有限公司" }
@@ -108,9 +108,9 @@ export const customizeFormat = {
     node_array: {
         example: {
             "meta": {
-                "name": __name__,
-                "author": __author__,
-                "version": __version__
+                "name": NAME,
+                "author": AUTHOR,
+                "version": VERSION
             },
             "format": "node_array",
             "data": [
@@ -256,9 +256,9 @@ export const customizeFormat = {
     freemind: {
         example: {
             "meta": {
-                "name": __name__,
-                "author": __author__,
-                "version": __version__
+                "name": NAME,
+                "author": AUTHOR,
+                "version": VERSION
             },
             "format": "freemind",
             "data": "<map version=\"1.0.1\"><node ID=\"root\" TEXT=\"freemind Example\"/></map>"

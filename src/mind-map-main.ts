@@ -1,6 +1,6 @@
 import { customizeUtil } from './util';
 import { ShortcutProvider } from './shortcut-provider';
-import { __version__, DEFAULT_OPTIONS, logger, $w } from './config';
+import { VERSION, DEFAULT_OPTIONS, logger, $w } from './config';
 import { MindMapDataProvider } from './data-provider';
 import { LayoutProvider } from './layout-provider';
 import { customizeFormat } from './customize-format';
@@ -28,7 +28,7 @@ export interface MindMapModuleOpts {
 
 export class MindMapMain {
 
-    version: string = __version__;
+    version: string = VERSION;
     opts: MindMapModuleOpts = {};
     options = this.opts;
     inited = false;
