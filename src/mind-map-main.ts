@@ -6,13 +6,6 @@ import { LayoutProvider } from './layout-provider';
 import { customizeFormat } from './customize-format';
 import { ViewProvider } from './view-provider';
 
-// if (typeof String.prototype.startsWith !== 'function') {
-//     String.prototype.startsWith = function (p) {
-//         return this.slice(0, p.length) === p;
-//     };
-// }
-
-
 export interface MindMapModuleOpts {
     container?: Array<any>;
     mode?: any;
@@ -394,7 +387,11 @@ export class MindMapMain {
                 this.layout.layout();
                 this.view.show(false);
                 this.view.restore_location(parent_node);
-                this.invoke_event_handle(MindMapMain.event_type.edit, { evt: 'remove_node', data: [nodeid], node: parentid });
+                this.invoke_event_handle(MindMapMain.event_type.edit, {
+                    evt: 'remove_node',
+                    data: [nodeid],
+                    node: parentid
+                });
             } else {
                 logger.error('fail, node can not be found');
                 return false;
@@ -658,38 +655,38 @@ export class MindMapMain {
 MindMapMain.direction = { left: -1, center: 0, right: 1 };
 MindMapMain.event_type = { show: 1, resize: 2, edit: 3, select: 4 };
 
-MindMapMain.plugin = function(name, init){
+MindMapMain.plugin = function (name, init) {
     this.name = name;
     this.init = init;
 };
 
 MindMapMain.plugins = [];
 
-MindMapMain.register_plugin = function(plugin){
-    if(plugin instanceof MindMapMain.plugin){
+MindMapMain.register_plugin = function (plugin) {
+    if (plugin instanceof MindMapMain.plugin) {
         MindMapMain.plugins.push(plugin);
     }
 };
 
-MindMapMain.init_plugins = function(sender){
-    $win.setTimeout(function(){
+MindMapMain.init_plugins = function (sender) {
+    $win.setTimeout(function () {
         MindMapMain._init_plugins(sender);
-    },0);
+    }, 0);
 };
 
-MindMapMain._init_plugins = function(sender){
+MindMapMain._init_plugins = function (sender) {
     let l = MindMapMain.plugins.length;
     let fn_init = null;
-    for(let i=0;i<l;i++){
+    for (let i = 0; i < l; i++) {
         fn_init = MindMapMain.plugins[i].init;
-        if(typeof fn_init === 'function'){
+        if (typeof fn_init === 'function') {
             fn_init(sender);
         }
     }
 };
 
 // quick way
-MindMapMain.show = function(options, mind){
+MindMapMain.show = function (options, mind) {
     let _jm = new MindMapMain(options);
     _jm.show(mind);
     return _jm;
