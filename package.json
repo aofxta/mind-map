@@ -3,6 +3,7 @@
   "version": "0.0.7",
   "description": "mind-map for typescript",
   "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
   "dependencies": {
     "lodash": "4.17.4",
     "tslint": "4.5.1",
