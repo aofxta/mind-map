@@ -1,3 +1,4 @@
+import * as _ from 'lodash';
 import { NAME, AUTHOR, VERSION, logger, $win } from './config';
 import { MindMapMain } from './mind-map-main';
 import { MindMapMind } from './mind-map-mind';
@@ -12,14 +13,14 @@ export const customizeFormat = {
                 version: VERSION
             },
             format: "node_tree",
-            data: { id: "root", topic: "利星⾏(北京)汽车有限公司" }
+            data: { id: "root", topic: "Main Node" }
         },
         get_mind: function (source) {
             const df = customizeFormat.node_tree;
             const mind = new MindMapMind();
-            mind.name = source.meta.name;
-            mind.author = source.meta.author;
-            mind.version = source.meta.version;
+            mind.name = _.get(source, 'meta.name', NAME);
+            mind.author = _.get(source, 'meta.author', AUTHOR);
+            mind.version = _.get(source, 'meta.version', VERSION);
             df._parse(mind, source.data);
             return mind;
         },
@@ -114,16 +115,16 @@ export const customizeFormat = {
             },
             format: "node_array",
             data: [
-                { id: "root", topic: "利星⾏(北京)汽车有限公司", isroot: true }
+                { id: "root", topic: "Main Node", isroot: true }
             ]
         },
 
         get_mind: function (source) {
             const df = customizeFormat.node_array;
             const mind = new MindMapMind();
-            mind.name = source.meta.name;
-            mind.author = source.meta.author;
-            mind.version = source.meta.version;
+            mind.name = _.get(source, 'meta.name', NAME);
+            mind.author = _.get(source, 'meta.author', AUTHOR);
+            mind.version = _.get(source, 'meta.version', VERSION);
             df._parse(mind, source.data);
             return mind;
         },
@@ -266,9 +267,9 @@ export const customizeFormat = {
         get_mind: function (source) {
             const df = customizeFormat.freemind;
             const mind = new MindMapMind();
-            mind.name = source.meta.name;
-            mind.author = source.meta.author;
-            mind.version = source.meta.version;
+            mind.name = _.get(source, 'meta.name', NAME);
+            mind.author = _.get(source, 'meta.author', AUTHOR);
+            mind.version = _.get(source, 'meta.version', VERSION);
             const xml = source.data;
             const xml_doc = df._parse_xml(xml);
             const xml_root = df._find_root(xml_doc);
