@@ -1,3 +1,4 @@
+import * as _ from 'lodash';
 import { customizeUtil } from './util';
 import { ShortcutProvider } from './shortcut-provider';
 import { VERSION, DEFAULT_OPTIONS, logger, $win } from './config';
@@ -16,6 +17,7 @@ export interface MindMapModuleOpts {
     editable?: boolean;
     default_event_handle?: any;
     theme?: any;
+    depth?: number;
 }
 
 
@@ -277,6 +279,7 @@ export class MindMapMain {
         this.invoke_event_handle(MindMapMain.event_type.show, { data: [mind] });
     }
 
+    // show entrance
     show(mind) {
         this._reset();
         this._show(mind);
@@ -290,9 +293,26 @@ export class MindMapMain {
         };
     }
 
-    get_data(data_format) {
+    get_data(data_format?) {
         const df = data_format || 'node_tree';
         return this.data.get_data(df);
+    }
+
+    get_depth() {
+        const currentData = this.get_data().data;
+        const getDepth = (data) => {
+            let depth = 1;
+            if (data.children && Array.isArray(data.children)) {
+                const childrenDepth = [];
+                const childrenLength = data.children.length;
+                for (let i = 0; i < childrenLength; i++) {
+                    childrenDepth.push(getDepth(data.children[i]));
+                }
+                return depth + _.max(childrenDepth);
+            }
+            return depth;
+        };
+        return getDepth(currentData);
     }
 
     get_root() {
@@ -304,6 +324,9 @@ export class MindMapMain {
     }
 
     add_node(parent_node, nodeid, topic, data) {
+        if (this.options.depth && this.get_depth() >= this.options.depth) {
+            throw new Error('over depth');
+        }
         console.log('2');
         if (this.get_editable()) {
             const node = this.mind.add_node(parent_node, nodeid, topic, data);
