@@ -302,7 +302,7 @@ export class MindMapMain {
         const currentData = this.get_data().data;
         const getDepth = (data) => {
             let depth = 1;
-            if (data.children && Array.isArray(data.children)) {
+            if (data.children && data.children[0]) {
                 const childrenDepth = [];
                 const childrenLength = data.children.length;
                 for (let i = 0; i < childrenLength; i++) {
@@ -324,13 +324,11 @@ export class MindMapMain {
     }
 
     add_node(parent_node, nodeid, topic, data) {
-        if (this.options.depth && this.get_depth() >= this.options.depth) {
+        if (this.options.depth && (parent_node.level >= this.options.depth)) {
             throw new Error('over depth');
         }
-        console.log('2');
         if (this.get_editable()) {
             const node = this.mind.add_node(parent_node, nodeid, topic, data);
-            console.log('4');
             if (!!node) {
                 this.view.add_node(node);
                 this.layout.layout();
