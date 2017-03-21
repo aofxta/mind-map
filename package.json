@@ -1,6 +1,6 @@
 {
   "name": "mind-map",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "mind-map for typescript",
   "main": "./dist/index.js",
   "typings": "./dist/index.d.ts",
