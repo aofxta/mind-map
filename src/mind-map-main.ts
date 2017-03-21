@@ -18,6 +18,7 @@ export interface MindMapModuleOpts {
     default_event_handle?: any;
     theme?: any;
     depth?: number;
+    hierarchy_rule?: { [propName: string]: { name: string, getChildren: any } };
 }
 
 
@@ -170,13 +171,30 @@ export class MindMapMain {
         }
     }
 
+    get_select_types_by_hierarchy_rule(node) {
+        if (!this.options.hierarchy_rule) {
+            return null;
+        }
+        const types = [];
+        types.push(node.selected_type);
+        const parentSelectType = node.parent.isroot ? 'root' : node.parent.selected_type;
+        let current_rule = _.find(this.options.hierarchy_rule, {name: parentSelectType});
+        if (!current_rule) {
+            return null;
+        }
+        current_rule.getChildren().forEach(children => {
+            types.push(children.name);
+        });
+        return types;
+    }
+
     begin_edit(node) {
         if (!customizeUtil.is_node(node)) {
             return this.begin_edit(this.get_node(node));
         }
         if (this.get_editable()) {
             if (!!node) {
-                this.view.edit_node_begin(node);
+                this.view.edit_node_begin(node, this.get_select_types_by_hierarchy_rule(node));
             } else {
                 logger.error('the node can not be found');
             }

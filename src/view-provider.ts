@@ -1,4 +1,3 @@
-
 import { logger, $get, $create, $document, $text, $html } from './config';
 import { customizeUtil } from './util';
 import { MindMapMain } from './mind-map-main';
@@ -18,6 +17,7 @@ export class ViewProvider {
 
     e_editor;
     e_select;
+    current_select;
     actualZoom;
     zoomStep;
     minZoom;
@@ -43,13 +43,6 @@ export class ViewProvider {
         this.e_editor = $create('input');
 
         this.e_select = $create('select');
-        const get_select_option = (value) => {
-            const e_option = $create('option');
-            e_option.value = value;
-            e_option.appendChild($document.createTextNode(value));
-            return e_option;
-        };
-
         console.log(' node -- :', this.e_nodes);
 
         this.e_panel.className = 'jsmind-inner';
@@ -62,7 +55,7 @@ export class ViewProvider {
         this.e_select.value = '销售经理';
         const initial_select_value = ['销售经理', '展厅', '销售小组'];
         initial_select_value.forEach((ele) => {
-            this.e_select.appendChild(get_select_option(ele));
+            this.e_select.appendChild(ViewProvider.get_select_option(ele));
         });
 
 
@@ -98,6 +91,13 @@ export class ViewProvider {
 
         this.init_canvas();
     }
+
+    static get_select_option(value) {
+        const e_option = $create('option');
+        e_option.value = value;
+        e_option.appendChild($document.createTextNode(value));
+        return e_option;
+    };
 
     add_event(obj, event_name, event_handle) {
         customizeUtil.dom.add_event(this.e_nodes, event_name, function (e) {
@@ -307,7 +307,21 @@ export class ViewProvider {
         return (!!this.editing_node);
     }
 
-    edit_node_begin(node) {
+    create_select_by_types(types) {
+        const new_select = $create('select');
+        new_select.value = types[0];
+        types.slice(1).forEach(type => {
+            new_select.appendChild(ViewProvider.get_select_option(type));
+        });
+        customizeUtil.dom.add_event(new_select, 'click', function (e) {
+            const evt = e || event;
+            evt.stopPropagation();
+        });
+        return new_select;
+    }
+
+    // when db click
+    edit_node_begin(node, types) {
         if (!node.topic) {
             logger.warn("don't edit image nodes");
             return;
@@ -324,6 +338,11 @@ export class ViewProvider {
         this.e_editor.style.width
             = (element.clientWidth - parseInt(ncs.getPropertyValue('padding-left')) - parseInt(ncs.getPropertyValue('padding-right'))) + 'px';
         element.innerHTML = '';
+        if (types) {
+            this.current_select = this.create_select_by_types(types);
+        } else {
+            this.current_select = this.e_select;
+        }
         element.appendChild(this.e_select);
         element.appendChild(this.e_editor);
         element.style.zIndex = 5;
@@ -338,10 +357,10 @@ export class ViewProvider {
             const view_data = node._data.view;
             const element = view_data.element;
             const topic = this.e_editor.value;
-            const selected_type = this.e_select.value;
+            const selected_type = this.current_select.value;
             element.style.zIndex = 'auto';
             element.removeChild(this.e_editor);
-            element.removeChild(this.e_select);
+            element.removeChild(this.current_select);
             if (customizeUtil.text.is_empty(topic) ||
                 customizeUtil.text.is_empty(selected_type) ||
                 (node.topic === topic && node.selected_type === selected_type)) {
