@@ -18,6 +18,7 @@ export class MindMapNode {
     selected_type: string;
     data: Object;
     isroot: boolean;
+    level: number;
     parent: MindMapNode;
     direction;
     expanded: boolean;
@@ -27,7 +28,7 @@ export class MindMapNode {
     static compare;
     static inherited;
 
-    constructor(sId, iIndex, sTopic, oData, bIsRoot, oParent?, eDirection?, bExpanded?, selectedType?) {
+    constructor(sId, iIndex, sTopic, oData, bIsRoot, oParent?, eDirection?, bExpanded?, selectedType?, level?) {
         if (!sId) {
             logger.error('invalid nodeid');
             return;
@@ -46,8 +47,12 @@ export class MindMapNode {
         this.parent = oParent;
         this.direction = eDirection;
         this.expanded = !!bExpanded;
+        this.level = level;
         this.children = [];
         this._data = {};
+        if (this.isroot) {
+            this.level = 1;
+        }
     };
 
     show() {

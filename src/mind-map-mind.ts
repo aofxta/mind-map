@@ -61,10 +61,13 @@ export class MindMapMind {
                         MindMapMain.direction.right :
                         MindMapMain.direction.left;
                 }
-                node = new MindMapNode(nodeid, nodeindex, topic, data, false, parent_node, d, expanded, selectedType);
+                node =
+                    new MindMapNode(nodeid, nodeindex, topic, data, false,
+                        parent_node, d, expanded, selectedType, parent_node.level + 1);
             } else {
-                node
-                    = new MindMapNode(nodeid, nodeindex, topic, data, false, parent_node, parent_node.direction, expanded, selectedType);
+                node =
+                    new MindMapNode(nodeid, nodeindex, topic, data, false,
+                        parent_node, parent_node.direction, expanded, selectedType, parent_node.level + 1);
             }
             if (this._put_node(node)) {
                 parent_node.children.push(node);
