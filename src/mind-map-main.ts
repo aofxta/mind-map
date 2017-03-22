@@ -346,7 +346,18 @@ export class MindMapMain {
             throw new Error('over depth');
         }
         if (this.get_editable()) {
-            const node = this.mind.add_node(parent_node, nodeid, topic, data);
+            let children;
+            if (parent_node.isroot) {
+                children = this.options.hierarchy_rule.root.getChildren();
+            } else {
+                children = _.find(this.options.hierarchy_rule, {name: parent_node.selected_type}).getChildren();
+            }
+            const selected_type = children[0] && children[0].name;
+            if (!selected_type) {
+                throw new Error('forbidden add');
+            }
+            topic = topic || `${selected_type}的名称`;
+            const node = this.mind.add_node(parent_node, nodeid, topic, data, null, null, null, selected_type);
             if (!!node) {
                 this.view.add_node(node);
                 this.layout.layout();

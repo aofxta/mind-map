@@ -33,14 +33,12 @@ export class MindMapMind {
         }
     }
 
-    add_node(parent_node, nodeid, topic, data, idx, direction?, expanded?) {
+    add_node(parent_node, nodeid, topic, data, idx, direction?, expanded?, selected_type?) {
         console.log('3');
         if (!customizeUtil.is_node(parent_node)) {
             return this.add_node(this.get_node(parent_node), nodeid, topic, data, idx, direction, expanded);
         }
         const nodeindex = idx || -1;
-        topic = '销售经理名称';
-        const selectedType = '销售经理';
 
         if (!!parent_node) {
             //logger.debug(parent_node);
@@ -63,11 +61,11 @@ export class MindMapMind {
                 }
                 node =
                     new MindMapNode(nodeid, nodeindex, topic, data, false,
-                        parent_node, d, expanded, selectedType, parent_node.level + 1);
+                        parent_node, d, expanded, selected_type, parent_node.level + 1);
             } else {
                 node =
                     new MindMapNode(nodeid, nodeindex, topic, data, false,
-                        parent_node, parent_node.direction, expanded, selectedType, parent_node.level + 1);
+                        parent_node, parent_node.direction, expanded, selected_type, parent_node.level + 1);
             }
             if (this._put_node(node)) {
                 parent_node.children.push(node);
