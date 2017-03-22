@@ -343,7 +343,7 @@ export class ViewProvider {
         } else {
             this.current_select = this.e_select;
         }
-        element.appendChild(this.e_select);
+        element.appendChild(this.current_select);
         element.appendChild(this.e_editor);
         element.style.zIndex = 5;
         // this.e_editor.focus();
