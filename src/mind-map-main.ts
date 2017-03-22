@@ -178,7 +178,7 @@ export class MindMapMain {
         const types = [];
         types.push(node.selected_type);
         const parentSelectType = node.parent.isroot ? 'root' : node.parent.selected_type;
-        let current_rule = _.find(this.options.hierarchy_rule, {name: parentSelectType});
+        let current_rule = _.find(this.options.hierarchy_rule, { name: parentSelectType });
         if (!current_rule) {
             return null;
         }
@@ -341,23 +341,29 @@ export class MindMapMain {
         return this.mind.get_node(nodeid);
     }
 
+    get_current_hierarchy_rule(parent_node) {
+        if (!this.options.hierarchy_rule) {
+            return null;
+        }
+        if (parent_node.isroot) {
+            return this.options.hierarchy_rule.root.getChildren()[0];
+        }
+        return _.find(this.options.hierarchy_rule, { name: parent_node.selected_type }).getChildren()[0];
+    }
+
     add_node(parent_node, nodeid, topic, data) {
         if (this.options.depth && (parent_node.level >= this.options.depth)) {
             throw new Error('over depth');
         }
         if (this.get_editable()) {
-            let current_rule;
-            if (parent_node.isroot) {
-                current_rule = this.options.hierarchy_rule.root.getChildren()[0];
-            } else {
-                current_rule = _.find(this.options.hierarchy_rule, {name: parent_node.selected_type}).getChildren()[0];
-            }
+            const current_rule = this.get_current_hierarchy_rule(parent_node);
             const selected_type = current_rule && current_rule.name;
-            if (!selected_type) {
+            if (!selected_type && this.options.hierarchy_rule) {
                 throw new Error('forbidden add');
+            } else {
+                topic = topic || `${selected_type}的名称`;
             }
-            topic = topic || `${selected_type}的名称`;
-            if(current_rule.backgroundColor) {
+            if (current_rule.backgroundColor) {
                 data = data || {};
                 data['background-color'] = current_rule.backgroundColor;
             }
