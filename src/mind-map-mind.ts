@@ -34,7 +34,6 @@ export class MindMapMind {
     }
 
     add_node(parent_node, nodeid, topic, data, idx, direction?, expanded?, selected_type?) {
-        console.log('3');
         if (!customizeUtil.is_node(parent_node)) {
             return this.add_node(this.get_node(parent_node), nodeid, topic, data, idx, direction, expanded);
         }

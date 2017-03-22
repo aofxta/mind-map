@@ -346,17 +346,21 @@ export class MindMapMain {
             throw new Error('over depth');
         }
         if (this.get_editable()) {
-            let children;
+            let current_rule;
             if (parent_node.isroot) {
-                children = this.options.hierarchy_rule.root.getChildren();
+                current_rule = this.options.hierarchy_rule.root.getChildren()[0];
             } else {
-                children = _.find(this.options.hierarchy_rule, {name: parent_node.selected_type}).getChildren();
+                current_rule = _.find(this.options.hierarchy_rule, {name: parent_node.selected_type}).getChildren()[0];
             }
-            const selected_type = children[0] && children[0].name;
+            const selected_type = current_rule && current_rule.name;
             if (!selected_type) {
                 throw new Error('forbidden add');
             }
             topic = topic || `${selected_type}的名称`;
+            if(current_rule.backgroundColor) {
+                data = data || {};
+                data['background-color'] = current_rule.backgroundColor;
+            }
             const node = this.mind.add_node(parent_node, nodeid, topic, data, null, null, null, selected_type);
             if (!!node) {
                 this.view.add_node(node);
