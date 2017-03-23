@@ -366,6 +366,7 @@ export class MindMapMain {
             if (current_rule.backgroundColor) {
                 data = data || {};
                 data['background-color'] = current_rule.backgroundColor;
+                data.is_created = true;
             }
             const node = this.mind.add_node(parent_node, nodeid, topic, data, null, null, null, selected_type);
             if (!!node) {

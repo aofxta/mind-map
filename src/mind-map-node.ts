@@ -1,4 +1,3 @@
-
 import { logger } from './config';
 interface NodeData {
     view?: NodeView;
@@ -16,13 +15,14 @@ export class MindMapNode {
     index: any;
     topic: string;
     selected_type: string;
-    data: Object;
+    data: { is_created?: boolean };
     isroot: boolean;
     level: number;
     parent: MindMapNode;
     direction;
     expanded: boolean;
     children: Array<any>;
+    is_created: boolean;
     private _data: NodeData;
 
     static compare;
@@ -50,6 +50,7 @@ export class MindMapNode {
         this.level = level;
         this.children = [];
         this._data = {};
+        this.is_created = this.data.is_created;
         if (this.isroot) {
             this.level = 1;
         }
