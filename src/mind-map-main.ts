@@ -18,7 +18,7 @@ export interface MindMapModuleOpts {
     default_event_handle?: any;
     theme?: any;
     depth?: number;
-    hierarchy_rule?: { [propName: string]: { name: string, getChildren: any } };
+    hierarchy_rule?: { ROOT: any, [propName: string]: { name: string, getChildren: any } };
 }
 
 
@@ -177,7 +177,7 @@ export class MindMapMain {
         }
         const types = [];
         types.push(node.selected_type);
-        const parentSelectType = node.parent.isroot ? 'root' : node.parent.selected_type;
+        const parentSelectType = node.parent.isroot ? 'ROOT' : node.parent.selected_type;
         let current_rule = _.find(this.options.hierarchy_rule, { name: parentSelectType });
         if (!current_rule) {
             return null;
@@ -346,7 +346,7 @@ export class MindMapMain {
             return null;
         }
         if (parent_node.isroot) {
-            return this.options.hierarchy_rule.root.getChildren()[0];
+            return this.options.hierarchy_rule.ROOT.getChildren()[0];
         }
         return _.find(this.options.hierarchy_rule, { name: parent_node.selected_type }).getChildren()[0];
     }
