@@ -52,10 +52,19 @@ export const customizeFormat = {
         _extract_data: function (node_json) {
             const data = {};
             for (let k in node_json) {
-                if (k == 'id' || k == 'topic' || k == 'children' || k == 'direction' || k == 'expanded') {
+                if (k == 'id' ||
+                    k == 'topic' ||
+                    k == 'children' ||
+                    k == 'direction' ||
+                    k == 'expanded' ||
+                    k == 'selected_type') {
                     continue;
                 }
-                data[k] = node_json[k];
+                if (k == 'background_color') {
+                    data['background-color'] = node_json[k];
+                } else {
+                    data[k] = node_json[k];
+                }
             }
             return data;
         },
@@ -67,7 +76,7 @@ export const customizeFormat = {
             if (node_parent.isroot) {
                 d = node_json.direction == 'left' ? MindMapMain.direction.left : MindMapMain.direction.right;
             }
-            const node = mind.add_node(node_parent, node_json.id, node_json.topic, data, null, d, node_json.expanded);
+            const node = mind.add_node(node_parent, node_json.id, node_json.topic, data, null, d, node_json.expanded, node_json.selected_type);
             if ('children' in node_json) {
                 const children = node_json.children;
                 for (let i = 0; i < children.length; i++) {

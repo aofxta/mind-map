@@ -45,9 +45,7 @@ export class MindMapMind {
             if (parent_node.isroot) {
                 let d = MindMapMain.direction.right;
                 if (isNaN(direction)) {
-                    logger.info('direction :', direction);
                     const children = parent_node.children;
-                    logger.info('children :', children);
                     const children_len = children.length;
                     let r = 0;
                     // for(var i=0;i<children_len;i++){if(children[i].direction === jm.direction.left){r--;}else{r++;}}
