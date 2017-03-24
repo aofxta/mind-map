@@ -93,6 +93,9 @@ export const customizeFormat = {
                 topic: node.topic,
                 direction: '',
                 children: [],
+                selected_type: node.selected_type,
+                is_created: node.is_created,
+                isroot: node.isroot,
                 expanded: node.expanded
             };
             if (!!node.parent && node.parent.isroot) {
