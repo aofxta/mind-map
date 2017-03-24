@@ -43,7 +43,6 @@ export class ViewProvider {
         this.e_editor = $create('input');
 
         this.e_select = $create('select');
-        console.log(' node -- :', this.e_nodes);
 
         this.e_panel.className = 'jsmind-inner';
         this.e_panel.appendChild(this.e_canvas);
@@ -221,26 +220,10 @@ export class ViewProvider {
                 $text(d, node.show());
             }
         }
-        console.log('node :', node);
         d.setAttribute('nodeid', node.id);
         d.style.visibility = 'hidden';
-        console.log('dd :', d);
         this._reset_node_custom_style(d, node.data);
-        // var p = $create('button');
-        // p.className = 'btn btn-primary';
-        // p.innerHTML = 'add';
-        // var nodeView = node._data.view;
-        // p.style.visibility = 'hidden';
-        // p.style.position = 'absolute';
         parent_node.appendChild(d);
-        // setTimeout(function () {
-        //   p.style.visibility = 'visible';
-        //   p.style.left = (nodeView.abs_x) + 'px';
-        //   p.style.top = (nodeView.abs_y + nodeView.height + 5) + 'px';
-        //   console.log('top: ', p.style.top);
-        //   parent_node.appendChild(p);
-        //   view_data.operationArea = p;
-        // } 10);
         view_data.element = d;
     }
 
@@ -270,7 +253,6 @@ export class ViewProvider {
     update_node(node) {
         const view_data = node._data.view;
         const element = view_data.element;
-        console.log('update : ', node);
         if (!!node.topic) {
             if (this.opts.support_html) {
                 $html(element, node.show());
