@@ -544,6 +544,9 @@ export class ViewProvider {
         if ('font-style' in node_data) {
             node_element.style.fontStyle = node_data['font-style'];
         }
+        if ('color' in node_data) {
+            node_element.style.color = node_data['color'];
+        }
         if ('background-image' in node_data) {
             const backgroundImage = node_data['background-image'];
             if (backgroundImage.startsWith('data') && node_data['width'] && node_data['height']) {

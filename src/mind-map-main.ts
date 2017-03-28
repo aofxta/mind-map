@@ -352,6 +352,8 @@ export class MindMapMain {
     }
 
     add_node(parent_node, nodeid, topic, data) {
+        data = data || {};
+        data.is_created = true;
         if (this.options.depth && (parent_node.level >= this.options.depth)) {
             throw new Error('over depth');
         }
@@ -364,9 +366,10 @@ export class MindMapMain {
                 topic = topic || `${selected_type}的名称`;
             }
             if (current_rule.backgroundColor) {
-                data = data || {};
                 data['background-color'] = current_rule.backgroundColor;
-                data.is_created = true;
+            }
+            if (current_rule.color) {
+                data['color'] = current_rule.color;
             }
             const node = this.mind.add_node(parent_node, nodeid, topic, data, null, null, null, selected_type);
             if (!!node) {
