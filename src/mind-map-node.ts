@@ -58,7 +58,7 @@ export class MindMapNode {
 
     show() {
         if (this.selected_type) {
-            return '' + (this.selected_type || '') + ' / ' + this.topic;
+            return `[${this.selected_type}] ${this.topic}`;
         }
         return this.topic;
     }
