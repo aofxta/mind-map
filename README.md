@@ -225,7 +225,6 @@ const mind = {
     }
 };
 
-![example](./lib/mind-map.gif)
 
 @Component(
   ...
@@ -245,6 +244,8 @@ class MindMapComponent Implements OnInit {
 }
 
 ```
+![example](./lib/mind-map.gif)
+
 
 Links:
 
