@@ -18,6 +18,7 @@ export interface MindMapModuleOpts {
     default_event_handle?: any;
     theme?: any;
     depth?: number;
+    can_root_node_editable?: boolean;
     hierarchy_rule?: { ROOT: any, [propName: string]: { name: string, getChildren: any } };
 }
 
@@ -116,6 +117,10 @@ export class MindMapMain {
         return this.options.editable;
     }
 
+    get_node_editable(node) {
+        return !(!this.options.can_root_node_editable && node.isroot);
+    }
+
     set_theme(theme) {
         const theme_old = this.options.theme;
         this.options.theme = (!!theme) ? theme : null;
@@ -192,7 +197,7 @@ export class MindMapMain {
         if (!customizeUtil.is_node(node)) {
             return this.begin_edit(this.get_node(node));
         }
-        if (this.get_editable()) {
+        if (this.get_editable() && this.get_node_editable(node)) {
             if (!!node) {
                 this.view.edit_node_begin(node, this.get_select_types_by_hierarchy_rule(node));
             } else {
