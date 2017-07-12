@@ -19,6 +19,7 @@ export interface MindMapModuleOpts {
     theme?: any;
     depth?: number;
     can_root_node_editable?: boolean;
+    selected_options?: string[];
     hierarchy_rule?: { ROOT: any, [propName: string]: { name: string, getChildren: any } };
 }
 
@@ -75,7 +76,8 @@ export class MindMapMain {
             hmargin: opts.view.hmargin,
             vmargin: opts.view.vmargin,
             line_width: opts.view.line_width,
-            line_color: opts.view.line_color
+            line_color: opts.view.line_color,
+            selected_options: opts.selected_options,
         };
         // create instance of function provider
         this.data = new MindMapDataProvider(this);

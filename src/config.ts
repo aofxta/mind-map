@@ -12,6 +12,8 @@ export const DEFAULT_OPTIONS = {
     theme: null,
     mode: 'full',     // full or side
     support_html: true,
+    can_root_node_editable: false,
+    selected_options: [],
 
     view: {
         hmargin: 100,

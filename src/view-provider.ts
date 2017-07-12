@@ -51,9 +51,9 @@ export class ViewProvider {
         this.e_editor.className = 'jsmind-editor';
         this.e_editor.type = 'text';
 
-        this.e_select.value = '销售经理';
+        this.e_select.value = this.opts.selected_options[0];
         const initial_select_value = ['销售经理', '展厅', '销售小组'];
-        initial_select_value.forEach((ele) => {
+        this.opts.selected_options.forEach((ele) => {
             this.e_select.appendChild(ViewProvider.get_select_option(ele));
         });
 
