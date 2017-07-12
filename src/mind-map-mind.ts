@@ -51,7 +51,6 @@ export class MindMapMind {
                     // for(var i=0;i<children_len;i++){if(children[i].direction === jm.direction.left){r--;}else{r++;}}
                     d = MindMapMain.direction.right
                 } else {
-                    logger.info('direction :', direction);
                     d = (direction != MindMapMain.direction.left) ?
                         MindMapMain.direction.right :
                         MindMapMain.direction.left;
