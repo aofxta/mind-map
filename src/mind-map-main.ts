@@ -177,8 +177,8 @@ export class MindMapMain {
         }
         const types = [];
         types.push(node.selected_type);
-        const parentSelectType = node.parent.isroot ? 'ROOT' : node.parent.selected_type;
-        let current_rule = _.find(this.options.hierarchy_rule, { name: parentSelectType });
+        const parent_select_type =  _.get(node, 'parent.isroot') ? 'ROOT' : _.get(node, 'parent.selected_type');
+        let current_rule = _.find(this.options.hierarchy_rule, { name: parent_select_type });
         if (!current_rule) {
             return null;
         }
