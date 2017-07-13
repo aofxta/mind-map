@@ -68,16 +68,11 @@ export class ViewProvider {
         this.minZoom = 0.5;
         this.maxZoom = 2;
 
-        const v = this;
-        customizeUtil.dom.add_event(this.e_nodes, 'click', function (e) {
-            v.edit_node_end();
-        });
-
+        this.add_event_to_canvas();
         this.add_event_to_editor(this.e_editor);
         this.add_event_to_select(this.e_select);
 
         this.container.appendChild(this.e_panel);
-
         this.init_canvas();
     }
 
@@ -88,6 +83,13 @@ export class ViewProvider {
         return e_option;
     };
 
+    add_event_to_canvas() {
+        customizeUtil.dom.add_event(this.e_nodes, 'click', (e) => {
+            this.edit_node_end();
+            e.stopPropagation();
+        });
+    }
+
     add_event_to_editor(editor) {
         customizeUtil.dom.add_event(editor, 'keydown', (e) => {
             const evt = e || event;
@@ -96,14 +98,14 @@ export class ViewProvider {
                 evt.stopPropagation();
             }
         });
-        customizeUtil.dom.add_event(editor, 'blur',  () => {
+        customizeUtil.dom.add_event(editor, 'blur', () => {
             this.edit_node_end();
         });
-        customizeUtil.dom.add_event(editor, 'click',  (e) => {
+        customizeUtil.dom.add_event(editor, 'click', (e) => {
             const evt = e || event;
             evt.stopPropagation();
         });
-        customizeUtil.dom.add_event(editor, 'focus',  (e) => {
+        customizeUtil.dom.add_event(editor, 'focus', (e) => {
             const evt = e || event;
             evt.stopPropagation();
             const type = this.editing_node.selected_type;
