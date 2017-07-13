@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import { logger, $get, $create, $document, $text, $html } from './config';
+import { $create, $document, $get, $html, $text, logger } from './config';
 import { customizeUtil } from './util';
 import { MindMapMain } from './mind-map-main';
 
@@ -15,6 +15,7 @@ export class ViewProvider {
     size = { w: 0, h: 0 };
     selected_node = null;
     editing_node = null;
+    previous_node = null;
 
     e_editor;
     e_select;
@@ -85,15 +86,24 @@ export class ViewProvider {
             const evt = e || event;
             evt.stopPropagation();
         });
+        customizeUtil.dom.add_event(this.e_editor, 'focus', function (e) {
+            const evt = e || event;
+            evt.stopPropagation();
+            const type = v.editing_node.selected_type;
+            if (v.get_is_interact_selected_value(type)) {
+                v.jm.mindMapDataTransporter.next(type);
+            }
+        });
         customizeUtil.dom.add_event(this.e_select, 'click', function (e) {
             const evt = e || event;
             evt.stopPropagation();
         });
         customizeUtil.dom.add_event(this.e_select, 'change', function (e) {
             const evt = e || event;
+            evt.stopPropagation();
             const value = _.get(evt, 'srcElement.value');
             if (v.get_is_interact_selected_value(value)) {
-                v.jm.mindMapDataTransporter.next(`change value ${value}`)
+                v.jm.mindMapDataTransporter.next(`change value ${value}`);
             }
         });
 
@@ -336,6 +346,7 @@ export class ViewProvider {
             this.edit_node_end();
         }
         this.editing_node = node;
+        this.previous_node = node;
         const view_data = node._data.view;
         const element = view_data.element;
         const topic = node.topic;
@@ -381,6 +392,8 @@ export class ViewProvider {
             } else {
                 this.jm.update_node(node.id, topic, selected_type);
             }
+        } else if (value) {
+            this.jm.update_node(this.previous_node.id, value, this.previous_node.selected_type);
         }
     }
 
