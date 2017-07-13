@@ -14,6 +14,7 @@ export const DEFAULT_OPTIONS = {
     support_html: true,
     can_root_node_editable: false,
     selected_options: [],
+    has_interaction: false,
 
     view: {
         hmargin: 100,

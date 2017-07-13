@@ -1,3 +1,4 @@
+import * as _ from 'lodash';
 import { logger, $get, $create, $document, $text, $html } from './config';
 import { customizeUtil } from './util';
 import { MindMapMain } from './mind-map-main';
@@ -27,6 +28,10 @@ export class ViewProvider {
         this.opts = options;
         this.jm = jm;
         this.layout = jm.layout;
+
+        this.jm.mindMapDataReceiver.subscribe(data => {
+            this.edit_node_end(data);
+        });
     }
 
     init() {
@@ -52,7 +57,6 @@ export class ViewProvider {
         this.e_editor.type = 'text';
 
         this.e_select.value = this.opts.selected_options[0];
-        const initial_select_value = ['销售经理', '展厅', '销售小组'];
         this.opts.selected_options.forEach((ele) => {
             this.e_select.appendChild(ViewProvider.get_select_option(ele));
         });
@@ -85,6 +89,13 @@ export class ViewProvider {
             const evt = e || event;
             evt.stopPropagation();
         });
+        customizeUtil.dom.add_event(this.e_select, 'change', function (e) {
+            const evt = e || event;
+            const value = _.get(evt, 'srcElement.value');
+            if (v.get_is_interact_selected_value(value)) {
+                v.jm.mindMapDataTransporter.next(`change value ${value}`)
+            }
+        });
 
         this.container.appendChild(this.e_panel);
 
@@ -97,6 +108,11 @@ export class ViewProvider {
         e_option.appendChild($document.createTextNode(value));
         return e_option;
     };
+
+    get_is_interact_selected_value(value) {
+        return this.jm.options.has_interaction && value === _.last(this.jm.options.selected_options);
+    }
+
 
     add_event(obj, event_name, event_handle) {
         customizeUtil.dom.add_event(this.e_nodes, event_name, function (e) {
@@ -291,7 +307,7 @@ export class ViewProvider {
 
     create_select_by_types(types) {
         const new_select = $create('select');
-        new_select.value = types[0];
+        const self = this;
         types.slice(1).forEach(type => {
             new_select.appendChild(ViewProvider.get_select_option(type));
         });
@@ -299,6 +315,14 @@ export class ViewProvider {
             const evt = e || event;
             evt.stopPropagation();
         });
+        customizeUtil.dom.add_event(new_select, 'change', function (e) {
+            const evt = e || event;
+            const value = _.get(evt, 'srcElement.value');
+            if (self.get_is_interact_selected_value(value)) {
+                self.jm.mindMapDataTransporter.next(`change value ${value}`)
+            }
+        });
+        new_select.value = types[0];
         return new_select;
     }
 
@@ -332,12 +356,15 @@ export class ViewProvider {
         // this.e_editor.select();
     }
 
-    edit_node_end() {
+    edit_node_end(value?) {
         if (this.editing_node != null) {
             const node = this.editing_node;
             this.editing_node = null;
             const view_data = node._data.view;
             const element = view_data.element;
+            if (value) {
+                this.e_editor.value = value;
+            }
             const topic = this.e_editor.value;
             const selected_type = this.current_select.value;
             element.style.zIndex = 'auto';

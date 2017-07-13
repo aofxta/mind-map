@@ -6,6 +6,7 @@ import { MindMapDataProvider } from './data-provider';
 import { LayoutProvider } from './layout-provider';
 import { customizeFormat } from './customize-format';
 import { ViewProvider } from './view-provider';
+import { Subject } from 'rxjs/Subject';
 
 export interface MindMapModuleOpts {
     container?: Array<any>;
@@ -20,6 +21,7 @@ export interface MindMapModuleOpts {
     depth?: number;
     can_root_node_editable?: boolean;
     selected_options?: string[];
+    has_interaction?: boolean;
     hierarchy_rule?: { ROOT: any, [propName: string]: { name: string, getChildren: any } };
 }
 
@@ -38,6 +40,8 @@ export class MindMapMain {
     layout;
     view;
     shortcut;
+    mindMapDataTransporter = new Subject<any>();
+    mindMapDataReceiver = new Subject<any>();
 
     static plugin;
     static plugins;
@@ -184,10 +188,10 @@ export class MindMapMain {
         }
         const types = [];
         types.push(node.selected_type);
-        const parent_select_type =  _.get(node, 'parent.isroot') ? 'ROOT' : _.get(node, 'parent.selected_type');
+        const parent_select_type = _.get(node, 'parent.selected_type');
         let current_rule = _.find(this.options.hierarchy_rule, { name: parent_select_type });
         if (!current_rule) {
-            return null;
+            current_rule = this.options.hierarchy_rule.ROOT;
         }
         current_rule.getChildren().forEach(children => {
             types.push(children.name);
