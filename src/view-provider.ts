@@ -103,7 +103,7 @@ export class ViewProvider {
             evt.stopPropagation();
             const value = _.get(evt, 'srcElement.value');
             if (v.get_is_interact_selected_value(value)) {
-                v.jm.mindMapDataTransporter.next(`change value ${value}`);
+                v.jm.mindMapDataTransporter.next(value);
             }
         });
 
@@ -192,8 +192,7 @@ export class ViewProvider {
     }
 
     init_canvas() {
-        const ctx = this.e_canvas.getContext('2d');
-        this.canvas_ctx = ctx;
+        this.canvas_ctx = this.e_canvas.getContext('2d');
     }
 
     init_nodes_size(node) {
