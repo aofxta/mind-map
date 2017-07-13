@@ -72,40 +72,9 @@ export class ViewProvider {
         customizeUtil.dom.add_event(this.e_nodes, 'click', function (e) {
             v.edit_node_end();
         });
-        customizeUtil.dom.add_event(this.e_editor, 'keydown', function (e) {
-            const evt = e || event;
-            if (evt.keyCode == 13) {
-                v.edit_node_end();
-                evt.stopPropagation();
-            }
-        });
-        customizeUtil.dom.add_event(this.e_editor, 'blur', function (e) {
-            v.edit_node_end();
-        });
-        customizeUtil.dom.add_event(this.e_editor, 'click', function (e) {
-            const evt = e || event;
-            evt.stopPropagation();
-        });
-        customizeUtil.dom.add_event(this.e_editor, 'focus', function (e) {
-            const evt = e || event;
-            evt.stopPropagation();
-            const type = v.editing_node.selected_type;
-            if (v.get_is_interact_selected_value(type)) {
-                v.jm.mindMapDataTransporter.next(type);
-            }
-        });
-        customizeUtil.dom.add_event(this.e_select, 'click', function (e) {
-            const evt = e || event;
-            evt.stopPropagation();
-        });
-        customizeUtil.dom.add_event(this.e_select, 'change', function (e) {
-            const evt = e || event;
-            evt.stopPropagation();
-            const value = _.get(evt, 'srcElement.value');
-            if (v.get_is_interact_selected_value(value)) {
-                v.jm.mindMapDataTransporter.next(value);
-            }
-        });
+
+        this.add_event_to_editor(this.e_editor);
+        this.add_event_to_select(this.e_select);
 
         this.container.appendChild(this.e_panel);
 
@@ -118,6 +87,48 @@ export class ViewProvider {
         e_option.appendChild($document.createTextNode(value));
         return e_option;
     };
+
+    add_event_to_editor(editor) {
+        customizeUtil.dom.add_event(editor, 'keydown', (e) => {
+            const evt = e || event;
+            if (evt.keyCode == 13) {
+                this.edit_node_end();
+                evt.stopPropagation();
+            }
+        });
+        customizeUtil.dom.add_event(editor, 'blur',  () => {
+            this.edit_node_end();
+        });
+        customizeUtil.dom.add_event(editor, 'click',  (e) => {
+            const evt = e || event;
+            evt.stopPropagation();
+        });
+        customizeUtil.dom.add_event(editor, 'focus',  (e) => {
+            const evt = e || event;
+            evt.stopPropagation();
+            const type = this.editing_node.selected_type;
+            if (this.get_is_interact_selected_value(type)) {
+                this.jm.mindMapDataTransporter.next(type);
+            }
+        });
+
+    }
+
+    add_event_to_select(select) {
+        customizeUtil.dom.add_event(select, 'click', (e) => {
+            const evt = e || event;
+            evt.stopPropagation();
+        });
+        customizeUtil.dom.add_event(select, 'change', (e) => {
+            const evt = e || event;
+            evt.stopPropagation();
+            const value = _.get(evt, 'srcElement.value');
+            if (this.get_is_interact_selected_value(value)) {
+                this.jm.mindMapDataTransporter.next(value);
+            }
+        });
+    }
+
 
     get_is_interact_selected_value(value) {
         return this.jm.options.has_interaction && value === _.last(this.jm.options.selected_options);
@@ -316,21 +327,11 @@ export class ViewProvider {
 
     create_select_by_types(types) {
         const new_select = $create('select');
-        const self = this;
         types.slice(1).forEach(type => {
             new_select.appendChild(ViewProvider.get_select_option(type));
         });
-        customizeUtil.dom.add_event(new_select, 'click', function (e) {
-            const evt = e || event;
-            evt.stopPropagation();
-        });
-        customizeUtil.dom.add_event(new_select, 'change', function (e) {
-            const evt = e || event;
-            const value = _.get(evt, 'srcElement.value');
-            if (self.get_is_interact_selected_value(value)) {
-                self.jm.mindMapDataTransporter.next(`change value ${value}`)
-            }
-        });
+        this.add_event_to_select(new_select);
+
         new_select.value = types[0];
         return new_select;
     }
