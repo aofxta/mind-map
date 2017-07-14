@@ -8,18 +8,18 @@ export class ViewProvider {
     jm: any;
     layout: any;
     container = null;
-    e_panel = null;
-    e_nodes = null;
-    e_canvas = null;
-    canvas_ctx = null;
+    ePanel = null;
+    eNodes = null;
+    eCanvas = null;
+    canvasCtx = null;
     size = { w: 0, h: 0 };
-    selected_node = null;
-    editing_node = null;
-    previous_node = null;
+    selectedNode = null;
+    editingNode = null;
+    previousNode = null;
 
-    e_editor;
-    e_select;
-    current_select;
+    eEditor;
+    eSelect;
+    currentSelect;
     actualZoom;
     zoomStep;
     minZoom;
@@ -36,10 +36,10 @@ export class ViewProvider {
     }
 
     static get_select_option(value) {
-        const e_option = $create('option');
-        e_option.value = value;
-        e_option.appendChild($document.createTextNode(value));
-        return e_option;
+        const eOption = $create('option');
+        eOption.value = value;
+        eOption.appendChild($document.createTextNode(value));
+        return eOption;
     };
 
     init() {
@@ -55,13 +55,13 @@ export class ViewProvider {
     }
 
     initView() {
-        this.e_panel = $create('div');
-        this.e_canvas = $create('canvas');
-        this.e_nodes = $create('jmnodes');
+        this.ePanel = $create('div');
+        this.eCanvas = $create('canvas');
+        this.eNodes = $create('jmnodes');
 
-        this.e_panel.className = 'jsmind-inner';
-        this.e_panel.appendChild(this.e_canvas);
-        this.e_panel.appendChild(this.e_nodes);
+        this.ePanel.className = 'jsmind-inner';
+        this.ePanel.appendChild(this.eCanvas);
+        this.ePanel.appendChild(this.eNodes);
 
         this.actualZoom = 1;
         this.zoomStep = 0.1;
@@ -72,52 +72,52 @@ export class ViewProvider {
         this.initSelect();
         this.initEditor();
 
-        this.container.appendChild(this.e_panel);
-        this.canvas_ctx = this.e_canvas.getContext('2d');
+        this.container.appendChild(this.ePanel);
+        this.canvasCtx = this.eCanvas.getContext('2d');
     }
 
     initSelect() {
-        this.e_select = $create('select');
-        this.e_select.value = this.opts.selectedOptions[0];
+        this.eSelect = $create('select');
+        this.eSelect.value = this.opts.selectedOptions[0];
         this.opts.selectedOptions.forEach((ele) => {
-            this.e_select.appendChild(ViewProvider.get_select_option(ele));
+            this.eSelect.appendChild(ViewProvider.get_select_option(ele));
         });
-        this.addEventToSelect(this.e_select);
+        this.addEventToSelect(this.eSelect);
     }
 
     initEditor() {
-        this.e_editor = $create('input');
-        this.e_editor.className = 'jsmind-editor';
-        this.e_editor.type = 'text';
-        this.addEventToEditor(this.e_editor);
+        this.eEditor = $create('input');
+        this.eEditor.className = 'jsmind-editor';
+        this.eEditor.type = 'text';
+        this.addEventToEditor(this.eEditor);
     }
 
     addEventToCanvas() {
-        customizeUtil.dom.add_event(this.e_nodes, 'click', (e) => {
+        customizeUtil.dom.addEvent(this.eNodes, 'click', (e) => {
             this.editNodeEnd();
             e.stopPropagation();
         });
     }
 
     addEventToEditor(editor) {
-        customizeUtil.dom.add_event(editor, 'keydown', (e) => {
+        customizeUtil.dom.addEvent(editor, 'keydown', (e) => {
             const evt = e || event;
             if (evt.keyCode == 13) {
                 this.editNodeEnd();
                 evt.stopPropagation();
             }
         });
-        customizeUtil.dom.add_event(editor, 'blur', () => {
+        customizeUtil.dom.addEvent(editor, 'blur', () => {
             this.editNodeEnd();
         });
-        customizeUtil.dom.add_event(editor, 'click', (e) => {
+        customizeUtil.dom.addEvent(editor, 'click', (e) => {
             const evt = e || event;
             evt.stopPropagation();
         });
-        customizeUtil.dom.add_event(editor, 'focus', (e) => {
+        customizeUtil.dom.addEvent(editor, 'focus', (e) => {
             const evt = e || event;
             evt.stopPropagation();
-            const type = this.editing_node.selected_type;
+            const type = this.editingNode.selected_type;
             if (this.getIsInteractSelectedValue(type)) {
                 this.jm.mindMapDataTransporter.next(type);
             }
@@ -126,11 +126,11 @@ export class ViewProvider {
     }
 
     addEventToSelect(select) {
-        customizeUtil.dom.add_event(select, 'click', (e) => {
+        customizeUtil.dom.addEvent(select, 'click', (e) => {
             const evt = e || event;
             evt.stopPropagation();
         });
-        customizeUtil.dom.add_event(select, 'change', (e) => {
+        customizeUtil.dom.addEvent(select, 'change', (e) => {
             const evt = e || event;
             evt.stopPropagation();
             const value = _.get(evt, 'srcElement.value');
@@ -147,7 +147,7 @@ export class ViewProvider {
 
 
     addEvent(obj, event_name, event_handle) {
-        customizeUtil.dom.add_event(this.e_nodes, event_name, function (e) {
+        customizeUtil.dom.addEvent(this.eNodes, event_name, function (e) {
             const evt = e || event;
             event_handle.call(obj, evt);
         });
@@ -174,7 +174,7 @@ export class ViewProvider {
 
     reset() {
         logger.debug('view.reset');
-        this.selected_node = null;
+        this.selectedNode = null;
         this.clearLines();
         this.clearNodes();
         this.resetTheme();
@@ -183,9 +183,9 @@ export class ViewProvider {
     resetTheme() {
         const theme_name = this.jm.options.theme;
         if (!!theme_name) {
-            this.e_nodes.className = 'theme-' + theme_name;
+            this.eNodes.className = 'theme-' + theme_name;
         } else {
-            this.e_nodes.className = '';
+            this.eNodes.className = '';
         }
     }
 
@@ -205,8 +205,8 @@ export class ViewProvider {
         const min_size = this.layout.getMinSize();
         let min_width = min_size.w + this.opts.hmargin * 2;
         let min_height = min_size.h + this.opts.vmargin * 2;
-        let client_w = this.e_panel.clientWidth;
-        let client_h = this.e_panel.clientHeight;
+        let client_w = this.ePanel.clientWidth;
+        let client_h = this.ePanel.clientHeight;
         if (client_w < min_width) {client_w = min_width;}
         if (client_h < min_height) {client_h = min_height;}
         this.size.w = client_w;
@@ -225,14 +225,14 @@ export class ViewProvider {
         for (let nodeid in nodes) {
             this.createNodeElement(nodes[nodeid], doc_frag);
         }
-        this.e_nodes.appendChild(doc_frag);
+        this.eNodes.appendChild(doc_frag);
         for (let nodeid in nodes) {
             this.initNodesSize(nodes[nodeid]);
         }
     }
 
     addNode(node) {
-        this.createNodeElement(node, this.e_nodes);
+        this.createNodeElement(node, this.eNodes);
         this.initNodesSize(node);
     }
 
@@ -271,12 +271,12 @@ export class ViewProvider {
     }
 
     removeNode(node) {
-        if (this.selected_node != null && this.selected_node.id == node.id) {
-            this.selected_node = null;
+        if (this.selectedNode != null && this.selectedNode.id == node.id) {
+            this.selectedNode = null;
         }
-        if (this.editing_node != null && this.editing_node.id == node.id) {
-            node._data.view.element.removeChild(this.e_editor);
-            this.editing_node = null;
+        if (this.editingNode != null && this.editingNode.id == node.id) {
+            node._data.view.element.removeChild(this.eEditor);
+            this.editingNode = null;
         }
         const children = node.children;
         let i = children.length;
@@ -286,8 +286,8 @@ export class ViewProvider {
         if (node._data.view) {
             const element = node._data.view.element;
             const expander = node._data.view.expander;
-            this.e_nodes.removeChild(element);
-            this.e_nodes.removeChild(expander);
+            this.eNodes.removeChild(element);
+            this.eNodes.removeChild(expander);
             node._data.view.element = null;
             node._data.view.expander = null;
         }
@@ -308,13 +308,13 @@ export class ViewProvider {
     }
 
     selectNode(node) {
-        if (!!this.selected_node) {
-            this.selected_node._data.view.element.className =
-                this.selected_node._data.view.element.className.replace(/\s*selected\s*/i, '');
-            this.resetNodeCustomStyle(this.selected_node);
+        if (!!this.selectedNode) {
+            this.selectedNode._data.view.element.className =
+                this.selectedNode._data.view.element.className.replace(/\s*selected\s*/i, '');
+            this.resetNodeCustomStyle(this.selectedNode);
         }
         if (!!node) {
-            this.selected_node = node;
+            this.selectedNode = node;
             node._data.view.element.className += ' selected';
             this.clearNodeCustomStyle(node);
         }
@@ -325,11 +325,11 @@ export class ViewProvider {
     }
 
     getEditingNode() {
-        return this.editing_node;
+        return this.editingNode;
     }
 
     isEditing() {
-        return (!!this.editing_node);
+        return (!!this.editingNode);
     }
 
     createSelectByTypes(types) {
@@ -349,47 +349,47 @@ export class ViewProvider {
             logger.warn("don't edit image nodes");
             return;
         }
-        if (this.editing_node != null) {
+        if (this.editingNode != null) {
             this.editNodeEnd();
         }
-        this.editing_node = node;
-        this.previous_node = node;
+        this.editingNode = node;
+        this.previousNode = node;
         const view_data = node._data.view;
         const element = view_data.element;
         const topic = node.topic;
         const ncs = getComputedStyle(element);
-        this.e_editor.value = topic;
-        this.e_editor.style.width
+        this.eEditor.value = topic;
+        this.eEditor.style.width
             = (element.clientWidth - parseInt(ncs.getPropertyValue('padding-left')) - parseInt(ncs.getPropertyValue('padding-right'))) + 'px';
         element.innerHTML = '';
         if (types) {
-            this.current_select = this.createSelectByTypes(types);
+            this.currentSelect = this.createSelectByTypes(types);
         } else {
-            this.current_select = this.e_select;
+            this.currentSelect = this.eSelect;
         }
-        element.appendChild(this.current_select);
-        element.appendChild(this.e_editor);
+        element.appendChild(this.currentSelect);
+        element.appendChild(this.eEditor);
         element.style.zIndex = 5;
-        // this.e_editor.focus();
-        // this.e_editor.select();
+        // this.eEditor.focus();
+        // this.eEditor.select();
     }
 
     editNodeEnd(value?) {
-        if (this.editing_node != null) {
-            const node = this.editing_node;
-            this.editing_node = null;
+        if (this.editingNode != null) {
+            const node = this.editingNode;
+            this.editingNode = null;
             const view_data = node._data.view;
             const element = view_data.element;
             if (value) {
-                this.e_editor.value = value;
+                this.eEditor.value = value;
             }
-            const topic = this.e_editor.value;
-            const selected_type = this.current_select.value;
+            const topic = this.eEditor.value;
+            const selected_type = this.currentSelect.value;
             element.style.zIndex = 'auto';
-            element.removeChild(this.e_editor);
-            element.removeChild(this.current_select);
-            if (customizeUtil.text.is_empty(topic) ||
-                customizeUtil.text.is_empty(selected_type) ||
+            element.removeChild(this.eEditor);
+            element.removeChild(this.currentSelect);
+            if (customizeUtil.text.isEmpty(topic) ||
+                customizeUtil.text.isEmpty(selected_type) ||
                 (node.topic === topic && node.selected_type === selected_type)) {
                 if (this.opts.supportHtml) {
                     $html(element, node.show());
@@ -400,7 +400,7 @@ export class ViewProvider {
                 this.jm.updateNode(node.id, topic, selected_type);
             }
         } else if (value) {
-            this.jm.updateNode(this.previous_node.id, value, this.previous_node.selected_type);
+            this.jm.updateNode(this.previousNode.id, value, this.previousNode.selected_type);
         }
     }
 
@@ -412,20 +412,20 @@ export class ViewProvider {
     }
 
     resize() {
-        this.e_canvas.width = 1;
-        this.e_canvas.height = 1;
-        this.e_nodes.style.width = '1px';
-        this.e_nodes.style.height = '1px';
+        this.eCanvas.width = 1;
+        this.eCanvas.height = 1;
+        this.eNodes.style.width = '1px';
+        this.eNodes.style.height = '1px';
 
         this.expandSize();
         this._show();
     }
 
     _show() {
-        this.e_canvas.width = this.size.w;
-        this.e_canvas.height = this.size.h;
-        this.e_nodes.style.width = this.size.w + 'px';
-        this.e_nodes.style.height = this.size.h + 'px';
+        this.eCanvas.width = this.size.w;
+        this.eCanvas.height = this.size.h;
+        this.eNodes.style.width = this.size.w + 'px';
+        this.eNodes.style.height = this.size.h + 'px';
         this.showNodes();
         this.showLines();
         //this.layout.cache_valid = true;
@@ -445,8 +445,8 @@ export class ViewProvider {
             return false;
         }
         this.actualZoom = zoom;
-        for (let i = 0; i < this.e_panel.children.length; i++) {
-            this.e_panel.children[i].style.transform = 'scale(' + zoom + ')';
+        for (let i = 0; i < this.ePanel.children.length; i++) {
+            this.ePanel.children[i].style.transform = 'scale(' + zoom + ')';
         }
         ;
         this.show(true);
@@ -456,14 +456,14 @@ export class ViewProvider {
 
     _centerRoot() {
         // center root node
-        const outer_w = this.e_panel.clientWidth;
-        const outer_h = this.e_panel.clientHeight;
+        const outer_w = this.ePanel.clientWidth;
+        const outer_h = this.ePanel.clientHeight;
         if (this.size.w > outer_w) {
             const _offset = this.getViewOffset();
-            this.e_panel.scrollLeft = _offset.x - outer_w / 2;
+            this.ePanel.scrollLeft = _offset.x - outer_w / 2;
         }
         if (this.size.h > outer_h) {
-            this.e_panel.scrollTop = (this.size.h - outer_h) / 2;
+            this.ePanel.scrollTop = (this.size.h - outer_h) / 2;
         }
     }
 
@@ -484,15 +484,15 @@ export class ViewProvider {
     saveLocation(node) {
         const vd = node._data.view;
         vd._saved_location = {
-            x: parseInt(vd.element.style.left) - this.e_panel.scrollLeft,
-            y: parseInt(vd.element.style.top) - this.e_panel.scrollTop,
+            x: parseInt(vd.element.style.left) - this.ePanel.scrollLeft,
+            y: parseInt(vd.element.style.top) - this.ePanel.scrollTop,
         };
     }
 
     restoreLocation(node) {
         const vd = node._data.view;
-        this.e_panel.scrollLeft = parseInt(vd.element.style.left) - vd._saved_location.x;
-        this.e_panel.scrollTop = parseInt(vd.element.style.top) - vd._saved_location.y;
+        this.ePanel.scrollLeft = parseInt(vd.element.style.left) - vd._saved_location.x;
+        this.ePanel.scrollTop = parseInt(vd.element.style.top) - vd._saved_location.y;
     }
 
     clearNodes() {
@@ -507,7 +507,7 @@ export class ViewProvider {
             node._data.view.element = null;
             node._data.view.expander = null;
         }
-        this.e_nodes.innerHTML = '';
+        this.eNodes.innerHTML = '';
     }
 
     showNodes() {
@@ -632,7 +632,7 @@ export class ViewProvider {
     }
 
     clearLines(canvas_ctx?) {
-        const ctx = canvas_ctx || this.canvas_ctx;
+        const ctx = canvas_ctx || this.canvasCtx;
         customizeUtil.canvas.clear(ctx, 0, 0, this.size.w, this.size.h);
     }
 
@@ -654,7 +654,7 @@ export class ViewProvider {
     }
 
     drawLine(pin, pout, offset, canvas_ctx) {
-        let ctx = canvas_ctx || this.canvas_ctx;
+        let ctx = canvas_ctx || this.canvasCtx;
         ctx.strokeStyle = this.opts.lineColor;
         ctx.lineWidth = this.opts.lineWidth;
         ctx.lineCap = 'round';

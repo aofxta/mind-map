@@ -493,7 +493,7 @@ export class MindMapMain {
 
     updateNode(nodeid, topic, selected_type) {
         if (this.getEditable()) {
-            if (customizeUtil.text.is_empty(topic)) {
+            if (customizeUtil.text.isEmpty(topic)) {
                 logger.warn('fail, topic can not be empty');
                 return;
             }

@@ -18,7 +18,7 @@ export class ShortcutProvider {
     }
 
     init() {
-        customizeUtil.dom.add_event($document, 'keydown', this.handler.bind(this));
+        customizeUtil.dom.addEvent($document, 'keydown', this.handler.bind(this));
 
         this.handles['addchild'] = this.handleAddChild;
         this.handles['addbrother'] = this.handleAddBrother;

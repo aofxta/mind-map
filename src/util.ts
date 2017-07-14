@@ -72,7 +72,7 @@ export const customizeUtil = {
 
     dom: {
         //target,eventType,handler
-        add_event: function (t, e, h) {
+        addEvent: function (t, e, h) {
             if (!!t.addEventListener) {
                 t.addEventListener(e, h, false);
             } else {
@@ -191,7 +191,7 @@ export const customizeUtil = {
     },
 
     text: {
-        is_empty: function (s) {
+        isEmpty: function (s) {
             if (!s) { return true; }
             return s.replace(/\s*/, '').length == 0;
         }
