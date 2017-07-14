@@ -15,7 +15,7 @@ export class MindMapMind {
 
     }
 
-    get_node(nodeid) {
+    getNode(nodeid) {
         if (nodeid in this.nodes) {
             return this.nodes[nodeid];
         } else {
@@ -24,18 +24,18 @@ export class MindMapMind {
         }
     }
 
-    set_root(nodeid, topic, data) {
+    setRoot(nodeid, topic, data) {
         if (this.root == null) {
             this.root = new MindMapNode(nodeid, 0, topic, data, true);
-            this._put_node(this.root);
+            this.putNode(this.root);
         } else {
             logger.error('root node is already exist');
         }
     }
 
-    add_node(parent_node, nodeid, topic, data, idx, direction?, expanded?, selected_type?) {
+    addNode(parent_node, nodeid, topic, data, idx, direction?, expanded?, selected_type?) {
         if (!customizeUtil.is_node(parent_node)) {
-            return this.add_node(this.get_node(parent_node), nodeid, topic, data, idx, direction, expanded);
+            return this.addNode(this.getNode(parent_node), nodeid, topic, data, idx, direction, expanded);
         }
         const nodeindex = idx || -1;
 
@@ -63,9 +63,9 @@ export class MindMapMind {
                     new MindMapNode(nodeid, nodeindex, topic, data, false,
                         parent_node, parent_node.direction, expanded, selected_type, parent_node.level + 1);
             }
-            if (this._put_node(node)) {
+            if (this.putNode(node)) {
                 parent_node.children.push(node);
-                this._reindex(parent_node);
+                this.reindex(parent_node);
             } else {
                 logger.error('fail, the nodeid \'' + node.id + '\' has been already exist.');
                 node = null;
@@ -77,13 +77,13 @@ export class MindMapMind {
         }
     }
 
-    insert_node_before(node_before, nodeid, topic, data) {
+    insertNodeBefore(node_before, nodeid, topic, data) {
         if (!customizeUtil.is_node(node_before)) {
-            return this.insert_node_before(this.get_node(node_before), nodeid, topic, data);
+            return this.insertNodeBefore(this.getNode(node_before), nodeid, topic, data);
         }
         if (!!node_before) {
             const node_index = node_before.index - 0.5;
-            return this.add_node(node_before.parent, nodeid, topic, data, node_index);
+            return this.addNode(node_before.parent, nodeid, topic, data, node_index);
         } else {
             logger.error('fail, the [node_before] can not be found.');
             return null;
@@ -91,10 +91,10 @@ export class MindMapMind {
     }
 
 
-    get_node_before(node) {
+    getNodeBefore(node) {
         if (!node) {return null;}
         if (!customizeUtil.is_node(node)) {
-            return this.get_node_before(this.get_node(node));
+            return this.getNodeBefore(this.getNode(node));
         }
         if (node.isroot) {return null;}
         const idx = node.index - 2;
@@ -106,23 +106,23 @@ export class MindMapMind {
     }
 
 
-    insert_node_after(node_after, nodeid, topic, data) {
+    insertNodeAfter(node_after, nodeid, topic, data) {
         if (!customizeUtil.is_node(node_after)) {
-            return this.insert_node_after(this.get_node(node_after), nodeid, topic, data);
+            return this.insertNodeAfter(this.getNode(node_after), nodeid, topic, data);
         }
         if (!!node_after) {
             const node_index = node_after.index + 0.5;
-            return this.add_node(node_after.parent, nodeid, topic, data, node_index);
+            return this.addNode(node_after.parent, nodeid, topic, data, node_index);
         } else {
             logger.error('fail, the [node_after] can not be found.');
             return null;
         }
     }
 
-    get_node_after(node) {
+    getNodeAfter(node) {
         if (!node) {return null;}
         if (!customizeUtil.is_node(node)) {
-            return this.get_node_after(this.get_node(node));
+            return this.getNodeAfter(this.getNode(node));
         }
         if (node.isroot) {return null;}
         const idx = node.index;
@@ -134,17 +134,17 @@ export class MindMapMind {
         }
     }
 
-    move_node(node, beforeid, parentid, direction) {
+    moveNode(node, beforeid, parentid, direction) {
         if (!customizeUtil.is_node(node)) {
-            return this.move_node(this.get_node(node), beforeid, parentid, direction);
+            return this.moveNode(this.getNode(node), beforeid, parentid, direction);
         }
         if (!parentid) {
             parentid = node.parent.id;
         }
-        return this._move_node(node, beforeid, parentid, direction);
+        return this.moveNodeDirect(node, beforeid, parentid, direction);
     }
 
-    _flow_node_direction(node, direction?) {
+    flowNodeDirection(node, direction?) {
         if (typeof direction === 'undefined') {
             direction = node.direction;
         } else {
@@ -152,31 +152,31 @@ export class MindMapMind {
         }
         let len = node.children.length;
         while (len--) {
-            this._flow_node_direction(node.children[len], direction);
+            this.flowNodeDirection(node.children[len], direction);
         }
     }
 
 
-    _move_node_internal(node, beforeid) {
+    moveNodeInternal(node, beforeid) {
         if (!!node && !!beforeid) {
             if (beforeid == '_last_') {
                 node.index = -1;
-                this._reindex(node.parent);
+                this.reindex(node.parent);
             } else if (beforeid == '_first_') {
                 node.index = 0;
-                this._reindex(node.parent);
+                this.reindex(node.parent);
             } else {
-                const node_before = (!!beforeid) ? this.get_node(beforeid) : null;
+                const node_before = (!!beforeid) ? this.getNode(beforeid) : null;
                 if (node_before != null && node_before.parent != null && node_before.parent.id == node.parent.id) {
                     node.index = node_before.index - 0.5;
-                    this._reindex(node.parent);
+                    this.reindex(node.parent);
                 }
             }
         }
         return node;
     }
 
-    _move_node(node, beforeid, parentid, direction) {
+    moveNodeDirect(node, beforeid, parentid, direction) {
         if (!!node && !!parentid) {
             if (node.parent.id != parentid) {
                 // remove from parent's children
@@ -188,7 +188,7 @@ export class MindMapMind {
                         break;
                     }
                 }
-                node.parent = this.get_node(parentid);
+                node.parent = this.getNode(parentid);
                 node.parent.children.push(node);
             }
 
@@ -201,15 +201,15 @@ export class MindMapMind {
             } else {
                 node.direction = node.parent.direction;
             }
-            this._move_node_internal(node, beforeid);
-            this._flow_node_direction(node);
+            this.moveNodeInternal(node, beforeid);
+            this.flowNodeDirection(node);
         }
         return node;
     }
 
-    remove_node(node) {
+    removeNode(node) {
         if (!customizeUtil.is_node(node)) {
-            return this.remove_node(this.get_node(node));
+            return this.removeNode(this.getNode(node));
         }
         if (!node) {
             logger.error('fail, the node can not be found');
@@ -226,7 +226,7 @@ export class MindMapMind {
         const children = node.children;
         let ci = children.length;
         while (ci--) {
-            this.remove_node(children[ci]);
+            this.removeNode(children[ci]);
         }
         // clean all children
         children.length = 0;
@@ -251,7 +251,7 @@ export class MindMapMind {
         return true;
     }
 
-    _put_node(node) {
+    putNode(node) {
         if (node.id in this.nodes) {
             logger.warn('the nodeid \'' + node.id + '\' has been already exist.');
             return false;
@@ -261,7 +261,7 @@ export class MindMapMind {
         }
     }
 
-    _reindex(node) {
+    reindex(node) {
         if (node instanceof MindMapNode) {
             node.children.sort(MindMapNode.compare);
             const length = node.children.length;

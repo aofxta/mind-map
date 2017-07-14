@@ -31,7 +31,7 @@ export class ViewProvider {
         this.layout = jm.layout;
 
         this.jm.mindMapDataReceiver.subscribe(data => {
-            this.edit_node_end(data);
+            this.editNodeEnd(data);
         });
     }
 
@@ -51,10 +51,10 @@ export class ViewProvider {
             return;
         }
 
-        this.init_view();
+        this.initView();
     }
 
-    init_view() {
+    initView() {
         this.e_panel = $create('div');
         this.e_canvas = $create('canvas');
         this.e_nodes = $create('jmnodes');
@@ -68,47 +68,47 @@ export class ViewProvider {
         this.minZoom = 0.5;
         this.maxZoom = 2;
 
-        this.add_event_to_canvas();
-        this.init_select();
-        this.init_editor();
+        this.addEventToCanvas();
+        this.initSelect();
+        this.initEditor();
 
         this.container.appendChild(this.e_panel);
         this.canvas_ctx = this.e_canvas.getContext('2d');
     }
 
-    init_select() {
+    initSelect() {
         this.e_select = $create('select');
         this.e_select.value = this.opts.selectedOptions[0];
         this.opts.selectedOptions.forEach((ele) => {
             this.e_select.appendChild(ViewProvider.get_select_option(ele));
         });
-        this.add_event_to_select(this.e_select);
+        this.addEventToSelect(this.e_select);
     }
 
-    init_editor() {
+    initEditor() {
         this.e_editor = $create('input');
         this.e_editor.className = 'jsmind-editor';
         this.e_editor.type = 'text';
-        this.add_event_to_editor(this.e_editor);
+        this.addEventToEditor(this.e_editor);
     }
 
-    add_event_to_canvas() {
+    addEventToCanvas() {
         customizeUtil.dom.add_event(this.e_nodes, 'click', (e) => {
-            this.edit_node_end();
+            this.editNodeEnd();
             e.stopPropagation();
         });
     }
 
-    add_event_to_editor(editor) {
+    addEventToEditor(editor) {
         customizeUtil.dom.add_event(editor, 'keydown', (e) => {
             const evt = e || event;
             if (evt.keyCode == 13) {
-                this.edit_node_end();
+                this.editNodeEnd();
                 evt.stopPropagation();
             }
         });
         customizeUtil.dom.add_event(editor, 'blur', () => {
-            this.edit_node_end();
+            this.editNodeEnd();
         });
         customizeUtil.dom.add_event(editor, 'click', (e) => {
             const evt = e || event;
@@ -118,14 +118,14 @@ export class ViewProvider {
             const evt = e || event;
             evt.stopPropagation();
             const type = this.editing_node.selected_type;
-            if (this.get_is_interact_selected_value(type)) {
+            if (this.getIsInteractSelectedValue(type)) {
                 this.jm.mindMapDataTransporter.next(type);
             }
         });
 
     }
 
-    add_event_to_select(select) {
+    addEventToSelect(select) {
         customizeUtil.dom.add_event(select, 'click', (e) => {
             const evt = e || event;
             evt.stopPropagation();
@@ -134,26 +134,26 @@ export class ViewProvider {
             const evt = e || event;
             evt.stopPropagation();
             const value = _.get(evt, 'srcElement.value');
-            if (this.get_is_interact_selected_value(value)) {
+            if (this.getIsInteractSelectedValue(value)) {
                 this.jm.mindMapDataTransporter.next(value);
             }
         });
     }
 
 
-    get_is_interact_selected_value(value) {
+    getIsInteractSelectedValue(value) {
         return this.jm.options.hasInteraction && value === _.last(this.jm.options.selectedOptions);
     }
 
 
-    add_event(obj, event_name, event_handle) {
+    addEvent(obj, event_name, event_handle) {
         customizeUtil.dom.add_event(this.e_nodes, event_name, function (e) {
             const evt = e || event;
             event_handle.call(obj, evt);
         });
     }
 
-    get_binded_nodeid(element) {
+    getBindedNodeId(element) {
         if (element == null) {
             return null;
         }
@@ -164,23 +164,23 @@ export class ViewProvider {
         if (tagName == 'jmnode' || tagName == 'jmexpander') {
             return element.getAttribute('nodeid');
         } else {
-            return this.get_binded_nodeid(element.parentElement);
+            return this.getBindedNodeId(element.parentElement);
         }
     }
 
-    is_expander(element) {
+    isExpander(element) {
         return (element.tagName.toLowerCase() == 'jmexpander');
     }
 
     reset() {
         logger.debug('view.reset');
         this.selected_node = null;
-        this.clear_lines();
-        this.clear_nodes();
-        this.reset_theme();
+        this.clearLines();
+        this.clearNodes();
+        this.resetTheme();
     }
 
-    reset_theme() {
+    resetTheme() {
         const theme_name = this.jm.options.theme;
         if (!!theme_name) {
             this.e_nodes.className = 'theme-' + theme_name;
@@ -189,20 +189,20 @@ export class ViewProvider {
         }
     }
 
-    reset_custom_style() {
+    resetCustomStyle() {
         const nodes = this.jm.mind.nodes;
         for (let nodeid in nodes) {
-            this.reset_node_custom_style(nodes[nodeid]);
+            this.resetNodeCustomStyle(nodes[nodeid]);
         }
     }
 
     load() {
         logger.debug('view.load');
-        this.init_nodes();
+        this.initNodes();
     }
 
-    expand_size() {
-        const min_size = this.layout.get_min_size();
+    expandSize() {
+        const min_size = this.layout.getMinSize();
         let min_width = min_size.w + this.opts.hmargin * 2;
         let min_height = min_size.h + this.opts.vmargin * 2;
         let client_w = this.e_panel.clientWidth;
@@ -213,30 +213,30 @@ export class ViewProvider {
         this.size.h = client_h;
     }
 
-    init_nodes_size(node) {
+    initNodesSize(node) {
         const view_data = node._data.view;
         view_data.width = view_data.element.clientWidth;
         view_data.height = view_data.element.clientHeight;
     }
 
-    init_nodes() {
+    initNodes() {
         const nodes = this.jm.mind.nodes;
         const doc_frag = $document.createDocumentFragment();
         for (let nodeid in nodes) {
-            this.create_node_element(nodes[nodeid], doc_frag);
+            this.createNodeElement(nodes[nodeid], doc_frag);
         }
         this.e_nodes.appendChild(doc_frag);
         for (let nodeid in nodes) {
-            this.init_nodes_size(nodes[nodeid]);
+            this.initNodesSize(nodes[nodeid]);
         }
     }
 
-    add_node(node) {
-        this.create_node_element(node, this.e_nodes);
-        this.init_nodes_size(node);
+    addNode(node) {
+        this.createNodeElement(node, this.e_nodes);
+        this.initNodesSize(node);
     }
 
-    create_node_element(node, parent_node) {
+    createNodeElement(node, parent_node) {
         let view_data = null;
         if ('view' in node._data) {
             view_data = node._data.view;
@@ -265,12 +265,12 @@ export class ViewProvider {
         }
         d.setAttribute('nodeid', node.id);
         d.style.visibility = 'hidden';
-        this._reset_node_custom_style(d, node.data);
+        this._resetNodeCustomStyle(d, node.data);
         parent_node.appendChild(d);
         view_data.element = d;
     }
 
-    remove_node(node) {
+    removeNode(node) {
         if (this.selected_node != null && this.selected_node.id == node.id) {
             this.selected_node = null;
         }
@@ -281,7 +281,7 @@ export class ViewProvider {
         const children = node.children;
         let i = children.length;
         while (i--) {
-            this.remove_node(children[i]);
+            this.removeNode(children[i]);
         }
         if (node._data.view) {
             const element = node._data.view.element;
@@ -293,7 +293,7 @@ export class ViewProvider {
         }
     }
 
-    update_node(node) {
+    updateNode(node) {
         const view_data = node._data.view;
         const element = view_data.element;
         if (!!node.topic) {
@@ -307,50 +307,50 @@ export class ViewProvider {
         view_data.height = element.clientHeight;
     }
 
-    select_node(node) {
+    selectNode(node) {
         if (!!this.selected_node) {
             this.selected_node._data.view.element.className =
                 this.selected_node._data.view.element.className.replace(/\s*selected\s*/i, '');
-            this.reset_node_custom_style(this.selected_node);
+            this.resetNodeCustomStyle(this.selected_node);
         }
         if (!!node) {
             this.selected_node = node;
             node._data.view.element.className += ' selected';
-            this.clear_node_custom_style(node);
+            this.clearNodeCustomStyle(node);
         }
     }
 
-    select_clear() {
-        this.select_node(null);
+    selectClear() {
+        this.selectNode(null);
     }
 
-    get_editing_node() {
+    getEditingNode() {
         return this.editing_node;
     }
 
-    is_editing() {
+    isEditing() {
         return (!!this.editing_node);
     }
 
-    create_select_by_types(types) {
+    createSelectByTypes(types) {
         const new_select = $create('select');
         types.slice(1).forEach(type => {
             new_select.appendChild(ViewProvider.get_select_option(type));
         });
-        this.add_event_to_select(new_select);
+        this.addEventToSelect(new_select);
 
         new_select.value = types[0];
         return new_select;
     }
 
     // when db click
-    edit_node_begin(node, types) {
+    editNodeBegin(node, types) {
         if (!node.topic) {
             logger.warn("don't edit image nodes");
             return;
         }
         if (this.editing_node != null) {
-            this.edit_node_end();
+            this.editNodeEnd();
         }
         this.editing_node = node;
         this.previous_node = node;
@@ -363,7 +363,7 @@ export class ViewProvider {
             = (element.clientWidth - parseInt(ncs.getPropertyValue('padding-left')) - parseInt(ncs.getPropertyValue('padding-right'))) + 'px';
         element.innerHTML = '';
         if (types) {
-            this.current_select = this.create_select_by_types(types);
+            this.current_select = this.createSelectByTypes(types);
         } else {
             this.current_select = this.e_select;
         }
@@ -374,7 +374,7 @@ export class ViewProvider {
         // this.e_editor.select();
     }
 
-    edit_node_end(value?) {
+    editNodeEnd(value?) {
         if (this.editing_node != null) {
             const node = this.editing_node;
             this.editing_node = null;
@@ -397,14 +397,14 @@ export class ViewProvider {
                     $text(element, node.show());
                 }
             } else {
-                this.jm.update_node(node.id, topic, selected_type);
+                this.jm.updateNode(node.id, topic, selected_type);
             }
         } else if (value) {
-            this.jm.update_node(this.previous_node.id, value, this.previous_node.selected_type);
+            this.jm.updateNode(this.previous_node.id, value, this.previous_node.selected_type);
         }
     }
 
-    get_view_offset() {
+    getViewOffset() {
         const bounds = this.layout.bounds;
         const _x = (this.size.w - bounds.e - bounds.w) / 2;
         const _y = this.size.h / 2;
@@ -417,7 +417,7 @@ export class ViewProvider {
         this.e_nodes.style.width = '1px';
         this.e_nodes.style.height = '1px';
 
-        this.expand_size();
+        this.expandSize();
         this._show();
     }
 
@@ -426,10 +426,10 @@ export class ViewProvider {
         this.e_canvas.height = this.size.h;
         this.e_nodes.style.width = this.size.w + 'px';
         this.e_nodes.style.height = this.size.h + 'px';
-        this.show_nodes();
-        this.show_lines();
+        this.showNodes();
+        this.showLines();
         //this.layout.cache_valid = true;
-        this.jm.invoke_event_handle(MindMapMain.eventType.resize, { data: [] });
+        this.jm.invokeEventHandleNextTick(MindMapMain.eventType.resize, { data: [] });
     }
 
     zoomIn() {
@@ -454,12 +454,12 @@ export class ViewProvider {
 
     }
 
-    _center_root() {
+    _centerRoot() {
         // center root node
         const outer_w = this.e_panel.clientWidth;
         const outer_h = this.e_panel.clientHeight;
         if (this.size.w > outer_w) {
-            const _offset = this.get_view_offset();
+            const _offset = this.getViewOffset();
             this.e_panel.scrollLeft = _offset.x - outer_w / 2;
         }
         if (this.size.h > outer_h) {
@@ -469,19 +469,19 @@ export class ViewProvider {
 
     show(keep_center) {
         logger.debug('view.show');
-        this.expand_size();
+        this.expandSize();
         this._show();
         if (!!keep_center) {
-            this._center_root();
+            this._centerRoot();
         }
     }
 
     relayout() {
-        this.expand_size();
+        this.expandSize();
         this._show();
     }
 
-    save_location(node) {
+    saveLocation(node) {
         const vd = node._data.view;
         vd._saved_location = {
             x: parseInt(vd.element.style.left) - this.e_panel.scrollLeft,
@@ -489,13 +489,13 @@ export class ViewProvider {
         };
     }
 
-    restore_location(node) {
+    restoreLocation(node) {
         const vd = node._data.view;
         this.e_panel.scrollLeft = parseInt(vd.element.style.left) - vd._saved_location.x;
         this.e_panel.scrollTop = parseInt(vd.element.style.top) - vd._saved_location.y;
     }
 
-    clear_nodes() {
+    clearNodes() {
         const mind = this.jm.mind;
         if (mind == null) {
             return;
@@ -510,7 +510,7 @@ export class ViewProvider {
         this.e_nodes.innerHTML = '';
     }
 
-    show_nodes() {
+    showNodes() {
         const nodes = this.jm.mind.nodes;
         let node = null;
         let node_element = null;
@@ -520,20 +520,20 @@ export class ViewProvider {
         let p_expander = null;
         let expander_text = '-';
         let view_data = null;
-        const _offset = this.get_view_offset();
+        const _offset = this.getViewOffset();
         for (let nodeid in nodes) {
             node = nodes[nodeid];
             view_data = node._data.view;
             node_element = view_data.element;
             operationArea = view_data.operationArea;
             expander = view_data.expander;
-            if (!this.layout.is_visible(node)) {
+            if (!this.layout.isVisible(node)) {
                 node_element.style.display = 'none';
                 expander.style.display = 'none';
                 continue;
             }
-            this.reset_node_custom_style(node);
-            p = this.layout.get_node_point(node);
+            this.resetNodeCustomStyle(node);
+            p = this.layout.getNodePoint(node);
             view_data.abs_x = _offset.x + p.x;
             view_data.abs_y = _offset.y + p.y;
             node_element.style.left = (_offset.x + p.x) + 'px';
@@ -547,7 +547,7 @@ export class ViewProvider {
             }
             if (!node.isroot && node.children.length > 0) {
                 expander_text = node.expanded ? '-' : '+';
-                p_expander = this.layout.get_expander_point(node);
+                p_expander = this.layout.getExpanderPoint(node);
                 expander.style.left = (_offset.x + p_expander.x) + 'px';
                 expander.style.top = (_offset.y + p_expander.y) + 'px';
                 expander.style.display = '';
@@ -565,11 +565,11 @@ export class ViewProvider {
         }
     }
 
-    reset_node_custom_style(node) {
-        this._reset_node_custom_style(node._data.view.element, node.data);
+    resetNodeCustomStyle(node) {
+        this._resetNodeCustomStyle(node._data.view.element, node.data);
     }
 
-    _reset_node_custom_style(node_element, node_data) {
+    _resetNodeCustomStyle(node_element, node_data) {
         if ('background-color' in node_data) {
             node_element.style.backgroundColor = node_data['background-color'];
         }
@@ -625,35 +625,35 @@ export class ViewProvider {
         }
     }
 
-    clear_node_custom_style(node) {
+    clearNodeCustomStyle(node) {
         const node_element = node._data.view.element;
         node_element.style.backgroundColor = "";
         node_element.style.color = "";
     }
 
-    clear_lines(canvas_ctx?) {
+    clearLines(canvas_ctx?) {
         const ctx = canvas_ctx || this.canvas_ctx;
         customizeUtil.canvas.clear(ctx, 0, 0, this.size.w, this.size.h);
     }
 
-    show_lines(canvas_ctx?) {
-        this.clear_lines(canvas_ctx);
+    showLines(canvas_ctx?) {
+        this.clearLines(canvas_ctx);
         const nodes = this.jm.mind.nodes;
         let node = null;
         let pin = null;
         let pout = null;
-        const _offset = this.get_view_offset();
+        const _offset = this.getViewOffset();
         for (let nodeid in nodes) {
             node = nodes[nodeid];
             if (!!node.isroot) {continue;}
             if (('visible' in node._data.layout) && !node._data.layout.visible) {continue;}
-            pin = this.layout.get_node_point_in(node);
-            pout = this.layout.get_node_point_out(node.parent);
-            this.draw_line(pout, pin, _offset, canvas_ctx);
+            pin = this.layout.getNodePointIn(node);
+            pout = this.layout.getNodePointOut(node.parent);
+            this.drawLine(pout, pin, _offset, canvas_ctx);
         }
     }
 
-    draw_line(pin, pout, offset, canvas_ctx) {
+    drawLine(pin, pout, offset, canvas_ctx) {
         let ctx = canvas_ctx || this.canvas_ctx;
         ctx.strokeStyle = this.opts.lineColor;
         ctx.lineWidth = this.opts.lineWidth;

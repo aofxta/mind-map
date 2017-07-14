@@ -40,7 +40,7 @@ export const customizeFormat = {
         _parse: function (mind, node_root) {
             const df = customizeFormat.node_tree;
             const data = df._extract_data(node_root);
-            mind.set_root(node_root.id, node_root.topic, data);
+            mind.setRoot(node_root.id, node_root.topic, data);
             if ('children' in node_root) {
                 const children = node_root.children;
                 for (let i = 0; i < children.length; i++) {
@@ -76,7 +76,7 @@ export const customizeFormat = {
             if (node_parent.isroot) {
                 d = node_json.direction == 'left' ? MindMapMain.direction.left : MindMapMain.direction.right;
             }
-            const node = mind.add_node(node_parent, node_json.id, node_json.topic, data, null, d, node_json.expanded, node_json.selected_type);
+            const node = mind.addNode(node_parent, node_json.id, node_json.topic, data, null, d, node_json.expanded, node_json.selected_type);
             if ('children' in node_json) {
                 const children = node_json.children;
                 for (let i = 0; i < children.length; i++) {
@@ -179,7 +179,7 @@ export const customizeFormat = {
                 if ('isroot' in node_array[i] && node_array[i].isroot) {
                     const root_json = node_array[i];
                     const data = df._extract_data(root_json);
-                    mind.set_root(root_json.id, root_json.topic, data);
+                    mind.setRoot(root_json.id, root_json.topic, data);
                     node_array.splice(i, 1);
                     return root_json.id;
                 }
@@ -202,7 +202,7 @@ export const customizeFormat = {
                     if (!!node_direction) {
                         d = node_direction == 'left' ? MindMapMain.direction.left : MindMapMain.direction.right;
                     }
-                    mind.add_node(parentid, node_json.id, node_json.topic, data, null, d, node_json.expanded);
+                    mind.addNode(parentid, node_json.id, node_json.topic, data, null, d, node_json.expanded);
                     node_array.splice(i, 1);
                     extract_count++;
                     const sub_extract_count = df._extract_subnode(mind, node_json.id, node_array);
@@ -373,9 +373,9 @@ export const customizeFormat = {
             }
             //logger.debug(node_position +':'+ node_direction);
             if (!!parent_id) {
-                mind.add_node(parent_id, node_id, node_topic, node_data, null, node_direction, node_expanded);
+                mind.addNode(parent_id, node_id, node_topic, node_data, null, node_direction, node_expanded);
             } else {
-                mind.set_root(node_id, node_topic, node_data);
+                mind.setRoot(node_id, node_topic, node_data);
             }
             const children = xml_node.childNodes;
             let child = null;

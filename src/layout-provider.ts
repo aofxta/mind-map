@@ -25,15 +25,15 @@ export class LayoutProvider {
 
     layout() {
         logger.debug('layout.layout');
-        this.layout_direction();
-        this.layout_offset();
+        this.layoutDirection();
+        this.layoutOffset();
     }
 
-    layout_direction() {
-        this._layout_direction_root();
+    layoutDirection() {
+        this._layoutDirectionRoot();
     }
 
-    _layout_direction_root() {
+    _layoutDirectionRoot() {
         const node = this.jm.mind.root;
         // logger.debug(node);
         let layout_data = null;
@@ -50,7 +50,7 @@ export class LayoutProvider {
         if (this.isside) {
             let i = children_count;
             while (i--) {
-                this._layout_direction_side(children[i], MindMapMain.direction.right, i);
+                this._layoutDirectionSide(children[i], MindMapMain.direction.right, i);
             }
         } else {
             let i = children_count;
@@ -58,9 +58,9 @@ export class LayoutProvider {
             while (i--) {
                 subnode = children[i];
                 if (subnode.direction == MindMapMain.direction.left) {
-                    this._layout_direction_side(subnode, MindMapMain.direction.left, i);
+                    this._layoutDirectionSide(subnode, MindMapMain.direction.left, i);
                 } else {
-                    this._layout_direction_side(subnode, MindMapMain.direction.right, i);
+                    this._layoutDirectionSide(subnode, MindMapMain.direction.right, i);
                 }
             }
             /*
@@ -68,16 +68,16 @@ export class LayoutProvider {
              var i = children_count;
              while(i--){
              if(i>=boundary){
-             this._layout_direction_side(children[i],jm.direction.left, children_count-i-1);
+             this._layoutDirectionSide(children[i],jm.direction.left, children_count-i-1);
              }else{
-             this._layout_direction_side(children[i],jm.direction.right, i);
+             this._layoutDirectionSide(children[i],jm.direction.right, i);
              }
              }*/
 
         }
     }
 
-    _layout_direction_side(node, direction, side_index) {
+    _layoutDirectionSide(node, direction, side_index) {
         let layout_data = null;
         if ('layout' in node._data) {
             layout_data = node._data.layout;
@@ -92,11 +92,11 @@ export class LayoutProvider {
         layout_data.side_index = side_index;
         let i = children_count;
         while (i--) {
-            this._layout_direction_side(children[i], direction, i);
+            this._layoutDirectionSide(children[i], direction, i);
         }
     }
 
-    layout_offset() {
+    layoutOffset() {
         const node = this.jm.mind.root;
         const layout_data = node._data.layout;
         layout_data.offset_x = 0;
@@ -117,8 +117,8 @@ export class LayoutProvider {
         }
         layout_data.left_nodes = left_nodes;
         layout_data.right_nodes = right_nodes;
-        layout_data.outer_height_left = this._layout_offset_subnodes(left_nodes);
-        layout_data.outer_height_right = this._layout_offset_subnodes(right_nodes);
+        layout_data.outer_height_left = this._layoutOffsetSubNodes(left_nodes);
+        layout_data.outer_height_right = this._layoutOffsetSubNodes(right_nodes);
         this.bounds.e = node._data.view.width / 2;
         this.bounds.w = 0 - this.bounds.e;
         //logger.debug(this.bounds.w);
@@ -127,7 +127,7 @@ export class LayoutProvider {
     }
 
     // layout both the x and y axis
-    _layout_offset_subnodes(nodes) {
+    _layoutOffsetSubNodes(nodes) {
         let total_height = 0;
         const nodes_count = nodes.length;
         let i = nodes_count;
@@ -143,10 +143,10 @@ export class LayoutProvider {
                 pd = node.parent._data;
             }
 
-            node_outer_height = this._layout_offset_subnodes(node.children);
+            node_outer_height = this._layoutOffsetSubNodes(node.children);
             if (!node.expanded) {
                 node_outer_height = 0;
-                this.set_visible(node.children, false);
+                this.setVisible(node.children, false);
             }
             node_outer_height = Math.max(node._data.view.height, node_outer_height);
 
@@ -174,7 +174,7 @@ export class LayoutProvider {
     }
 
     // layout the y axis only, for collapse/expand a node
-    _layout_offset_subnodes_height(nodes) {
+    _layoutOffsetSubNodesHeight(nodes) {
         let total_height = 0;
         const nodes_count = nodes.length;
         let i = nodes_count;
@@ -190,7 +190,7 @@ export class LayoutProvider {
                 pd = node.parent._data;
             }
 
-            node_outer_height = this._layout_offset_subnodes_height(node.children);
+            node_outer_height = this._layoutOffsetSubNodesHeight(node.children);
             if (!node.expanded) {
                 node_outer_height = 0;
             }
@@ -215,7 +215,7 @@ export class LayoutProvider {
         return total_height;
     }
 
-    get_node_offset(node) {
+    getNodeOffset(node) {
         const layout_data = node._data.layout;
         let offset_cache = null;
         if (('_offset_' in layout_data) && this.cache_valid) {
@@ -228,7 +228,7 @@ export class LayoutProvider {
             let x = layout_data.offset_x;
             let y = layout_data.offset_y;
             if (!node.isroot) {
-                const offset_p = this.get_node_offset(node.parent);
+                const offset_p = this.getNodeOffset(node.parent);
                 x += offset_p.x;
                 y += offset_p.y;
             }
@@ -238,9 +238,9 @@ export class LayoutProvider {
         return offset_cache;
     }
 
-    get_node_point(node) {
+    getNodePoint(node) {
         const view_data = node._data.view;
-        const offset_p = this.get_node_offset(node);
+        const offset_p = this.getNodeOffset(node);
         //logger.debug(offset_p);
         let p = { x: 0, y: 0 };
         p.x = offset_p.x + view_data.width * (node._data.layout.direction - 1) / 2;
@@ -249,11 +249,11 @@ export class LayoutProvider {
         return p;
     }
 
-    get_node_point_in(node) {
-        return this.get_node_offset(node);
+    getNodePointIn(node) {
+        return this.getNodeOffset(node);
     }
 
-    get_node_point_out(node) {
+    getNodePointOut(node) {
         const layout_data = node._data.layout;
         let pout_cache = null;
         if (('_pout_' in layout_data) && this.cache_valid) {
@@ -268,7 +268,7 @@ export class LayoutProvider {
                 pout_cache.y = 0;
             } else {
                 const view_data = node._data.view;
-                const offset_p = this.get_node_offset(node);
+                const offset_p = this.getNodeOffset(node);
                 pout_cache.x = offset_p.x + (view_data.width + this.opts.pspace) * node._data.layout.direction;
                 pout_cache.y = offset_p.y;
                 //logger.debug('pout');
@@ -278,8 +278,8 @@ export class LayoutProvider {
         return pout_cache;
     }
 
-    get_expander_point(node) {
-        const p = this.get_node_point_out(node);
+    getExpanderPoint(node) {
+        const p = this.getNodePointOut(node);
         const ex_p = { x: 0, y: 0 };
         if (node._data.layout.direction == MindMapMain.direction.right) {
             ex_p.x = p.x - this.opts.pspace;
@@ -290,13 +290,13 @@ export class LayoutProvider {
         return ex_p;
     }
 
-    get_min_size() {
+    getMinSize() {
         const nodes = this.jm.mind.nodes;
         let node = null;
         let pout = null;
         for (let nodeid in nodes) {
             node = nodes[nodeid];
-            pout = this.get_node_point_out(node);
+            pout = this.getNodePointOut(node);
             //logger.debug(pout.x);
             if (pout.x > this.bounds.e) {this.bounds.e = pout.x;}
             if (pout.x < this.bounds.w) {this.bounds.w = pout.x;}
@@ -307,30 +307,30 @@ export class LayoutProvider {
         }
     }
 
-    toggle_node(node) {
+    toggleNode(node) {
         if (node.isroot) {
             return;
         }
         if (node.expanded) {
-            this.collapse_node(node);
+            this.collapseNode(node);
         } else {
-            this.expand_node(node);
+            this.expandNode(node);
         }
     }
 
-    expand_node(node) {
+    expandNode(node) {
         node.expanded = true;
-        this.part_layout(node);
-        this.set_visible(node.children, true);
+        this.partLayout(node);
+        this.setVisible(node.children, true);
     }
 
-    collapse_node(node) {
+    collapseNode(node) {
         node.expanded = false;
-        this.part_layout(node);
-        this.set_visible(node.children, false);
+        this.partLayout(node);
+        this.setVisible(node.children, false);
     }
 
-    expand_all() {
+    expandAll() {
         const nodes = this.jm.mind.nodes;
         let c = 0;
         let node;
@@ -343,12 +343,12 @@ export class LayoutProvider {
         }
         if (c > 0) {
             const root = this.jm.mind.root;
-            this.part_layout(root);
-            this.set_visible(root.children, true);
+            this.partLayout(root);
+            this.setVisible(root.children, true);
         }
     }
 
-    collapse_all() {
+    collapseAll() {
         const nodes = this.jm.mind.nodes;
         let c = 0;
         let node;
@@ -361,12 +361,12 @@ export class LayoutProvider {
         }
         if (c > 0) {
             const root = this.jm.mind.root;
-            this.part_layout(root);
-            this.set_visible(root.children, true);
+            this.partLayout(root);
+            this.setVisible(root.children, true);
         }
     }
 
-    expand_to_depth(target_depth, curr_nodes, curr_depth) {
+    expandToDepth(target_depth, curr_nodes?, curr_depth?) {
         if (target_depth < 1) {return;}
         const nodes = curr_nodes || this.jm.mind.root.children;
         let depth = curr_depth || 1;
@@ -376,32 +376,32 @@ export class LayoutProvider {
             node = nodes[i];
             if (depth < target_depth) {
                 if (!node.expanded) {
-                    this.expand_node(node);
+                    this.expandNode(node);
                 }
-                this.expand_to_depth(target_depth, node.children, depth + 1);
+                this.expandToDepth(target_depth, node.children, depth + 1);
             }
             if (depth == target_depth) {
                 if (node.expanded) {
-                    this.collapse_node(node);
+                    this.collapseNode(node);
                 }
             }
         }
     }
 
-    part_layout(node) {
+    partLayout(node) {
         const root = this.jm.mind.root;
         if (!!root) {
             const root_layout_data = root._data.layout;
             if (node.isroot) {
-                root_layout_data.outer_height_right = this._layout_offset_subnodes_height(root_layout_data.right_nodes);
-                root_layout_data.outer_height_left = this._layout_offset_subnodes_height(root_layout_data.left_nodes);
+                root_layout_data.outer_height_right = this._layoutOffsetSubNodesHeight(root_layout_data.right_nodes);
+                root_layout_data.outer_height_left = this._layoutOffsetSubNodesHeight(root_layout_data.left_nodes);
             } else {
                 if (node._data.layout.direction == MindMapMain.direction.right) {
                     root_layout_data.outer_height_right
-                        = this._layout_offset_subnodes_height(root_layout_data.right_nodes);
+                        = this._layoutOffsetSubNodesHeight(root_layout_data.right_nodes);
                 } else {
                     root_layout_data.outer_height_left
-                        = this._layout_offset_subnodes_height(root_layout_data.left_nodes);
+                        = this._layoutOffsetSubNodesHeight(root_layout_data.left_nodes);
                 }
             }
             this.bounds.s = Math.max(root_layout_data.outer_height_left, root_layout_data.outer_height_right);
@@ -411,7 +411,7 @@ export class LayoutProvider {
         }
     }
 
-    set_visible(nodes, visible) {
+    setVisible(nodes, visible) {
         let i = nodes.length;
         let node = null;
         let layout_data = null;
@@ -419,9 +419,9 @@ export class LayoutProvider {
             node = nodes[i];
             layout_data = node._data.layout;
             if (node.expanded) {
-                this.set_visible(node.children, visible);
+                this.setVisible(node.children, visible);
             } else {
-                this.set_visible(node.children, false);
+                this.setVisible(node.children, false);
             }
             if (!node.isroot) {
                 node._data.layout.visible = visible;
@@ -429,11 +429,11 @@ export class LayoutProvider {
         }
     }
 
-    is_expand(node) {
+    isExpand(node) {
         return node.expanded;
     }
 
-    is_visible(node) {
+    isVisible(node) {
         const layout_data = node._data.layout;
         if (('visible' in layout_data) && !layout_data.visible) {
             return false;

@@ -1,12 +1,13 @@
 import * as _ from 'lodash';
 import { customizeUtil } from './util';
 import { ShortcutProvider } from './shortcut-provider';
-import { VERSION, DEFAULT_OPTIONS, logger, $win } from './config';
+import { $win, DEFAULT_OPTIONS, logger, VERSION } from './config';
 import { MindMapDataProvider } from './data-provider';
 import { LayoutProvider } from './layout-provider';
 import { customizeFormat } from './customize-format';
 import { ViewProvider } from './view-provider';
 import { Subject } from 'rxjs/Subject';
+import { MindMapMind } from './mind-map-mind';
 
 export interface MindMapModuleOptsView {
     hmargin: number;
@@ -45,13 +46,13 @@ export class MindMapMain {
     opts: MindMapModuleOpts = {};
     options = this.opts;
     inited = false;
-    mind = null;
+    mind: MindMapMind;
     eventHandles = [];
     static direction;
     static eventType;
-    data;
-    layout;
-    view;
+    data: MindMapDataProvider;
+    layout: LayoutProvider;
+    view: ViewProvider;
     shortcut;
     mindMapDataTransporter = new Subject<any>();
     mindMapDataReceiver = new Subject<any>();
@@ -107,95 +108,95 @@ export class MindMapMain {
         this.view.init();
         this.shortcut.init();
 
-        this._event_bind();
+        this.eventBind();
 
         MindMapMain.initPluginsNextTick(this);
     }
 
-    enable_edit() {
+    enableEdit() {
         this.options.editable = true;
     }
 
-    disable_edit() {
+    disableEdit() {
         this.options.editable = false;
     }
 
-    // call enable_event_handle('dblclick')
+    // call enableEventHandle('dblclick')
     // options are 'mousedown', 'click', 'dblclick'
-    enable_event_handle(event_handle) {
+    enableEventHandle(event_handle) {
         this.options.defaultEventHandle['can' + event_handle + 'Handle'] = true;
     }
 
-    // call disable_event_handle('dblclick')
+    // call disableEventHandle('dblclick')
     // options are 'mousedown', 'click', 'dblclick'
-    disable_event_handle(event_handle) {
+    disableEventHandle(event_handle) {
         this.options.defaultEventHandle['can' + event_handle + 'Handle'] = false;
     }
 
-    get_editable() {
+    getEditable() {
         return this.options.editable;
     }
 
-    get_node_editable(node) {
+    getNodeEditable(node) {
         return !(!this.options.canRootNodeEditable && node.isroot);
     }
 
-    set_theme(theme) {
+    setTheme(theme) {
         const theme_old = this.options.theme;
         this.options.theme = (!!theme) ? theme : null;
         if (theme_old != this.options.theme) {
-            this.view.reset_theme();
-            this.view.reset_custom_style();
+            this.view.resetTheme();
+            this.view.resetCustomStyle();
         }
     }
 
-    _event_bind() {
-        this.view.add_event(this, 'mousedown', this.mousedown_handle);
-        this.view.add_event(this, 'click', this.click_handle);
-        this.view.add_event(this, 'dblclick', this.dblclick_handle);
+    eventBind() {
+        this.view.addEvent(this, 'mousedown', this.mouseDownHandle);
+        this.view.addEvent(this, 'click', this.clickHandle);
+        this.view.addEvent(this, 'dblclick', this.dblclickHandle);
     }
 
-    mousedown_handle(e) {
+    mouseDownHandle(e) {
         if (!this.options.defaultEventHandle.canHandleMouseDown) {
             return;
         }
         const element = e.target || event.srcElement;
-        const nodeid = this.view.get_binded_nodeid(element);
+        const nodeid = this.view.getBindedNodeId(element);
         if (!!nodeid) {
-            this.select_node(nodeid);
+            this.selectNode(nodeid);
         } else {
-            this.select_clear();
+            this.selectClear();
         }
     }
 
-    click_handle(e) {
+    clickHandle(e) {
         if (!this.options.defaultEventHandle.canHandleClick) {
             return;
         }
         const element = e.target || event.srcElement;
-        const isexpander = this.view.is_expander(element);
+        const isexpander = this.view.isExpander(element);
         if (isexpander) {
-            const nodeid = this.view.get_binded_nodeid(element);
+            const nodeid = this.view.getBindedNodeId(element);
             if (!!nodeid) {
-                this.toggle_node(nodeid);
+                this.toggleNode(nodeid);
             }
         }
     }
 
-    dblclick_handle(e) {
+    dblclickHandle(e) {
         if (!this.options.defaultEventHandle.canHandleDblclick) {
             return;
         }
-        if (this.get_editable()) {
+        if (this.getEditable()) {
             const element = e.target || event.srcElement;
-            const nodeid = this.view.get_binded_nodeid(element);
+            const nodeid = this.view.getBindedNodeId(element);
             if (!!nodeid && nodeid !== 'root') {
-                this.begin_edit(nodeid);
+                this.beginEdit(nodeid);
             }
         }
     }
 
-    get_select_types_by_hierarchy_rule(node) {
+    getSelectTypesByHierarchyRule(node) {
         if (!this.options.hierarchyRule) {
             return null;
         }
@@ -212,13 +213,13 @@ export class MindMapMain {
         return types;
     }
 
-    begin_edit(node) {
+    beginEdit(node) {
         if (!customizeUtil.is_node(node)) {
-            return this.begin_edit(this.get_node(node));
+            return this.beginEdit(this.getNode(node));
         }
-        if (this.get_editable() && this.get_node_editable(node)) {
+        if (this.getEditable() && this.getNodeEditable(node)) {
             if (!!node) {
-                this.view.edit_node_begin(node, this.get_select_types_by_hierarchy_rule(node));
+                this.view.editNodeBegin(node, this.getSelectTypesByHierarchyRule(node));
             } else {
                 logger.error('the node can not be found');
             }
@@ -228,67 +229,67 @@ export class MindMapMain {
         }
     }
 
-    end_edit() {
-        this.view.edit_node_end();
+    endEdit() {
+        this.view.editNodeEnd();
     }
 
-    toggle_node(node) {
+    toggleNode(node) {
         if (!customizeUtil.is_node(node)) {
-            return this.toggle_node(this.get_node(node));
+            return this.toggleNode(this.getNode(node));
         }
         if (!!node) {
             if (node.isroot) {return;}
-            this.view.save_location(node);
-            this.layout.toggle_node(node);
+            this.view.saveLocation(node);
+            this.layout.toggleNode(node);
             this.view.relayout();
-            this.view.restore_location(node);
+            this.view.restoreLocation(node);
         } else {
             logger.error('the node can not be found.');
         }
     }
 
-    expand_node(node) {
+    expandNode(node) {
         if (!customizeUtil.is_node(node)) {
-            return this.expand_node(this.get_node(node));
+            return this.expandNode(this.getNode(node));
         }
         if (!!node) {
             if (node.isroot) {return;}
-            this.view.save_location(node);
-            this.layout.expand_node(node);
+            this.view.saveLocation(node);
+            this.layout.expandNode(node);
             this.view.relayout();
-            this.view.restore_location(node);
+            this.view.restoreLocation(node);
         } else {
             logger.error('the node can not be found.');
         }
     }
 
-    collapse_node(node) {
+    collapseNode(node) {
         if (!customizeUtil.is_node(node)) {
-            return this.collapse_node(this.get_node(node));
+            return this.collapseNode(this.getNode(node));
         }
         if (!!node) {
             if (node.isroot) {return;}
-            this.view.save_location(node);
-            this.layout.collapse_node(node);
+            this.view.saveLocation(node);
+            this.layout.collapseNode(node);
             this.view.relayout();
-            this.view.restore_location(node);
+            this.view.restoreLocation(node);
         } else {
             logger.error('the node can not be found.');
         }
     }
 
-    expand_all() {
-        this.layout.expand_all();
+    expandAll() {
+        this.layout.expandAll();
         this.view.relayout();
     }
 
-    collapse_all() {
-        this.layout.collapse_all();
+    collapseAll() {
+        this.layout.collapseAll();
         this.view.relayout();
     }
 
-    expand_to_depth(depth) {
-        this.layout.expand_to_depth(depth);
+    expandToDepth(depth) {
+        this.layout.expandToDepth(depth);
         this.view.relayout();
     }
 
@@ -318,7 +319,7 @@ export class MindMapMain {
         this.view.show(true);
         logger.debug('view.show ok');
 
-        this.invoke_event_handle(MindMapMain.eventType.show, { data: [mind] });
+        this.invokeEventHandleNextTick(MindMapMain.eventType.show, { data: [mind] });
     }
 
     // show entrance
@@ -327,7 +328,7 @@ export class MindMapMain {
         this._show(mind);
     }
 
-    get_meta() {
+    getMeta() {
         return {
             name: this.mind.name,
             author: this.mind.author,
@@ -335,13 +336,13 @@ export class MindMapMain {
         };
     }
 
-    get_data(data_format?) {
+    getData(data_format?) {
         const df = data_format || 'node_tree';
-        return this.data.get_data(df);
+        return this.data.getData(df);
     }
 
-    get_depth() {
-        const currentData = this.get_data().data;
+    getDepth() {
+        const currentData = this.getData().data;
         const getDepth = (data) => {
             let depth = 1;
             if (data.children && data.children[0]) {
@@ -357,15 +358,15 @@ export class MindMapMain {
         return getDepth(currentData);
     }
 
-    get_root() {
+    getRoot() {
         return this.mind.root;
     }
 
-    get_node(nodeid) {
-        return this.mind.get_node(nodeid);
+    getNode(nodeid) {
+        return this.mind.getNode(nodeid);
     }
 
-    get_current_hierarchy_rule(parent_node) {
+    getCurrentHierarchyRule(parent_node) {
         if (!this.options.hierarchyRule) {
             return null;
         }
@@ -375,14 +376,14 @@ export class MindMapMain {
         return _.find(this.options.hierarchyRule, { name: parent_node.selected_type }).getChildren()[0];
     }
 
-    add_node(parent_node, nodeid, topic, data) {
+    addNode(parent_node, nodeid, topic, data) {
         data = data || {};
         data.is_created = true;
         if (this.options.depth && (parent_node.level >= this.options.depth)) {
             throw new Error('over depth');
         }
-        if (this.get_editable()) {
-            const current_rule = this.get_current_hierarchy_rule(parent_node);
+        if (this.getEditable()) {
+            const current_rule = this.getCurrentHierarchyRule(parent_node);
             const selected_type = current_rule && current_rule.name;
             if (!selected_type && this.options.hierarchyRule) {
                 throw new Error('forbidden add');
@@ -395,15 +396,15 @@ export class MindMapMain {
             if (current_rule.color) {
                 data['color'] = current_rule.color;
             }
-            const node = this.mind.add_node(parent_node, nodeid, topic, data, null, null, null, selected_type);
+            const node = this.mind.addNode(parent_node, nodeid, topic, data, null, null, null, selected_type);
             if (!!node) {
-                this.view.add_node(node);
+                this.view.addNode(node);
                 this.layout.layout();
                 this.view.show(false);
-                this.view.reset_node_custom_style(node);
-                this.expand_node(parent_node);
-                this.invoke_event_handle(MindMapMain.eventType.edit, {
-                    evt: 'add_node',
+                this.view.resetNodeCustomStyle(node);
+                this.expandNode(parent_node);
+                this.invokeEventHandleNextTick(MindMapMain.eventType.edit, {
+                    evt: 'addNode',
                     data: [parent_node.id, nodeid, topic, data],
                     node: nodeid
                 });
@@ -415,16 +416,16 @@ export class MindMapMain {
         }
     }
 
-    insert_node_before(node_before, nodeid, topic, data) {
-        if (this.get_editable()) {
+    insertNodeBefore(node_before, nodeid, topic, data) {
+        if (this.getEditable()) {
             const beforeid = customizeUtil.is_node(node_before) ? node_before.id : node_before;
-            const node = this.mind.insert_node_before(node_before, nodeid, topic, data);
+            const node = this.mind.insertNodeBefore(node_before, nodeid, topic, data);
             if (!!node) {
-                this.view.add_node(node);
+                this.view.addNode(node);
                 this.layout.layout();
                 this.view.show(false);
-                this.invoke_event_handle(MindMapMain.eventType.edit, {
-                    evt: 'insert_node_before',
+                this.invokeEventHandleNextTick(MindMapMain.eventType.edit, {
+                    evt: 'insertNodeBefore',
                     data: [beforeid, nodeid, topic, data],
                     node: nodeid
                 });
@@ -436,15 +437,15 @@ export class MindMapMain {
         }
     }
 
-    insert_node_after(node_after, nodeid, topic, data) {
-        if (this.get_editable()) {
-            const node = this.mind.insert_node_after(node_after, nodeid, topic, data);
+    insertNodeAfter(node_after, nodeid, topic, data) {
+        if (this.getEditable()) {
+            const node = this.mind.insertNodeAfter(node_after, nodeid, topic, data);
             if (!!node) {
-                this.view.add_node(node);
+                this.view.addNode(node);
                 this.layout.layout();
                 this.view.show(false);
-                this.invoke_event_handle(MindMapMain.eventType.edit, {
-                    evt: 'insert_node_after',
+                this.invokeEventHandleNextTick(MindMapMain.eventType.edit, {
+                    evt: 'insertNodeAfter',
                     data: [node_after.id, nodeid, topic, data],
                     node: nodeid
                 });
@@ -456,11 +457,11 @@ export class MindMapMain {
         }
     }
 
-    remove_node(node) {
+    removeNode(node) {
         if (!customizeUtil.is_node(node)) {
-            return this.remove_node(this.get_node(node));
+            return this.removeNode(this.getNode(node));
         }
-        if (this.get_editable()) {
+        if (this.getEditable()) {
             if (!!node) {
                 if (node.isroot) {
                     logger.error('fail, can not remove root node');
@@ -468,15 +469,15 @@ export class MindMapMain {
                 }
                 const nodeid = node.id;
                 const parentid = node.parent.id;
-                const parent_node = this.get_node(parentid);
-                this.view.save_location(parent_node);
-                this.view.remove_node(node);
-                this.mind.remove_node(node);
+                const parent_node = this.getNode(parentid);
+                this.view.saveLocation(parent_node);
+                this.view.removeNode(node);
+                this.mind.removeNode(node);
                 this.layout.layout();
                 this.view.show(false);
-                this.view.restore_location(parent_node);
-                this.invoke_event_handle(MindMapMain.eventType.edit, {
-                    evt: 'remove_node',
+                this.view.restoreLocation(parent_node);
+                this.invokeEventHandleNextTick(MindMapMain.eventType.edit, {
+                    evt: 'removeNode',
                     data: [nodeid],
                     node: parentid
                 });
@@ -490,26 +491,26 @@ export class MindMapMain {
         }
     }
 
-    update_node(nodeid, topic, selected_type) {
-        if (this.get_editable()) {
+    updateNode(nodeid, topic, selected_type) {
+        if (this.getEditable()) {
             if (customizeUtil.text.is_empty(topic)) {
                 logger.warn('fail, topic can not be empty');
                 return;
             }
-            const node = this.get_node(nodeid);
+            const node = this.getNode(nodeid);
             if (!!node) {
                 if (node.topic === topic && node.selected_type === selected_type) {
                     logger.info('nothing changed');
-                    this.view.update_node(node);
+                    this.view.updateNode(node);
                     return;
                 }
                 node.topic = topic;
                 node.selected_type = selected_type;
-                this.view.update_node(node);
+                this.view.updateNode(node);
                 this.layout.layout();
                 this.view.show(false);
-                this.invoke_event_handle(MindMapMain.eventType.edit, {
-                    evt: 'update_node',
+                this.invokeEventHandleNextTick(MindMapMain.eventType.edit, {
+                    evt: 'updateNode',
                     data: [nodeid, topic],
                     node: nodeid
                 });
@@ -520,15 +521,15 @@ export class MindMapMain {
         }
     }
 
-    move_node(nodeid, beforeid, parentid, direction) {
-        if (this.get_editable()) {
-            const node = this.mind.move_node(nodeid, beforeid, parentid, direction);
+    moveNode(nodeid, beforeid, parentid, direction) {
+        if (this.getEditable()) {
+            const node = this.mind.moveNode(nodeid, beforeid, parentid, direction);
             if (!!node) {
-                this.view.update_node(node);
+                this.view.updateNode(node);
                 this.layout.layout();
                 this.view.show(false);
-                this.invoke_event_handle(MindMapMain.eventType.edit, {
-                    evt: 'move_node',
+                this.invokeEventHandleNextTick(MindMapMain.eventType.edit, {
+                    evt: 'moveNode',
                     data: [nodeid, beforeid, parentid, direction],
                     node: nodeid
                 });
@@ -539,20 +540,20 @@ export class MindMapMain {
         }
     }
 
-    select_node(node) {
+    selectNode(node) {
         if (!customizeUtil.is_node(node)) {
-            return this.select_node(this.get_node(node));
+            return this.selectNode(this.getNode(node));
         }
-        if (!node || !this.layout.is_visible(node)) {
+        if (!node || !this.layout.isVisible(node)) {
             return;
         }
         this.mind.selected = node;
         if (!!node) {
-            this.view.select_node(node);
+            this.view.selectNode(node);
         }
     }
 
-    get_selected_node() {
+    getSelectedNode() {
         if (!!this.mind) {
             return this.mind.selected;
         } else {
@@ -560,20 +561,20 @@ export class MindMapMain {
         }
     }
 
-    select_clear() {
+    selectClear() {
         if (!!this.mind) {
             this.mind.selected = null;
-            this.view.select_clear();
+            this.view.selectClear();
         }
     }
 
-    is_node_visible(node) {
-        return this.layout.is_visible(node);
+    isNodeVisible(node) {
+        return this.layout.isVisible(node);
     }
 
-    find_node_before(node) {
+    findNodeBefore(node) {
         if (!customizeUtil.is_node(node)) {
-            return this.find_node_before(this.get_node(node));
+            return this.findNodeBefore(this.getNode(node));
         }
         if (!node || node.isroot) {return null;}
         let n = null;
@@ -591,14 +592,14 @@ export class MindMapMain {
                 }
             }
         } else {
-            n = this.mind.get_node_before(node);
+            n = this.mind.getNodeBefore(node);
         }
         return n;
     }
 
-    find_node_after(node) {
+    findNodeAfter(node) {
         if (!customizeUtil.is_node(node)) {
-            return this.find_node_after(this.get_node(node));
+            return this.findNodeAfter(this.getNode(node));
         }
         if (!node || node.isroot) {return null;}
         let n = null;
@@ -619,14 +620,14 @@ export class MindMapMain {
                 }
             }
         } else {
-            n = this.mind.get_node_after(node);
+            n = this.mind.getNodeAfter(node);
         }
         return n;
     }
 
-    set_node_color(nodeid, bgcolor, fgcolor) {
-        if (this.get_editable()) {
-            const node = this.mind.get_node(nodeid);
+    setNodeColor(nodeid, bgcolor, fgcolor) {
+        if (this.getEditable()) {
+            const node = this.mind.getNode(nodeid);
             if (!!node) {
                 if (!!bgcolor) {
                     node.data['background-color'] = bgcolor;
@@ -634,7 +635,7 @@ export class MindMapMain {
                 if (!!fgcolor) {
                     node.data['foreground-color'] = fgcolor;
                 }
-                this.view.reset_node_custom_style(node);
+                this.view.resetNodeCustomStyle(node);
             }
         } else {
             logger.error('fail, this mind map is not editable');
@@ -642,9 +643,9 @@ export class MindMapMain {
         }
     }
 
-    set_node_font_style(nodeid, size, weight, style) {
-        if (this.get_editable()) {
-            const node = this.mind.get_node(nodeid);
+    setNodeFontStyle(nodeid, size, weight, style) {
+        if (this.getEditable()) {
+            const node = this.mind.getNode(nodeid);
             if (!!node) {
                 if (!!size) {
                     node.data['font-size'] = size;
@@ -655,8 +656,8 @@ export class MindMapMain {
                 if (!!style) {
                     node.data['font-style'] = style;
                 }
-                this.view.reset_node_custom_style(node);
-                this.view.update_node(node);
+                this.view.resetNodeCustomStyle(node);
+                this.view.updateNode(node);
                 this.layout.layout();
                 this.view.show(false);
             }
@@ -666,9 +667,9 @@ export class MindMapMain {
         }
     }
 
-    set_node_background_image(nodeid, image, width, height, rotation) {
-        if (this.get_editable()) {
-            const node = this.mind.get_node(nodeid);
+    setNodeBackgroundImage(nodeid, image, width, height, rotation) {
+        if (this.getEditable()) {
+            const node = this.mind.getNode(nodeid);
             if (!!node) {
                 if (!!image) {
                     node.data['background-image'] = image;
@@ -682,8 +683,8 @@ export class MindMapMain {
                 if (!!rotation) {
                     node.data['background-rotation'] = rotation;
                 }
-                this.view.reset_node_custom_style(node);
-                this.view.update_node(node);
+                this.view.resetNodeCustomStyle(node);
+                this.view.updateNode(node);
                 this.layout.layout();
                 this.view.show(false);
             }
@@ -693,17 +694,17 @@ export class MindMapMain {
         }
     }
 
-    set_node_background_rotation(nodeid, rotation) {
-        if (this.get_editable()) {
-            const node = this.mind.get_node(nodeid);
+    setNodeBackgroundRotation(nodeid, rotation) {
+        if (this.getEditable()) {
+            const node = this.mind.getNode(nodeid);
             if (!!node) {
                 if (!node.data['background-image']) {
                     logger.error('fail, only can change rotation angle of node with background image');
                     return null;
                 }
                 node.data['background-rotation'] = rotation;
-                this.view.reset_node_custom_style(node);
-                this.view.update_node(node);
+                this.view.resetNodeCustomStyle(node);
+                this.view.updateNode(node);
                 this.layout.layout();
                 this.view.show(false);
             }
@@ -718,20 +719,20 @@ export class MindMapMain {
     }
 
     // callback(type ,data)
-    add_event_listener(callback) {
+    addEventListener(callback) {
         if (typeof callback === 'function') {
             this.eventHandles.push(callback);
         }
     }
 
-    invoke_event_handle(type, data) {
+    invokeEventHandleNextTick(type, data) {
         const j = this;
         $win.setTimeout(function () {
-            j._invoke_event_handle(type, data);
+            j.invokeEventHandle(type, data);
         }, 0);
     }
 
-    _invoke_event_handle(type, data) {
+    invokeEventHandle(type, data) {
         const l = this.eventHandles.length;
         for (let i = 0; i < l; i++) {
             this.eventHandles[i](type, data);

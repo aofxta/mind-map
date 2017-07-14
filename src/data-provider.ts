@@ -41,7 +41,7 @@ export class MindMapDataProvider {
         return mind;
     }
 
-    get_data(data_format) {
+    getData(data_format) {
         let data = null;
         if (data_format == 'node_array') {
             data = customizeFormat.node_array.get_data(this.jm.mind);

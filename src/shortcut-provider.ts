@@ -20,15 +20,15 @@ export class ShortcutProvider {
     init() {
         customizeUtil.dom.add_event($document, 'keydown', this.handler.bind(this));
 
-        this.handles['addchild'] = this.handle_addchild;
-        this.handles['addbrother'] = this.handle_addbrother;
-        this.handles['editnode'] = this.handle_editnode;
-        this.handles['delnode'] = this.handle_delnode;
-        this.handles['toggle'] = this.handle_toggle;
-        this.handles['up'] = this.handle_up;
-        this.handles['down'] = this.handle_down;
-        this.handles['left'] = this.handle_left;
-        this.handles['right'] = this.handle_right;
+        this.handles['addchild'] = this.handleAddChild;
+        this.handles['addbrother'] = this.handleAddBrother;
+        this.handles['editnode'] = this.handleEditNode;
+        this.handles['delnode'] = this.handleDelNode;
+        this.handles['toggle'] = this.handleToggle;
+        this.handles['up'] = this.handleUp;
+        this.handles['down'] = this.handleDown;
+        this.handles['left'] = this.handleLeft;
+        this.handles['right'] = this.handleRight;
 
         for (const handle in this.mapping) {
             if (!!this.mapping[handle] && (handle in this.handles)) {
@@ -37,16 +37,16 @@ export class ShortcutProvider {
         }
     }
 
-    enable_shortcut() {
+    enableShortcut() {
         this.opts.enable = true;
     }
 
-    disable_shortcut() {
+    disableShortcut() {
         this.opts.enable = false;
     }
 
     handler(e) {
-        if (this.jm.view.is_editing()) {return;}
+        if (this.jm.view.isEditing()) {return;}
         const evt = e || event;
         if (!this.opts.enable) {return true;}
         const kc = evt.keyCode;
@@ -55,104 +55,104 @@ export class ShortcutProvider {
         }
     }
 
-    handle_addchild(_jm, e) {
-        const selected_node = _jm.get_selected_node();
+    handleAddChild(_jm, e) {
+        const selected_node = _jm.getSelectedNode();
         if (!!selected_node) {
             const nodeid = customizeUtil.uuid.newid();
-            const node = _jm.add_node(selected_node, nodeid, 'New Node');
+            const node = _jm.addNode(selected_node, nodeid, 'New Node');
             if (!!node) {
-                _jm.select_node(nodeid);
-                _jm.begin_edit(nodeid);
+                _jm.selectNode(nodeid);
+                _jm.beginEdit(nodeid);
             }
         }
     }
 
-    handle_addbrother(_jm, e) {
-        const selected_node = _jm.get_selected_node();
+    handleAddBrother(_jm, e) {
+        const selected_node = _jm.getSelectedNode();
         if (!!selected_node && !selected_node.isroot) {
             const nodeid = customizeUtil.uuid.newid();
-            const node = _jm.insert_node_after(selected_node, nodeid, 'New Node');
+            const node = _jm.insertNodeAfter(selected_node, nodeid, 'New Node');
             if (!!node) {
-                _jm.select_node(nodeid);
-                _jm.begin_edit(nodeid);
+                _jm.selectNode(nodeid);
+                _jm.beginEdit(nodeid);
             }
         }
     }
 
-    handle_editnode(_jm, e) {
-        const selected_node = _jm.get_selected_node();
+    handleEditNode(_jm, e) {
+        const selected_node = _jm.getSelectedNode();
         if (!!selected_node) {
-            _jm.begin_edit(selected_node);
+            _jm.beginEdit(selected_node);
         }
     }
 
-    handle_delnode(_jm, e) {
-        const selected_node = _jm.get_selected_node();
+    handleDelNode(_jm, e) {
+        const selected_node = _jm.getSelectedNode();
         if (!!selected_node && !selected_node.isroot) {
-            _jm.select_node(selected_node.parent);
-            _jm.remove_node(selected_node);
+            _jm.selectNode(selected_node.parent);
+            _jm.removeNode(selected_node);
         }
     }
 
-    handle_toggle(_jm, e) {
+    handleToggle(_jm, e) {
         const evt = e || event;
-        const selected_node = _jm.get_selected_node();
+        const selected_node = _jm.getSelectedNode();
         if (!!selected_node) {
-            _jm.toggle_node(selected_node.id);
+            _jm.toggleNode(selected_node.id);
             evt.stopPropagation();
             evt.preventDefault();
         }
     }
 
-    handle_up(_jm, e) {
+    handleUp(_jm, e) {
         const evt = e || event;
-        const selected_node = _jm.get_selected_node();
+        const selected_node = _jm.getSelectedNode();
         if (!!selected_node) {
-            let up_node = _jm.find_node_before(selected_node);
+            let up_node = _jm.findNodeBefore(selected_node);
             if (!up_node) {
-                const np = _jm.find_node_before(selected_node.parent);
+                const np = _jm.findNodeBefore(selected_node.parent);
                 if (!!np && np.children.length > 0) {
                     up_node = np.children[np.children.length - 1];
                 }
             }
             if (!!up_node) {
-                _jm.select_node(up_node);
+                _jm.selectNode(up_node);
             }
             evt.stopPropagation();
             evt.preventDefault();
         }
     }
 
-    handle_down(_jm, e) {
+    handleDown(_jm, e) {
         const evt = e || event;
-        const selected_node = _jm.get_selected_node();
+        const selected_node = _jm.getSelectedNode();
         if (!!selected_node) {
-            let down_node = _jm.find_node_after(selected_node);
+            let down_node = _jm.findNodeAfter(selected_node);
             if (!down_node) {
-                const np = _jm.find_node_after(selected_node.parent);
+                const np = _jm.findNodeAfter(selected_node.parent);
                 if (!!np && np.children.length > 0) {
                     down_node = np.children[0];
                 }
             }
             if (!!down_node) {
-                _jm.select_node(down_node);
+                _jm.selectNode(down_node);
             }
             evt.stopPropagation();
             evt.preventDefault();
         }
     }
 
-    handle_left(_jm, e) {
-        this._handle_direction(_jm, e, MindMapMain.direction.left);
+    handleLeft(_jm, e) {
+        this._handleDirection(_jm, e, MindMapMain.direction.left);
     }
 
-    handle_right(_jm, e) {
-        this._handle_direction(_jm, e, MindMapMain.direction.right);
+    handleRight(_jm, e) {
+        this._handleDirection(_jm, e, MindMapMain.direction.right);
     }
 
-    _handle_direction(_jm, e, d) {
+    _handleDirection(_jm, e, d) {
         const evt = e || event;
-        const selected_node = _jm.get_selected_node();
+        const selected_node = _jm.getSelectedNode();
         let node = null;
         if (!!selected_node) {
             if (selected_node.isroot) {
@@ -175,7 +175,7 @@ export class ShortcutProvider {
                 node = selected_node.parent;
             }
             if (!!node) {
-                _jm.select_node(node);
+                _jm.selectNode(node);
             }
             evt.stopPropagation();
             evt.preventDefault();
