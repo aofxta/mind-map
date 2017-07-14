@@ -1,3 +1,4 @@
+import { MindMapModuleOpts } from './mind-map-main';
 export const $win: { [propName: string]: any } = window;
 
 export const NAME: string = 'jsMind';
@@ -6,31 +7,31 @@ export const AUTHOR = '';
 
 export const logger = console;
 
-export const DEFAULT_OPTIONS = {
+export const DEFAULT_OPTIONS: MindMapModuleOpts = {
     container: '',   // id of the container
     editable: false, // you can change it in your options
     theme: null,
     mode: 'full',     // full or side
-    support_html: true,
-    can_root_node_editable: false,
-    selected_options: [],
-    has_interaction: false,
+    supportHtml: true,
+    canRootNodeEditable: false,
+    selectedOptions: [],
+    hasInteraction: false,
 
     view: {
         hmargin: 100,
         vmargin: 50,
-        line_width: 2,
-        line_color: '#555'
+        lineWidth: 2,
+        lineColor: '#555'
     },
     layout: {
         hspace: 30,
         vspace: 20,
         pspace: 13
     },
-    default_event_handle: {
-        enable_mousedown_handle: true,
-        enable_click_handle: true,
-        enable_dblclick_handle: true
+    defaultEventHandle: {
+        canHandleMouseDown: true,
+        canHandleClick: true,
+        canHandleDblclick: true
     },
     shortcut: {
         enable: true,

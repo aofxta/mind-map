@@ -78,8 +78,8 @@ export class ViewProvider {
 
     init_select() {
         this.e_select = $create('select');
-        this.e_select.value = this.opts.selected_options[0];
-        this.opts.selected_options.forEach((ele) => {
+        this.e_select.value = this.opts.selectedOptions[0];
+        this.opts.selectedOptions.forEach((ele) => {
             this.e_select.appendChild(ViewProvider.get_select_option(ele));
         });
         this.add_event_to_select(this.e_select);
@@ -142,7 +142,7 @@ export class ViewProvider {
 
 
     get_is_interact_selected_value(value) {
-        return this.jm.options.has_interaction && value === _.last(this.jm.options.selected_options);
+        return this.jm.options.hasInteraction && value === _.last(this.jm.options.selectedOptions);
     }
 
 
@@ -257,7 +257,7 @@ export class ViewProvider {
             view_data.expander = d_e;
         }
         if (!!node.topic) {
-            if (this.opts.support_html) {
+            if (this.opts.supportHtml) {
                 $html(d, node.show());
             } else {
                 $text(d, node.show());
@@ -297,7 +297,7 @@ export class ViewProvider {
         const view_data = node._data.view;
         const element = view_data.element;
         if (!!node.topic) {
-            if (this.opts.support_html) {
+            if (this.opts.supportHtml) {
                 $html(element, node.show());
             } else {
                 $text(element, node.show());
@@ -391,7 +391,7 @@ export class ViewProvider {
             if (customizeUtil.text.is_empty(topic) ||
                 customizeUtil.text.is_empty(selected_type) ||
                 (node.topic === topic && node.selected_type === selected_type)) {
-                if (this.opts.support_html) {
+                if (this.opts.supportHtml) {
                     $html(element, node.show());
                 } else {
                     $text(element, node.show());
@@ -429,7 +429,7 @@ export class ViewProvider {
         this.show_nodes();
         this.show_lines();
         //this.layout.cache_valid = true;
-        this.jm.invoke_event_handle(MindMapMain.event_type.resize, { data: [] });
+        this.jm.invoke_event_handle(MindMapMain.eventType.resize, { data: [] });
     }
 
     zoomIn() {
@@ -655,8 +655,8 @@ export class ViewProvider {
 
     draw_line(pin, pout, offset, canvas_ctx) {
         let ctx = canvas_ctx || this.canvas_ctx;
-        ctx.strokeStyle = this.opts.line_color;
-        ctx.lineWidth = this.opts.line_width;
+        ctx.strokeStyle = this.opts.lineColor;
+        ctx.lineWidth = this.opts.lineWidth;
         ctx.lineCap = 'round';
 
         customizeUtil.canvas.bezierto(

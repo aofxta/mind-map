@@ -8,21 +8,34 @@ import { customizeFormat } from './customize-format';
 import { ViewProvider } from './view-provider';
 import { Subject } from 'rxjs/Subject';
 
+export interface MindMapModuleOptsView {
+    hmargin: number;
+    vmargin: number;
+    lineWidth: number;
+    lineColor: string;
+}
+
+export interface MindMapModuleOptsDefaultEventHandle {
+    canHandleMouseDown: boolean;
+    canHandleClick: boolean;
+    canHandleDblclick: boolean;
+}
+
 export interface MindMapModuleOpts {
-    container?: Array<any>;
+    container?: string;
     mode?: any;
     layout?: any;
-    support_html?: any;
-    view?: any;
+    supportHtml?: any;
+    view?: MindMapModuleOptsView;
     shortcut?: any;
     editable?: boolean;
-    default_event_handle?: any;
+    defaultEventHandle?: MindMapModuleOptsDefaultEventHandle;
     theme?: any;
     depth?: number;
-    can_root_node_editable?: boolean;
-    selected_options?: string[];
-    has_interaction?: boolean;
-    hierarchy_rule?: { ROOT: any, [propName: string]: { name: string, getChildren: any } };
+    canRootNodeEditable?: boolean;
+    selectedOptions?: string[];
+    hasInteraction?: boolean;
+    hierarchyRule?: { ROOT: any, [propName: string]: { name: string, getChildren: any } };
 }
 
 
@@ -33,9 +46,9 @@ export class MindMapMain {
     options = this.opts;
     inited = false;
     mind = null;
-    event_handles = [];
+    eventHandles = [];
     static direction;
-    static event_type;
+    static eventType;
     data;
     layout;
     view;
@@ -45,9 +58,9 @@ export class MindMapMain {
 
     static plugin;
     static plugins;
-    static register_plugin;
-    static init_plugins;
-    static _init_plugins;
+    static registerPlugin;
+    static initPluginsNextTick;
+    static initPlugins;
     static show;
 
 
@@ -68,25 +81,25 @@ export class MindMapMain {
 
         const opts = this.options;
 
-        const opts_layout = {
+        const optsLayout = {
             mode: opts.mode,
             hspace: opts.layout.hspace,
             vspace: opts.layout.vspace,
             pspace: opts.layout.pspace
         };
-        const opts_view = {
+        const optsView = {
             container: opts.container,
-            support_html: opts.support_html,
+            supportHtml: opts.supportHtml,
             hmargin: opts.view.hmargin,
             vmargin: opts.view.vmargin,
-            line_width: opts.view.line_width,
-            line_color: opts.view.line_color,
-            selected_options: opts.selected_options,
+            lineWidth: opts.view.lineWidth,
+            lineColor: opts.view.lineColor,
+            selectedOptions: opts.selectedOptions,
         };
         // create instance of function provider
         this.data = new MindMapDataProvider(this);
-        this.layout = new LayoutProvider(this, opts_layout);
-        this.view = new ViewProvider(this, opts_view);
+        this.layout = new LayoutProvider(this, optsLayout);
+        this.view = new ViewProvider(this, optsView);
         this.shortcut = new ShortcutProvider(this, opts.shortcut);
 
         this.data.init();
@@ -96,7 +109,7 @@ export class MindMapMain {
 
         this._event_bind();
 
-        MindMapMain.init_plugins(this);
+        MindMapMain.initPluginsNextTick(this);
     }
 
     enable_edit() {
@@ -110,13 +123,13 @@ export class MindMapMain {
     // call enable_event_handle('dblclick')
     // options are 'mousedown', 'click', 'dblclick'
     enable_event_handle(event_handle) {
-        this.options.default_event_handle['enable_' + event_handle + '_handle'] = true;
+        this.options.defaultEventHandle['can' + event_handle + 'Handle'] = true;
     }
 
     // call disable_event_handle('dblclick')
     // options are 'mousedown', 'click', 'dblclick'
     disable_event_handle(event_handle) {
-        this.options.default_event_handle['enable_' + event_handle + '_handle'] = false;
+        this.options.defaultEventHandle['can' + event_handle + 'Handle'] = false;
     }
 
     get_editable() {
@@ -124,7 +137,7 @@ export class MindMapMain {
     }
 
     get_node_editable(node) {
-        return !(!this.options.can_root_node_editable && node.isroot);
+        return !(!this.options.canRootNodeEditable && node.isroot);
     }
 
     set_theme(theme) {
@@ -143,7 +156,7 @@ export class MindMapMain {
     }
 
     mousedown_handle(e) {
-        if (!this.options.default_event_handle['enable_mousedown_handle']) {
+        if (!this.options.defaultEventHandle.canHandleMouseDown) {
             return;
         }
         const element = e.target || event.srcElement;
@@ -156,7 +169,7 @@ export class MindMapMain {
     }
 
     click_handle(e) {
-        if (!this.options.default_event_handle['enable_click_handle']) {
+        if (!this.options.defaultEventHandle.canHandleClick) {
             return;
         }
         const element = e.target || event.srcElement;
@@ -170,7 +183,7 @@ export class MindMapMain {
     }
 
     dblclick_handle(e) {
-        if (!this.options.default_event_handle['enable_dblclick_handle']) {
+        if (!this.options.defaultEventHandle.canHandleDblclick) {
             return;
         }
         if (this.get_editable()) {
@@ -183,15 +196,15 @@ export class MindMapMain {
     }
 
     get_select_types_by_hierarchy_rule(node) {
-        if (!this.options.hierarchy_rule) {
+        if (!this.options.hierarchyRule) {
             return null;
         }
         const types = [];
         types.push(node.selected_type);
         const parent_select_type = _.get(node, 'parent.selected_type');
-        let current_rule = _.find(this.options.hierarchy_rule, { name: parent_select_type });
+        let current_rule = _.find(this.options.hierarchyRule, { name: parent_select_type });
         if (!current_rule) {
-            current_rule = this.options.hierarchy_rule.ROOT;
+            current_rule = this.options.hierarchyRule.ROOT;
         }
         current_rule.getChildren().forEach(children => {
             types.push(children.name);
@@ -305,7 +318,7 @@ export class MindMapMain {
         this.view.show(true);
         logger.debug('view.show ok');
 
-        this.invoke_event_handle(MindMapMain.event_type.show, { data: [mind] });
+        this.invoke_event_handle(MindMapMain.eventType.show, { data: [mind] });
     }
 
     // show entrance
@@ -353,13 +366,13 @@ export class MindMapMain {
     }
 
     get_current_hierarchy_rule(parent_node) {
-        if (!this.options.hierarchy_rule) {
+        if (!this.options.hierarchyRule) {
             return null;
         }
         if (parent_node.isroot) {
-            return this.options.hierarchy_rule.ROOT.getChildren()[0];
+            return this.options.hierarchyRule.ROOT.getChildren()[0];
         }
-        return _.find(this.options.hierarchy_rule, { name: parent_node.selected_type }).getChildren()[0];
+        return _.find(this.options.hierarchyRule, { name: parent_node.selected_type }).getChildren()[0];
     }
 
     add_node(parent_node, nodeid, topic, data) {
@@ -371,7 +384,7 @@ export class MindMapMain {
         if (this.get_editable()) {
             const current_rule = this.get_current_hierarchy_rule(parent_node);
             const selected_type = current_rule && current_rule.name;
-            if (!selected_type && this.options.hierarchy_rule) {
+            if (!selected_type && this.options.hierarchyRule) {
                 throw new Error('forbidden add');
             } else {
                 topic = topic || `${selected_type}的名称`;
@@ -389,7 +402,7 @@ export class MindMapMain {
                 this.view.show(false);
                 this.view.reset_node_custom_style(node);
                 this.expand_node(parent_node);
-                this.invoke_event_handle(MindMapMain.event_type.edit, {
+                this.invoke_event_handle(MindMapMain.eventType.edit, {
                     evt: 'add_node',
                     data: [parent_node.id, nodeid, topic, data],
                     node: nodeid
@@ -410,7 +423,7 @@ export class MindMapMain {
                 this.view.add_node(node);
                 this.layout.layout();
                 this.view.show(false);
-                this.invoke_event_handle(MindMapMain.event_type.edit, {
+                this.invoke_event_handle(MindMapMain.eventType.edit, {
                     evt: 'insert_node_before',
                     data: [beforeid, nodeid, topic, data],
                     node: nodeid
@@ -430,7 +443,7 @@ export class MindMapMain {
                 this.view.add_node(node);
                 this.layout.layout();
                 this.view.show(false);
-                this.invoke_event_handle(MindMapMain.event_type.edit, {
+                this.invoke_event_handle(MindMapMain.eventType.edit, {
                     evt: 'insert_node_after',
                     data: [node_after.id, nodeid, topic, data],
                     node: nodeid
@@ -462,7 +475,7 @@ export class MindMapMain {
                 this.layout.layout();
                 this.view.show(false);
                 this.view.restore_location(parent_node);
-                this.invoke_event_handle(MindMapMain.event_type.edit, {
+                this.invoke_event_handle(MindMapMain.eventType.edit, {
                     evt: 'remove_node',
                     data: [nodeid],
                     node: parentid
@@ -495,7 +508,7 @@ export class MindMapMain {
                 this.view.update_node(node);
                 this.layout.layout();
                 this.view.show(false);
-                this.invoke_event_handle(MindMapMain.event_type.edit, {
+                this.invoke_event_handle(MindMapMain.eventType.edit, {
                     evt: 'update_node',
                     data: [nodeid, topic],
                     node: nodeid
@@ -514,7 +527,7 @@ export class MindMapMain {
                 this.view.update_node(node);
                 this.layout.layout();
                 this.view.show(false);
-                this.invoke_event_handle(MindMapMain.event_type.edit, {
+                this.invoke_event_handle(MindMapMain.eventType.edit, {
                     evt: 'move_node',
                     data: [nodeid, beforeid, parentid, direction],
                     node: nodeid
@@ -707,7 +720,7 @@ export class MindMapMain {
     // callback(type ,data)
     add_event_listener(callback) {
         if (typeof callback === 'function') {
-            this.event_handles.push(callback);
+            this.eventHandles.push(callback);
         }
     }
 
@@ -719,16 +732,16 @@ export class MindMapMain {
     }
 
     _invoke_event_handle(type, data) {
-        const l = this.event_handles.length;
+        const l = this.eventHandles.length;
         for (let i = 0; i < l; i++) {
-            this.event_handles[i](type, data);
+            this.eventHandles[i](type, data);
         }
     }
 
 }
 
 MindMapMain.direction = { left: -1, center: 0, right: 1 };
-MindMapMain.event_type = { show: 1, resize: 2, edit: 3, select: 4 };
+MindMapMain.eventType = { show: 1, resize: 2, edit: 3, select: 4 };
 
 MindMapMain.plugin = function (name, init) {
     this.name = name;
@@ -737,19 +750,19 @@ MindMapMain.plugin = function (name, init) {
 
 MindMapMain.plugins = [];
 
-MindMapMain.register_plugin = function (plugin) {
+MindMapMain.registerPlugin = function (plugin) {
     if (plugin instanceof MindMapMain.plugin) {
         MindMapMain.plugins.push(plugin);
     }
 };
 
-MindMapMain.init_plugins = function (sender) {
+MindMapMain.initPluginsNextTick = function (sender) {
     $win.setTimeout(function () {
-        MindMapMain._init_plugins(sender);
+        MindMapMain.initPlugins(sender);
     }, 0);
 };
 
-MindMapMain._init_plugins = function (sender) {
+MindMapMain.initPlugins = function (sender) {
     let l = MindMapMain.plugins.length;
     let fn_init = null;
     for (let i = 0; i < l; i++) {
