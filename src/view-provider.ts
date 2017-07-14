@@ -117,7 +117,7 @@ export class ViewProvider {
         customizeUtil.dom.addEvent(editor, 'focus', (e) => {
             const evt = e || event;
             evt.stopPropagation();
-            const type = this.editingNode.selected_type;
+            const type = this.editingNode.selectedType;
             if (this.getIsInteractSelectedValue(type)) {
                 this.jm.mindMapDataTransporter.next(type);
             }
