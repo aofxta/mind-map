@@ -201,8 +201,8 @@ export class MindMapMain {
             return null;
         }
         const types = [];
-        types.push(node.selected_type);
-        const parent_select_type = _.get(node, 'parent.selected_type');
+        types.push(node.selectedType);
+        const parent_select_type = _.get(node, 'parent.selectedType');
         let current_rule = _.find(this.options.hierarchyRule, { name: parent_select_type });
         if (!current_rule) {
             current_rule = this.options.hierarchyRule.ROOT;
@@ -337,7 +337,7 @@ export class MindMapMain {
     }
 
     getData(data_format?) {
-        const df = data_format || 'node_tree';
+        const df = data_format || 'nodeTree';
         return this.data.getData(df);
     }
 
@@ -373,12 +373,12 @@ export class MindMapMain {
         if (parent_node.isroot) {
             return this.options.hierarchyRule.ROOT.getChildren()[0];
         }
-        return _.find(this.options.hierarchyRule, { name: parent_node.selected_type }).getChildren()[0];
+        return _.find(this.options.hierarchyRule, { name: parent_node.selectedType }).getChildren()[0];
     }
 
     addNode(parent_node, nodeid, topic, data) {
         data = data || {};
-        data.is_created = true;
+        data.isCreated = true;
         if (this.options.depth && (parent_node.level >= this.options.depth)) {
             throw new Error('over depth');
         }
@@ -499,7 +499,7 @@ export class MindMapMain {
             }
             const node = this.getNode(nodeid);
             if (!!node) {
-                if (node.topic === topic && node.selected_type === selected_type) {
+                if (node.topic === topic && node.selectedType === selected_type) {
                     logger.info('nothing changed');
                     this.view.updateNode(node);
                     return;

@@ -14,15 +14,15 @@ export class MindMapNode {
     id: string;
     index: any;
     topic: string;
-    selected_type: string;
-    data: { is_created?: boolean };
+    selectedType: string;
+    data: { isCreated?: boolean };
     isroot: boolean;
     level: number;
     parent: MindMapNode;
     direction;
     expanded: boolean;
     children: Array<any>;
-    is_created: boolean;
+    isCreated: boolean;
     private _data: NodeData;
 
     static compare;
@@ -41,7 +41,7 @@ export class MindMapNode {
         this.id = sId;
         this.index = iIndex;
         this.topic = sTopic;
-        this.selected_type = selectedType;
+        this.selectedType = selectedType;
         this.data = oData || {};
         this.isroot = bIsRoot;
         this.parent = oParent;
@@ -50,20 +50,20 @@ export class MindMapNode {
         this.level = level;
         this.children = [];
         this._data = {};
-        this.is_created = this.data.is_created;
+        this.isCreated = this.data.isCreated;
         if (this.isroot) {
             this.level = 1;
         }
     };
 
     show() {
-        if (this.selected_type) {
-            return `[${this.selected_type}] ${this.topic}`;
+        if (this.selectedType) {
+            return `[${this.selectedType}] ${this.topic}`;
         }
         return this.topic;
     }
 
-    get_location() {
+    getLocation() {
         const vd = this._data.view;
         return {
             x: vd.abs_x,
@@ -71,7 +71,7 @@ export class MindMapNode {
         };
     }
 
-    get_size() {
+    getSize() {
         const vd = this._data.view;
         return {
             w: vd.width,
