@@ -62,7 +62,7 @@ export class ViewProvider {
 
 
         this.container.appendChild(this.e_panel);
-        this.init_canvas();
+        this.canvas_ctx = this.e_canvas.getContext('2d');
     }
 
     static get_select_option(value) {
@@ -207,10 +207,6 @@ export class ViewProvider {
         if (client_h < min_height) {client_h = min_height;}
         this.size.w = client_w;
         this.size.h = client_h;
-    }
-
-    init_canvas() {
-        this.canvas_ctx = this.e_canvas.getContext('2d');
     }
 
     init_nodes_size(node) {
