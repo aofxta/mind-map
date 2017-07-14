@@ -35,6 +35,13 @@ export class ViewProvider {
         });
     }
 
+    static get_select_option(value) {
+        const e_option = $create('option');
+        e_option.value = value;
+        e_option.appendChild($document.createTextNode(value));
+        return e_option;
+    };
+
     init() {
         logger.debug('view.init');
 
@@ -43,6 +50,11 @@ export class ViewProvider {
             logger.error('the options.view.container was not be found in dom');
             return;
         }
+
+        this.init_view();
+    }
+
+    init_view() {
         this.e_panel = $create('div');
         this.e_canvas = $create('canvas');
         this.e_nodes = $create('jmnodes');
@@ -60,17 +72,9 @@ export class ViewProvider {
         this.init_select();
         this.init_editor();
 
-
         this.container.appendChild(this.e_panel);
         this.canvas_ctx = this.e_canvas.getContext('2d');
     }
-
-    static get_select_option(value) {
-        const e_option = $create('option');
-        e_option.value = value;
-        e_option.appendChild($document.createTextNode(value));
-        return e_option;
-    };
 
     init_select() {
         this.e_select = $create('select');
