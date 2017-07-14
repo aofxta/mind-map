@@ -46,22 +46,10 @@ export class ViewProvider {
         this.e_panel = $create('div');
         this.e_canvas = $create('canvas');
         this.e_nodes = $create('jmnodes');
-        this.e_editor = $create('input');
-
-        this.e_select = $create('select');
 
         this.e_panel.className = 'jsmind-inner';
         this.e_panel.appendChild(this.e_canvas);
         this.e_panel.appendChild(this.e_nodes);
-
-        this.e_editor.className = 'jsmind-editor';
-        this.e_editor.type = 'text';
-
-        this.e_select.value = this.opts.selected_options[0];
-        this.opts.selected_options.forEach((ele) => {
-            this.e_select.appendChild(ViewProvider.get_select_option(ele));
-        });
-
 
         this.actualZoom = 1;
         this.zoomStep = 0.1;
@@ -69,8 +57,9 @@ export class ViewProvider {
         this.maxZoom = 2;
 
         this.add_event_to_canvas();
-        this.add_event_to_editor(this.e_editor);
-        this.add_event_to_select(this.e_select);
+        this.init_select();
+        this.init_editor();
+
 
         this.container.appendChild(this.e_panel);
         this.init_canvas();
@@ -82,6 +71,22 @@ export class ViewProvider {
         e_option.appendChild($document.createTextNode(value));
         return e_option;
     };
+
+    init_select() {
+        this.e_select = $create('select');
+        this.e_select.value = this.opts.selected_options[0];
+        this.opts.selected_options.forEach((ele) => {
+            this.e_select.appendChild(ViewProvider.get_select_option(ele));
+        });
+        this.add_event_to_select(this.e_select);
+    }
+
+    init_editor() {
+        this.e_editor = $create('input');
+        this.e_editor.className = 'jsmind-editor';
+        this.e_editor.type = 'text';
+        this.add_event_to_editor(this.e_editor);
+    }
 
     add_event_to_canvas() {
         customizeUtil.dom.add_event(this.e_nodes, 'click', (e) => {
