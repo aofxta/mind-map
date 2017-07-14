@@ -1,4 +1,4 @@
-jsMind
+Mind Map
 ======
 
 ## Notice
@@ -131,24 +131,24 @@ const option = {
   theme: 'normal',
   editable: true,
   depth: 4,
-  hierarchy_rule: HIERARCHY_RULES
+  hierarchyRule: HIERARCHY_RULES
 };
 
 const mind = {
-  "format": "node_tree",
+  "format": "nodeTree",
     "data": {
       "id": 43,
       "topic": "xx车行",
-      "selected_type": false,
-      "background_color": "#7EC6E1",
+      "selectedType": false,
+      "backgroundColor": "#7EC6E1",
       "children": [
         {
           "id": 80,
           "color": "#fff",
           "topic": "show room",
           "direction": "right",
-          "selected_type": "销售经理",
-          "background_color": "#616161",
+          "selectedType": "销售经理",
+          "backgroundColor": "#616161",
           "children": []
         },
         {
@@ -156,24 +156,24 @@ const mind = {
           "color": "#fff",
           "topic": "销售经理",
           "direction": "right",
-          "selected_type": "销售经理",
-          "background_color": "#616161",
+          "selectedType": "销售经理",
+          "backgroundColor": "#616161",
           "children": [
             {
               "id": 46,
               "color": "#fff",
               "topic": "展厅经理",
               "direction": "right",
-              "selected_type": "展厅",
-              "background_color": "#989898",
+              "selectedType": "展厅",
+              "backgroundColor": "#989898",
               "children": [
                 {
                   "id": 49,
                   "color": "#fff",
                   "topic": "销售小组C",
                   "direction": "right",
-                  "selected_type": "销售小组",
-                  "background_color": "#C6C6C6",
+                  "selectedType": "销售小组",
+                  "backgroundColor": "#C6C6C6",
                   "children": []
                 },
                 {
@@ -181,8 +181,8 @@ const mind = {
                   "color": "#fff",
                   "topic": "AMG销售",
                   "direction": "right",
-                  "selected_type": "销售小组",
-                  "background_color": "#C6C6C6",
+                  "selectedType": "销售小组",
+                  "backgroundColor": "#C6C6C6",
                   "children": []
                 },
                 {
@@ -190,8 +190,8 @@ const mind = {
                   "color": "#fff",
                   "topic": "销售小组A",
                   "direction": "right",
-                  "selected_type": "销售小组",
-                  "background_color": "#C6C6C6",
+                  "selectedType": "销售小组",
+                  "backgroundColor": "#C6C6C6",
                   "children": []
                 },
                 {
@@ -199,8 +199,8 @@ const mind = {
                   "color": "#fff",
                   "topic": "销售小组B",
                   "direction": "right",
-                  "selected_type": "销售小组",
-                  "background_color": "#C6C6C6",
+                  "selectedType": "销售小组",
+                  "backgroundColor": "#C6C6C6",
                   "children": []
                 },
                 {
@@ -208,8 +208,8 @@ const mind = {
                   "color": "#fff",
                   "topic": "销售小组D",
                   "direction": "right",
-                  "selected_type": "销售小组",
-                  "background_color": "#C6C6C6",
+                  "selectedType": "销售小组",
+                  "backgroundColor": "#C6C6C6",
                   "children": []
                 }
               ]
@@ -221,8 +221,8 @@ const mind = {
           "color": "#fff",
           "topic": "Smart经理",
           "direction": "right",
-          "selected_type": "销售经理",
-          "background_color": "#616161",
+          "selectedType": "销售经理",
+          "backgroundColor": "#616161",
           "children": []
         }
       ]
