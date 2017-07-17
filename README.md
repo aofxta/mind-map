@@ -233,7 +233,7 @@ const mind = {
 @Component(
   ...
 )
-class MindMapComponent Implements OnInit {
+class MindMapComponent implements OnInit {
 
   mindMap;
 
@@ -245,6 +245,30 @@ class MindMapComponent Implements OnInit {
     this.mindMap = MindMapMain.show(option, mind);
   }
 
+  removeNode() {
+    const selectedNode = this.mindMap.getSelectedNode();
+    const selectedId = selectedNode && selectedNode.id;
+
+    if (!selectedId) {
+      return;
+    }
+    this.mindMap.removeNode(selectedId);
+  }
+
+  addNode() {
+    const selectedNode = this.mindMap.getSelectedNode();
+    if (!selectedNode) {
+      return;
+    }
+
+    const nodeId = customizeUtil.uuid.newid();
+    this.mindMap.addNode(selectedNode, nodeId);
+  }
+
+  getMindMapData() {
+    const data = this.mindMap.getData().data;
+    console.log('data: ', data);
+  }
 }
 
 ```
