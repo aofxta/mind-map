@@ -17,7 +17,7 @@ jsMind is a pure javascript library for mindmap, it base on html5 canvas. jsMind
 
 ## Feature
 
-* configurable node tree depth etc.
+### Configurable node tree depth etc.
 
 > we can add property depth of option parameter to control this mind map depth, it will throw exception when add node greater the depth.
 
@@ -25,7 +25,6 @@ jsMind is a pure javascript library for mindmap, it base on html5 canvas. jsMind
 const option = {
   ...
   depth: 5,
-  selectedOptions: ['销售经理', '展厅', '销售小组'],
   hasInteraction: true,
 }
 
@@ -38,11 +37,10 @@ support interaction(but now, we only support interaction with the last level opt
  we can receive event from the mind map transporter.
   Likewise, we can initiative send event to the mind map by the mind map receiver)
 
-* selectedOptions(string[]): offer select options 
 * hasInteraction(boolean): define this mind map whether need interaction, if true, we can use some utils like reporter and receiver to control yourself interaction
 
 
-* configurable node select type.
+### Configurable node select type.
 
 > we can add property hierarchy_rule of option parameter to control this mind map select type and node background color and font color.
 
