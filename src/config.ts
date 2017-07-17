@@ -14,7 +14,6 @@ export const DEFAULT_OPTIONS: MindMapModuleOpts = {
     mode: 'full',     // full or side
     supportHtml: true,
     canRootNodeEditable: false,
-    selectedOptions: [],
     hasInteraction: false,
 
     view: {

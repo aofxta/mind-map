@@ -34,7 +34,6 @@ export interface MindMapModuleOpts {
     theme?: any;
     depth?: number;
     canRootNodeEditable?: boolean;
-    selectedOptions?: string[];
     hasInteraction?: boolean;
     hierarchyRule?: { ROOT: any, [propName: string]: { name: string, getChildren: any } };
 }
@@ -95,7 +94,6 @@ export class MindMapMain {
             vmargin: opts.view.vmargin,
             lineWidth: opts.view.lineWidth,
             lineColor: opts.view.lineColor,
-            selectedOptions: opts.selectedOptions,
         };
         // create instance of function provider
         this.data = new MindMapDataProvider(this);
@@ -196,12 +194,12 @@ export class MindMapMain {
         }
     }
 
-    getSelectTypesByHierarchyRule(node) {
+    getSelectTypesByHierarchyRule(node?) {
         if (!this.options.hierarchyRule) {
             return null;
         }
         const types = [];
-        types.push(node.selectedType);
+        types.push(_.get(node, 'selectedType'));
         const parent_select_type = _.get(node, 'parent.selectedType');
         let current_rule = _.find(this.options.hierarchyRule, { name: parent_select_type });
         if (!current_rule) {
@@ -210,7 +208,7 @@ export class MindMapMain {
         current_rule.getChildren().forEach(children => {
             types.push(children.name);
         });
-        return types;
+        return _.compact(types);
     }
 
     beginEdit(node) {

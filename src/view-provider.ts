@@ -78,8 +78,9 @@ export class ViewProvider {
 
     initSelect() {
         this.eSelect = $create('select');
-        this.eSelect.value = this.opts.selectedOptions[0];
-        this.opts.selectedOptions.forEach((ele) => {
+        const selectedOptions = this.jm.getSelectTypesByHierarchyRule();
+        this.eSelect.value = selectedOptions[0];
+        selectedOptions.forEach((ele) => {
             this.eSelect.appendChild(ViewProvider.get_select_option(ele));
         });
         this.addEventToSelect(this.eSelect);
