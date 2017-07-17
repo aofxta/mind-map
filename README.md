@@ -17,25 +17,34 @@ jsMind is a pure javascript library for mindmap, it base on html5 canvas. jsMind
 
 ## Feature
 
-* configurable node tree depth.
+* configurable node tree depth etc.
 
 > we can add property depth of option parameter to control this mind map depth, it will throw exception when add node greater the depth.
 
 ```javascript
 const option = {
   ...
-  depth: 5
+  depth: 5,
+  selectedOptions: ['销售经理', '展厅', '销售小组'],
+  hasInteraction: true,
 }
 
 const mindMap = MindMapMain.show(option, mind);
 ```
 
-By above example, we create a mind map that support 5 level depth.
+By above example, we create a mind map that support 5 level depth, 
+define the select option is `销售经理`, `展厅`, `销售小组` and 
+support interaction(but now, we only support interaction with the last level option, that's mean when we select the last option like `销售小组`,
+ we can receive event from the mind map transporter.
+  Likewise, we can initiative send event to the mind map by the mind map receiver)
+
+* selectedOptions(string[]): offer select options 
+* hasInteraction(boolean): define this mind map whether need interaction, if true, we can use some utils like reporter and receiver to control yourself interaction
 
 
 * configurable node select type.
 
-> we can add property hierarchy_rule of option parameter to control this mind map select type and node backgroud color and font color.
+> we can add property hierarchy_rule of option parameter to control this mind map select type and node background color and font color.
 
 ```javascript
 const HIERARCHY_RULES = {
@@ -76,11 +85,10 @@ const HIERARCHY_RULES = {
 
 By above example, we can configurate the mind map hierarchical relationship.
 
-> name: display in node text
-> color: node font color
-> backgroundColor: node background color
-> getChildren: get can select node type in selector
-
+* name(string): display in node text
+* color(string): node font color
+* backgroundColor(string): node background color
+* getChildren(function): get can select node type in selector
 
 
 ## Usage
