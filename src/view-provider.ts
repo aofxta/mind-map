@@ -14,6 +14,7 @@ export class ViewProvider {
     canvasCtx = null;
     size = { w: 0, h: 0 };
     selectedNode = null;
+    selectedOptions;
     editingNode = null;
     previousNode = null;
 
@@ -28,6 +29,7 @@ export class ViewProvider {
     constructor(jm, options) {
         this.opts = options;
         this.jm = jm;
+        this.selectedOptions = this.jm.getSelectTypesByHierarchyRule();
         this.layout = jm.layout;
 
         this.jm.mindMapDataReceiver.subscribe(data => {
@@ -78,9 +80,8 @@ export class ViewProvider {
 
     initSelect() {
         this.eSelect = $create('select');
-        const selectedOptions = this.jm.getSelectTypesByHierarchyRule();
-        this.eSelect.value = selectedOptions[0];
-        selectedOptions.forEach((ele) => {
+        this.eSelect.value = this.selectedOptions[0];
+        this.selectedOptions.forEach((ele) => {
             this.eSelect.appendChild(ViewProvider.get_select_option(ele));
         });
         this.addEventToSelect(this.eSelect);
@@ -123,7 +124,6 @@ export class ViewProvider {
                 this.jm.mindMapDataTransporter.next(type);
             }
         });
-
     }
 
     addEventToSelect(select) {
@@ -143,7 +143,7 @@ export class ViewProvider {
 
 
     getIsInteractSelectedValue(value) {
-        return this.jm.options.hasInteraction && value === _.last(this.jm.options.selectedOptions);
+        return this.jm.options.hasInteraction && value === _.last(this.selectedOptions);
     }
 
 
