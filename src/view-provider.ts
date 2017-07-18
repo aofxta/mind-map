@@ -121,7 +121,7 @@ export class ViewProvider {
             evt.stopPropagation();
             const type = this.editingNode.selectedType;
             if (this.getIsInteractSelectedValue(type)) {
-                this.jm.mindMapDataTransporter.next(type);
+                this.jm.mindMapDataTransporter.next({type, topic: this.editingNode.topic});
             }
         });
     }
