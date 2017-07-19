@@ -503,7 +503,7 @@ export class MindMapMain {
                     return;
                 }
                 node.topic = topic;
-                node.selected_type = selected_type;
+                node.selectedType = selected_type;
                 this.view.updateNode(node);
                 this.layout.layout();
                 this.view.show(false);
