@@ -385,23 +385,23 @@ export class ViewProvider {
                 this.eEditor.value = value;
             }
             const topic = this.eEditor.value;
-            const selected_type = this.currentSelect.value;
+            const selectedType = this.currentSelect.value;
             element.style.zIndex = 'auto';
             element.removeChild(this.eEditor);
             element.removeChild(this.currentSelect);
             if (customizeUtil.text.isEmpty(topic) ||
-                customizeUtil.text.isEmpty(selected_type) ||
-                (node.topic === topic && node.selected_type === selected_type)) {
+                customizeUtil.text.isEmpty(selectedType) ||
+                (node.topic === topic && node.selectedType === selectedType)) {
                 if (this.opts.supportHtml) {
                     $html(element, node.show());
                 } else {
                     $text(element, node.show());
                 }
             } else {
-                this.jm.updateNode(node.id, topic, selected_type);
+                this.jm.updateNode(node.id, topic, selectedType);
             }
         } else if (value) {
-            this.jm.updateNode(this.previousNode.id, value, this.previousNode.selected_type);
+            this.jm.updateNode(this.previousNode.id, value, this.previousNode.selectedType);
         }
     }
 
