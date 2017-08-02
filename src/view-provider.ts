@@ -334,14 +334,17 @@ export class ViewProvider {
     }
 
     createSelectByTypes(types) {
-        const new_select = $create('select');
+        const newSelect = $create('select');
         types.slice(1).forEach(type => {
-            new_select.appendChild(ViewProvider.get_select_option(type));
+            newSelect.appendChild(ViewProvider.get_select_option(type));
         });
-        this.addEventToSelect(new_select);
+        if (types.length <= 1) {
+            newSelect.style.borderColor = 'red';
+        }
+        this.addEventToSelect(newSelect);
 
-        new_select.value = types[0];
-        return new_select;
+        newSelect.value = types[0];
+        return newSelect;
     }
 
     // when db click
