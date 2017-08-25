@@ -37,7 +37,7 @@ export const DEFAULT_OPTIONS: MindMapModuleOpts = {
         handles: {},
         mapping: {
             addchild: 45, // Insert
-            addbrother: 13, // Enter
+            // addbrother: 13, // Enter
             editnode: 113,// F2
             delnode: 46, // Delete
             toggle: 32, // Space
