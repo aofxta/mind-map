@@ -26,6 +26,7 @@ const option = {
   ...
   depth: 5,
   hasInteraction: true,
+  enableDraggable: true,
 }
 
 const mindMap = MindMapMain.show(option, mind);
@@ -38,6 +39,7 @@ support interaction(but now, we only support interaction with the last level opt
   Likewise, we can initiative send event to the mind map by the mind map receiver)
 
 * hasInteraction(boolean): define this mind map whether need interaction, if true, we can use some utils like reporter and receiver to control yourself interaction
+* enableDraggable(boolean): enable node draggable, default is false
 
 
 ### Configurable node select type.
