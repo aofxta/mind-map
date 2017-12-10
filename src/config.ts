@@ -15,6 +15,7 @@ export const DEFAULT_OPTIONS: MindMapModuleOpts = {
     supportHtml: true,
     canRootNodeEditable: false,
     hasInteraction: false,
+    enableDraggable: false,
 
     view: {
         hmargin: 100,

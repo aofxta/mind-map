@@ -8,6 +8,7 @@ import { customizeFormat } from './customize-format';
 import { ViewProvider } from './view-provider';
 import { Subject } from 'rxjs/Subject';
 import { MindMapMind } from './mind-map-mind';
+import { Draggable } from './plugin/draggable';
 
 export interface MindMapModuleOptsView {
     hmargin: number;
@@ -36,6 +37,7 @@ export interface MindMapModuleOpts {
     canRootNodeEditable?: boolean;
     hasInteraction?: boolean;
     hierarchyRule?: { ROOT: any, [propName: string]: { name: string, getChildren: any } };
+    enableDraggable?: boolean;
 }
 
 
@@ -109,6 +111,24 @@ export class MindMapMain {
         this.eventBind();
 
         MindMapMain.initPluginsNextTick(this);
+        if (this.options.enableDraggable) {
+            this.options.enableDraggable = false;
+            this.registerPlugin();
+        }
+
+
+    }
+
+    registerPlugin() {
+        const draggablePlugin = new MindMapMain.plugin('draggable', function (jm) {
+            const jd = new Draggable(jm);
+            jd.init();
+            jm.addEventListener(function (type, data) {
+                jd.jm_event_handle.call(jd, type, data);
+            });
+        });
+
+        MindMapMain.registerPlugin(draggablePlugin);
     }
 
     enableEdit() {
@@ -736,7 +756,6 @@ export class MindMapMain {
             this.eventHandles[i](type, data);
         }
     }
-
 }
 
 MindMapMain.direction = { left: -1, center: 0, right: 1 };
