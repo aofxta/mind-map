@@ -282,26 +282,3 @@ class MindMapComponent implements OnInit {
 ```
 ![example](./lib/mind-map.gif)
 
-
-Links:
-
-* App : <http://jsmind.sinaapp.com>
-* Home : <http://hizzgdev.github.io/jsmind/developer.html>
-* Demo :
-  * <http://hizzgdev.github.io/jsmind/example/1_basic.html>
-  * <http://hizzgdev.github.io/jsmind/example/2_features.html>
-* Documents :
-  * [简体中文][1]
-  * [English(draft)][2]
-* Wiki :
-  * [邮件列表 Mailing List](../../wiki/MailingList)
-  * [热点问题 Hot Topics](../../wiki/HotTopics)
-* Donate :
-  * [资助本项目的开发][4]
-
-
-[1]:https://github.com/hizzgdev/jsmind/blob/master/docs/zh/index.md
-[2]:https://github.com/hizzgdev/jsmind/blob/master/docs/en/index.md
-[3]:LICENSE
-[4]:http://hizzgdev.github.io/jsmind/donate.html
-
