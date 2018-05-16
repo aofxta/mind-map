@@ -6,7 +6,7 @@ import { MindMapDataProvider } from './data-provider';
 import { LayoutProvider } from './layout-provider';
 import { customizeFormat } from './customize-format';
 import { ViewProvider } from './view-provider';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 import { MindMapMind } from './mind-map-mind';
 import { Draggable } from './plugin/draggable';
 
