@@ -3,7 +3,7 @@ export const $win: { [propName: string]: any } = window;
 
 export const NAME: string = 'jsMind';
 export const VERSION: string = '0.0.7';
-export const AUTHOR = '';
+export const AUTHOR = 'wfsovereign';
 
 export const logger = console;
 
