@@ -1,5 +1,6 @@
 import { logger } from './config';
 import { customizeFormat } from './customize-format';
+import { MindMapModuleOpts } from './mind-map-main'
 
 export class MindMapDataProvider {
     jm: any;
@@ -16,7 +17,7 @@ export class MindMapDataProvider {
         logger.debug('data.reset');
     }
 
-    load(mind_data) {
+    load(mind_data, opts: MindMapModuleOpts) {
         let df = null;
         let mind = null;
         if (typeof mind_data === 'object') {
@@ -28,6 +29,7 @@ export class MindMapDataProvider {
         } else {
             df = 'freemind';
         }
+        customizeFormat.setSelectable(opts.selectable)
 
         if (df == 'node_array') {
             mind = customizeFormat.node_array.getMind(mind_data);

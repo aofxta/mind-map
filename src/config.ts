@@ -10,6 +10,7 @@ export const logger = console;
 export const DEFAULT_OPTIONS: MindMapModuleOpts = {
     container: '',   // id of the container
     editable: false, // you can change it in your options
+    selectable: true, // you can change it in your options
     theme: null,
     mode: 'full',     // full or side
     supportHtml: true,
@@ -39,7 +40,7 @@ export const DEFAULT_OPTIONS: MindMapModuleOpts = {
         mapping: {
             addchild: 45, // Insert
             // addbrother: 13, // Enter
-            editnode: 113,// F2
+            editnode: 113, // F2
             delnode: 46, // Delete
             toggle: 32, // Space
             left: 37, // Left

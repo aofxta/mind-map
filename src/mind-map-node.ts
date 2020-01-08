@@ -23,12 +23,13 @@ export class MindMapNode {
     expanded: boolean;
     children: Array<any>;
     isCreated: boolean;
+    selectable: boolean;
     private _data: NodeData;
 
     static compare;
     static inherited;
 
-    constructor(sId, iIndex, sTopic, oData, bIsRoot, oParent?, eDirection?, bExpanded?, selectedType?, level?) {
+    constructor(sId, iIndex, sTopic, oData, bIsRoot, oParent?, eDirection?, bExpanded?, selectedType?, level?, selectable?) {
         if (!sId) {
             logger.error('invalid nodeid');
             return;
@@ -42,6 +43,7 @@ export class MindMapNode {
         this.index = iIndex;
         this.topic = sTopic;
         this.selectedType = selectedType;
+        this.selectable = selectable
         this.data = oData || {};
         this.isroot = bIsRoot;
         this.parent = oParent;
@@ -57,7 +59,7 @@ export class MindMapNode {
     };
 
     show() {
-        if (this.selectedType) {
+        if (this.selectedType && this.selectable !== false) {
             return `[${this.selectedType}] ${this.topic}`;
         }
         return this.topic;

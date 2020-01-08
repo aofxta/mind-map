@@ -33,14 +33,14 @@ export class MindMapMind {
         }
     }
 
-    addNode(parent_node, nodeid, topic, data, idx, direction?, expanded?, selected_type?) {
+    addNode(parent_node, nodeid, topic, data, idx, direction?, expanded?, selected_type?, selectable?) {
         if (!customizeUtil.is_node(parent_node)) {
             return this.addNode(this.getNode(parent_node), nodeid, topic, data, idx, direction, expanded);
         }
         const nodeindex = idx || -1;
 
         if (!!parent_node) {
-            //logger.debug(parent_node);
+            // logger.debug(parent_node);
             let node = null;
             if (parent_node.isroot) {
                 let d = MindMapMain.direction.right;
@@ -57,11 +57,11 @@ export class MindMapMind {
                 }
                 node =
                     new MindMapNode(nodeid, nodeindex, topic, data, false,
-                        parent_node, d, expanded, selected_type, parent_node.level + 1);
+                        parent_node, d, expanded, selected_type, parent_node.level + 1, selectable);
             } else {
                 node =
                     new MindMapNode(nodeid, nodeindex, topic, data, false,
-                        parent_node, parent_node.direction, expanded, selected_type, parent_node.level + 1);
+                        parent_node, parent_node.direction, expanded, selected_type, parent_node.level + 1, selectable);
             }
             if (this.putNode(node)) {
                 parent_node.children.push(node);
@@ -247,7 +247,7 @@ export class MindMapMind {
         }
         // remove it's self
         node = null;
-        //delete node;
+        // delete node;
         return true;
     }
 

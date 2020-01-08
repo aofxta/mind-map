@@ -5,6 +5,15 @@ import { MindMapMind } from './mind-map-mind';
 import { MindMapNode } from './mind-map-node';
 
 export const customizeFormat = {
+    config: {
+        selectable: true,
+    },
+    setSelectable(val) {
+        customizeFormat.config = {
+            ...customizeFormat.config,
+            selectable: val
+        }
+    },
     nodeTree: {
         example: {
             meta: {
@@ -12,8 +21,8 @@ export const customizeFormat = {
                 author: AUTHOR,
                 version: VERSION
             },
-            format: "nodeTree",
-            data: { id: "root", topic: "Main Node" }
+            format: 'nodeTree',
+            data: { id: 'root', topic: 'Main Node' }
         },
         getMind: function (source) {
             const df = customizeFormat.nodeTree;
@@ -76,7 +85,7 @@ export const customizeFormat = {
             if (node_parent.isroot) {
                 d = node_json.direction == 'left' ? MindMapMain.direction.left : MindMapMain.direction.right;
             }
-            const node = mind.addNode(node_parent, node_json.id, node_json.topic, data, null, d, node_json.expanded, node_json.selectedType);
+            const node = mind.addNode(node_parent, node_json.id, node_json.topic, data, null, d, node_json.expanded, node_json.selectedType, customizeFormat.config.selectable);
             if ('children' in node_json) {
                 const children = node_json.children;
                 for (let i = 0; i < children.length; i++) {
@@ -87,7 +96,7 @@ export const customizeFormat = {
 
         _buildNode: function (node) {
             const df = customizeFormat.nodeTree;
-            if (!(node instanceof MindMapNode)) {return;}
+            if (!(node instanceof MindMapNode)) {return; }
             const o = {
                 id: node.id,
                 topic: node.topic,
@@ -125,9 +134,9 @@ export const customizeFormat = {
                 author: AUTHOR,
                 version: VERSION
             },
-            format: "node_array",
+            format: 'node_array',
             data: [
-                { id: "root", topic: "Main Node", isroot: true }
+                { id: 'root', topic: 'Main Node', isroot: true }
             ]
         },
 
@@ -234,7 +243,7 @@ export const customizeFormat = {
 
         _arrayNode: function (node, node_array) {
             const df = customizeFormat.node_array;
-            if (!(node instanceof MindMapNode)) {return;}
+            if (!(node instanceof MindMapNode)) {return; }
             const o = {
                 id: node.id,
                 topic: node.topic,
@@ -273,8 +282,8 @@ export const customizeFormat = {
                 author: AUTHOR,
                 version: VERSION
             },
-            format: "freemind",
-            data: "<map version=\"1.0.1\"><node ID=\"root\" TEXT=\"freemind Example\"/></map>"
+            format: 'freemind',
+            data: '<map version=\"1.0.1\"><node ID=\"root\" TEXT=\"freemind Example\"/></map>'
         },
         getMind: function (source) {
             const df = customizeFormat.freemind;

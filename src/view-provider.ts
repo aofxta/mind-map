@@ -80,10 +80,13 @@ export class ViewProvider {
 
     initSelect() {
         this.eSelect = $create('select');
-        this.eSelect.value = this.selectedOptions[0];
-        this.selectedOptions.forEach((ele) => {
-            this.eSelect.appendChild(ViewProvider.get_select_option(ele));
-        });
+        this.eSelect.value = this.selectedOptions && this.selectedOptions[0];
+        if (this.selectedOptions) {
+            this.selectedOptions.forEach((ele) => {
+                this.eSelect.appendChild(ViewProvider.get_select_option(ele));
+            });
+        }
+
         this.addEventToSelect(this.eSelect);
     }
 
@@ -104,13 +107,15 @@ export class ViewProvider {
     addEventToEditor(editor) {
         customizeUtil.dom.addEvent(editor, 'keydown', (e) => {
             const evt = e || event;
-            if (evt.keyCode == 13) {
+            if (evt.keyCode === 13) {
                 this.editNodeEnd();
                 evt.stopPropagation();
             }
         });
         customizeUtil.dom.addEvent(editor, 'blur', () => {
-            this.editNodeEnd();
+            setTimeout(() => {
+                this.editNodeEnd();
+            })
         });
         customizeUtil.dom.addEvent(editor, 'click', (e) => {
             const evt = e || event;
@@ -350,7 +355,7 @@ export class ViewProvider {
     // when db click
     editNodeBegin(node, types) {
         if (!node.topic) {
-            logger.warn("don't edit image nodes");
+            logger.warn(`don't edit image nodes`);
             return;
         }
         if (this.editingNode != null) {
@@ -371,7 +376,7 @@ export class ViewProvider {
         } else {
             this.currentSelect = this.eSelect;
         }
-        element.appendChild(this.currentSelect);
+        node.selectable && element.appendChild(this.currentSelect);
         element.appendChild(this.eEditor);
         element.style.zIndex = 5;
         // this.eEditor.focus();
@@ -381,7 +386,6 @@ export class ViewProvider {
     editNodeEnd(value?) {
         if (this.editingNode != null) {
             const node = this.editingNode;
-            this.editingNode = null;
             const view_data = node._data.view;
             const element = view_data.element;
             if (value) {
@@ -391,7 +395,7 @@ export class ViewProvider {
             const selectedType = this.currentSelect.value;
             element.style.zIndex = 'auto';
             element.removeChild(this.eEditor);
-            element.removeChild(this.currentSelect);
+            node.selectable && element.removeChild(this.currentSelect);
             if (customizeUtil.text.isEmpty(topic) ||
                 customizeUtil.text.isEmpty(selectedType) ||
                 (node.topic === topic && node.selectedType === selectedType)) {
@@ -403,6 +407,8 @@ export class ViewProvider {
             } else {
                 this.jm.updateNode(node.id, topic, selectedType);
             }
+            this.editingNode = null;
+
         } else if (value) {
             this.jm.updateNode(this.previousNode.id, value, this.previousNode.selectedType);
         }
@@ -432,7 +438,7 @@ export class ViewProvider {
         this.eNodes.style.height = this.size.h + 'px';
         this.showNodes();
         this.showLines();
-        //this.layout.cache_valid = true;
+        // this.layout.cache_valid = true;
         this.jm.invokeEventHandleNextTick(MindMapMain.eventType.resize, { data: [] });
     }
 

@@ -31,6 +31,7 @@ export interface MindMapModuleOpts {
     view?: MindMapModuleOptsView;
     shortcut?: any;
     editable?: boolean;
+    selectable?: boolean;
     defaultEventHandle?: MindMapModuleOptsDefaultEventHandle;
     theme?: any;
     depth?: number;
@@ -320,7 +321,7 @@ export class MindMapMain {
     _show(mind) {
         const m = mind || customizeFormat.node_array.example;
 
-        this.mind = this.data.load(m);
+        this.mind = this.data.load(m, this.opts);
         if (!this.mind) {
             logger.error('data.load error');
             return;
@@ -414,7 +415,7 @@ export class MindMapMain {
             if (current_rule.color) {
                 data['color'] = current_rule.color;
             }
-            const node = this.mind.addNode(parent_node, nodeid, topic, data, null, null, null, selected_type);
+            const node = this.mind.addNode(parent_node, nodeid, topic, data, null, null, null, selected_type, this.options.selectable);
             if (!!node) {
                 this.view.addNode(node);
                 this.layout.layout();
