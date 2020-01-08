@@ -1,6 +1,7 @@
 import { logger } from './config';
 import { customizeFormat } from './customize-format';
 import { MindMapModuleOpts } from './mind-map-main'
+import { MIND_TYPE } from './constants'
 
 export class MindMapDataProvider {
     jm: any;
@@ -24,18 +25,18 @@ export class MindMapDataProvider {
             if (!!mind_data.format) {
                 df = mind_data.format;
             } else {
-                df = 'nodeTree';
+                df = MIND_TYPE.NODE_TREE;
             }
         } else {
-            df = 'freemind';
+            df = MIND_TYPE.FREE_MIND;
         }
         customizeFormat.setSelectable(opts.selectable)
 
-        if (df == 'node_array') {
+        if (df === MIND_TYPE.NODE_ARRAY) {
             mind = customizeFormat.node_array.getMind(mind_data);
-        } else if (df == 'nodeTree') {
+        } else if (df === MIND_TYPE.NODE_TREE) {
             mind = customizeFormat.nodeTree.getMind(mind_data);
-        } else if (df == 'freemind') {
+        } else if (df === MIND_TYPE.FREE_MIND) {
             mind = customizeFormat.freemind.getMind(mind_data);
         } else {
             logger.warn('unsupported format');
@@ -45,11 +46,11 @@ export class MindMapDataProvider {
 
     getData(data_format) {
         let data = null;
-        if (data_format == 'node_array') {
+        if (data_format === MIND_TYPE.NODE_ARRAY) {
             data = customizeFormat.node_array.getData(this.jm.mind);
-        } else if (data_format == 'nodeTree') {
+        } else if (data_format === MIND_TYPE.NODE_TREE) {
             data = customizeFormat.nodeTree.getData(this.jm.mind);
-        } else if (data_format == 'freemind') {
+        } else if (data_format === MIND_TYPE.FREE_MIND) {
             data = customizeFormat.freemind.getData(this.jm.mind);
         } else {
             logger.error('unsupported ' + data_format + ' format');
