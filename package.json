@@ -9,7 +9,8 @@
     "tslint": "tslint",
     "build": "tsc",
     "prepublish": "npm run build",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha -r ts-node/register -r jsdom-global/register src/**/*.spec.ts",
+    "coverage": "nyc -r lcov -e .ts -x \"*.test.ts\" npm run test",
     "commit": "git-cz",
     "release": "standard-version"
   },
@@ -24,9 +25,17 @@
     "src"
   ],
   "devDependencies": {
+    "@types/chai": "^4.2.7",
+    "@types/mocha": "^5.2.7",
+    "chai": "^4.2.0",
     "commitizen": "2.9.6",
     "cz-conventional-changelog": "2.1.0",
-    "standard-version": "4.2.0"
+    "jsdom": "^15.2.1",
+    "jsdom-global": "^3.0.2",
+    "mocha": "^7.0.0",
+    "nyc": "^15.0.0",
+    "standard-version": "4.2.0",
+    "ts-node": "^8.5.4"
   },
   "repository": {
     "type": "git",
