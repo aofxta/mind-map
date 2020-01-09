@@ -33,8 +33,8 @@ export const customizeUtil = {
             let xhr = a._xhr();
             if (!xhr) { return; }
             xhr.onreadystatechange = function () {
-                if (xhr.readyState == 4) {
-                    if (xhr.status == 200 || xhr.status == 0) {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200 || xhr.status === 0) {
                         if (typeof callback === 'function') {
                             let data = customizeUtil.json.string2json(xhr.responseText);
                             if (data != null) {
@@ -55,7 +55,7 @@ export const customizeUtil = {
             method = method || 'GET';
             xhr.open(method, url, true);
             xhr.setRequestHeader('If-Modified-Since', '0');
-            if (method == 'POST') {
+            if (method === 'POST') {
                 xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded;charset=utf-8');
                 xhr.send(p);
             } else {
@@ -71,7 +71,7 @@ export const customizeUtil = {
     },
 
     dom: {
-        //target,eventType,handler
+        // target,eventType,handler
         addEvent: function (t, e, h) {
             if (!!t.addEventListener) {
                 t.addEventListener(e, h, false);
@@ -171,7 +171,7 @@ export const customizeUtil = {
             for (let o in a) {
                 if (o in b) {
                     if (typeof b[o] === 'object' &&
-                        Object.prototype.toString.call(b[o]).toLowerCase() == '[object object]' && !b[o].length) {
+                        Object.prototype.toString.call(b[o]).toLowerCase() === '[object object]' && !b[o].length) {
                         customizeUtil.json.merge(b[o], a[o]);
                     } else {
                         b[o] = a[o];
@@ -193,7 +193,7 @@ export const customizeUtil = {
     text: {
         isEmpty: function (s) {
             if (!s) { return true; }
-            return s.replace(/\s*/, '').length == 0;
+            return s.replace(/\s*/, '').length === 0;
         }
     }
 };

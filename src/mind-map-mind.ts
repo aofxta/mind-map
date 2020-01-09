@@ -51,7 +51,7 @@ export class MindMapMind {
                     // for(var i=0;i<children_len;i++){if(children[i].direction === jm.direction.left){r--;}else{r++;}}
                     d = MindMapMain.direction.right
                 } else {
-                    d = (direction != MindMapMain.direction.left) ?
+                    d = (direction !== MindMapMain.direction.left) ?
                         MindMapMain.direction.right :
                         MindMapMain.direction.left;
                 }
@@ -92,11 +92,11 @@ export class MindMapMind {
 
 
     getNodeBefore(node) {
-        if (!node) {return null;}
+        if (!node) {return null; }
         if (!customizeUtil.is_node(node)) {
             return this.getNodeBefore(this.getNode(node));
         }
-        if (node.isroot) {return null;}
+        if (node.isroot) {return null; }
         const idx = node.index - 2;
         if (idx >= 0) {
             return node.parent.children[idx];
@@ -120,11 +120,11 @@ export class MindMapMind {
     }
 
     getNodeAfter(node) {
-        if (!node) {return null;}
+        if (!node) {return null; }
         if (!customizeUtil.is_node(node)) {
             return this.getNodeAfter(this.getNode(node));
         }
-        if (node.isroot) {return null;}
+        if (node.isroot) {return null; }
         const idx = node.index;
         const brothers = node.parent.children;
         if (brothers.length >= idx) {
@@ -159,15 +159,15 @@ export class MindMapMind {
 
     moveNodeInternal(node, beforeid) {
         if (!!node && !!beforeid) {
-            if (beforeid == '_last_') {
+            if (beforeid === '_last_') {
                 node.index = -1;
                 this.reindex(node.parent);
-            } else if (beforeid == '_first_') {
+            } else if (beforeid === '_first_') {
                 node.index = 0;
                 this.reindex(node.parent);
             } else {
                 const node_before = (!!beforeid) ? this.getNode(beforeid) : null;
-                if (node_before != null && node_before.parent != null && node_before.parent.id == node.parent.id) {
+                if (node_before != null && node_before.parent != null && node_before.parent.id === node.parent.id) {
                     node.index = node_before.index - 0.5;
                     this.reindex(node.parent);
                 }
@@ -178,12 +178,12 @@ export class MindMapMind {
 
     moveNodeDirect(node, beforeid, parentid, direction) {
         if (!!node && !!parentid) {
-            if (node.parent.id != parentid) {
+            if (node.parent.id !== parentid) {
                 // remove from parent's children
                 const sibling = node.parent.children;
                 let si = sibling.length;
                 while (si--) {
-                    if (sibling[si].id == node.id) {
+                    if (sibling[si].id === node.id) {
                         sibling.splice(si, 1);
                         break;
                     }
@@ -193,7 +193,7 @@ export class MindMapMind {
             }
 
             if (node.parent.isroot) {
-                if (direction == MindMapMain.direction.left) {
+                if (direction === MindMapMain.direction.left) {
                     node.direction = direction;
                 } else {
                     node.direction = MindMapMain.direction.right;
@@ -219,7 +219,7 @@ export class MindMapMind {
             logger.error('fail, can not remove root node');
             return false;
         }
-        if (this.selected != null && this.selected.id == node.id) {
+        if (this.selected != null && this.selected.id === node.id) {
             this.selected = null;
         }
         // clean all subordinate nodes
@@ -234,7 +234,7 @@ export class MindMapMind {
         const sibling = node.parent.children;
         let si = sibling.length;
         while (si--) {
-            if (sibling[si].id == node.id) {
+            if (sibling[si].id === node.id) {
                 sibling.splice(si, 1);
                 break;
             }

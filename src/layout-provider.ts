@@ -11,7 +11,7 @@ export class LayoutProvider {
     constructor(jm, options) {
         this.opts = options;
         this.jm = jm;
-        this.isside = (this.opts.mode == 'side');
+        this.isside = (this.opts.mode === 'side');
     }
 
     init() {
@@ -57,7 +57,7 @@ export class LayoutProvider {
             let subnode = null;
             while (i--) {
                 subnode = children[i];
-                if (subnode.direction == MindMapMain.direction.left) {
+                if (subnode.direction === MindMapMain.direction.left) {
                     this._layoutDirectionSide(subnode, MindMapMain.direction.left, i);
                 } else {
                     this._layoutDirectionSide(subnode, MindMapMain.direction.right, i);
@@ -109,7 +109,7 @@ export class LayoutProvider {
         let subnode = null;
         while (i--) {
             subnode = children[i];
-            if (subnode._data.layout.direction == MindMapMain.direction.right) {
+            if (subnode._data.layout.direction === MindMapMain.direction.right) {
                 right_nodes.unshift(subnode);
             } else {
                 left_nodes.unshift(subnode);
@@ -121,7 +121,6 @@ export class LayoutProvider {
         layout_data.outer_height_right = this._layoutOffsetSubNodes(right_nodes);
         this.bounds.e = node._data.view.width / 2;
         this.bounds.w = 0 - this.bounds.e;
-        //logger.debug(this.bounds.w);
         this.bounds.n = 0;
         this.bounds.s = Math.max(layout_data.outer_height_left, layout_data.outer_height_right);
     }
@@ -209,8 +208,6 @@ export class LayoutProvider {
         while (i--) {
             node = nodes[i];
             node._data.layout.offset_y += middle_height;
-            //logger.debug(node.topic);
-            //logger.debug(node._data.layout.offset_y);
         }
         return total_height;
     }
@@ -224,7 +221,7 @@ export class LayoutProvider {
             offset_cache = { x: -1, y: -1 };
             layout_data._offset_ = offset_cache;
         }
-        if (offset_cache.x == -1 || offset_cache.y == -1) {
+        if (offset_cache.x === -1 || offset_cache.y === -1) {
             let x = layout_data.offset_x;
             let y = layout_data.offset_y;
             if (!node.isroot) {
@@ -241,11 +238,9 @@ export class LayoutProvider {
     getNodePoint(node) {
         const view_data = node._data.view;
         const offset_p = this.getNodeOffset(node);
-        //logger.debug(offset_p);
         let p = { x: 0, y: 0 };
         p.x = offset_p.x + view_data.width * (node._data.layout.direction - 1) / 2;
         p.y = offset_p.y - view_data.height / 2;
-        //logger.debug(p);
         return p;
     }
 
@@ -262,7 +257,7 @@ export class LayoutProvider {
             pout_cache = { x: -1, y: -1 };
             layout_data._pout_ = pout_cache;
         }
-        if (pout_cache.x == -1 || pout_cache.y == -1) {
+        if (pout_cache.x === -1 || pout_cache.y === -1) {
             if (node.isroot) {
                 pout_cache.x = 0;
                 pout_cache.y = 0;
@@ -271,8 +266,6 @@ export class LayoutProvider {
                 const offset_p = this.getNodeOffset(node);
                 pout_cache.x = offset_p.x + (view_data.width + this.opts.pspace) * node._data.layout.direction;
                 pout_cache.y = offset_p.y;
-                //logger.debug('pout');
-                //logger.debug(pout_cache);
             }
         }
         return pout_cache;
@@ -281,7 +274,7 @@ export class LayoutProvider {
     getExpanderPoint(node) {
         const p = this.getNodePointOut(node);
         const ex_p = { x: 0, y: 0 };
-        if (node._data.layout.direction == MindMapMain.direction.right) {
+        if (node._data.layout.direction === MindMapMain.direction.right) {
             ex_p.x = p.x - this.opts.pspace;
         } else {
             ex_p.x = p.x;
@@ -297,9 +290,8 @@ export class LayoutProvider {
         for (let nodeid in nodes) {
             node = nodes[nodeid];
             pout = this.getNodePointOut(node);
-            //logger.debug(pout.x);
-            if (pout.x > this.bounds.e) {this.bounds.e = pout.x;}
-            if (pout.x < this.bounds.w) {this.bounds.w = pout.x;}
+            if (pout.x > this.bounds.e) {this.bounds.e = pout.x; }
+            if (pout.x < this.bounds.w) {this.bounds.w = pout.x; }
         }
         return {
             w: this.bounds.e - this.bounds.w,
@@ -367,7 +359,7 @@ export class LayoutProvider {
     }
 
     expandToDepth(target_depth, curr_nodes?, curr_depth?) {
-        if (target_depth < 1) {return;}
+        if (target_depth < 1) {return; }
         const nodes = curr_nodes || this.jm.mind.root.children;
         let depth = curr_depth || 1;
         let i = nodes.length;
@@ -380,7 +372,7 @@ export class LayoutProvider {
                 }
                 this.expandToDepth(target_depth, node.children, depth + 1);
             }
-            if (depth == target_depth) {
+            if (depth === target_depth) {
                 if (node.expanded) {
                     this.collapseNode(node);
                 }
@@ -396,7 +388,7 @@ export class LayoutProvider {
                 root_layout_data.outer_height_right = this._layoutOffsetSubNodesHeight(root_layout_data.right_nodes);
                 root_layout_data.outer_height_left = this._layoutOffsetSubNodesHeight(root_layout_data.left_nodes);
             } else {
-                if (node._data.layout.direction == MindMapMain.direction.right) {
+                if (node._data.layout.direction === MindMapMain.direction.right) {
                     root_layout_data.outer_height_right
                         = this._layoutOffsetSubNodesHeight(root_layout_data.right_nodes);
                 } else {

@@ -70,7 +70,7 @@ export class MindMapMain {
     constructor(options) {
         customizeUtil.json.merge(this.opts, DEFAULT_OPTIONS);
         customizeUtil.json.merge(this.opts, options);
-        if (this.opts.container == null || this.opts.container.length == 0) {
+        if (this.opts.container === null || this.opts.container.length === 0) {
             logger.error('the options.container should not be empty.');
             return;
         }
@@ -79,7 +79,7 @@ export class MindMapMain {
 
 
     init() {
-        if (this.inited) {return;}
+        if (this.inited) {return; }
         this.inited = true;
 
         const opts = this.options;
@@ -163,7 +163,7 @@ export class MindMapMain {
     setTheme(theme) {
         const theme_old = this.options.theme;
         this.options.theme = (!!theme) ? theme : null;
-        if (theme_old != this.options.theme) {
+        if (theme_old !== this.options.theme) {
             this.view.resetTheme();
             this.view.resetCustomStyle();
         }
@@ -257,7 +257,7 @@ export class MindMapMain {
             return this.toggleNode(this.getNode(node));
         }
         if (!!node) {
-            if (node.isroot) {return;}
+            if (node.isroot) {return; }
             this.view.saveLocation(node);
             this.layout.toggleNode(node);
             this.view.relayout();
@@ -272,7 +272,7 @@ export class MindMapMain {
             return this.expandNode(this.getNode(node));
         }
         if (!!node) {
-            if (node.isroot) {return;}
+            if (node.isroot) {return; }
             this.view.saveLocation(node);
             this.layout.expandNode(node);
             this.view.relayout();
@@ -287,7 +287,7 @@ export class MindMapMain {
             return this.collapseNode(this.getNode(node));
         }
         if (!!node) {
-            if (node.isroot) {return;}
+            if (node.isroot) {return; }
             this.view.saveLocation(node);
             this.layout.collapseNode(node);
             this.view.relayout();
@@ -595,7 +595,7 @@ export class MindMapMain {
         if (!customizeUtil.is_node(node)) {
             return this.findNodeBefore(this.getNode(node));
         }
-        if (!node || node.isroot) {return null;}
+        if (!node || node.isroot) {return null; }
         let n = null;
         if (node.parent.isroot) {
             const c = node.parent.children;
@@ -620,7 +620,7 @@ export class MindMapMain {
         if (!customizeUtil.is_node(node)) {
             return this.findNodeAfter(this.getNode(node));
         }
-        if (!node || node.isroot) {return null;}
+        if (!node || node.isroot) {return null; }
         let n = null;
         if (node.parent.isroot) {
             const c = node.parent.children;

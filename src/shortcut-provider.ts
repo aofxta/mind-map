@@ -46,9 +46,9 @@ export class ShortcutProvider {
     }
 
     handler(e) {
-        if (this.jm.view.isEditing()) {return;}
+        if (this.jm.view.isEditing()) {return; }
         const evt = e || event;
-        if (!this.opts.enable) {return true;}
+        if (!this.opts.enable) {return true; }
         const kc = evt.keyCode;
         if (kc in this._mapping) {
             this._mapping[kc].call(this, this.jm, e);

@@ -34,11 +34,11 @@ export class MindMapNode {
             logger.error('invalid nodeid');
             return;
         }
-        if (typeof iIndex != 'number') {
+        if (typeof iIndex !== 'number') {
             logger.error('invalid node index');
             return;
         }
-        if (typeof bExpanded === 'undefined') {bExpanded = true;}
+        if (typeof bExpanded === 'undefined') {bExpanded = true; }
         this.id = sId;
         this.index = iIndex;
         this.topic = sTopic;
@@ -88,11 +88,11 @@ MindMapNode.compare = (node1, node2) => {
     const i2 = node2.index;
     if (i1 >= 0 && i2 >= 0) {
         r = i1 - i2;
-    } else if (i1 == -1 && i2 == -1) {
+    } else if (i1 === -1 && i2 === -1) {
         r = 0;
-    } else if (i1 == -1) {
+    } else if (i1 === -1) {
         r = 1;
-    } else if (i2 == -1) {
+    } else if (i2 === -1) {
         r = -1;
     } else {
         r = 0;

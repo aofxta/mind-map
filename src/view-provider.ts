@@ -164,10 +164,10 @@ export class ViewProvider {
             return null;
         }
         const tagName = element.tagName.toLowerCase();
-        if (tagName == 'jmnodes' || tagName == 'body' || tagName == 'html') {
+        if (tagName === 'jmnodes' || tagName === 'body' || tagName === 'html') {
             return null;
         }
-        if (tagName == 'jmnode' || tagName == 'jmexpander') {
+        if (tagName === 'jmnode' || tagName === 'jmexpander') {
             return element.getAttribute('nodeid');
         } else {
             return this.getBindedNodeId(element.parentElement);
@@ -175,7 +175,7 @@ export class ViewProvider {
     }
 
     isExpander(element) {
-        return (element.tagName.toLowerCase() == 'jmexpander');
+        return (element.tagName.toLowerCase() === 'jmexpander');
     }
 
     reset() {
@@ -213,8 +213,8 @@ export class ViewProvider {
         let min_height = min_size.h + this.opts.vmargin * 2;
         let client_w = this.ePanel.clientWidth;
         let client_h = this.ePanel.clientHeight;
-        if (client_w < min_width) {client_w = min_width;}
-        if (client_h < min_height) {client_h = min_height;}
+        if (client_w < min_width) {client_w = min_width; }
+        if (client_h < min_height) {client_h = min_height; }
         this.size.w = client_w;
         this.size.h = client_h;
     }
@@ -277,10 +277,10 @@ export class ViewProvider {
     }
 
     removeNode(node) {
-        if (this.selectedNode != null && this.selectedNode.id == node.id) {
+        if (this.selectedNode != null && this.selectedNode.id === node.id) {
             this.selectedNode = null;
         }
-        if (this.editingNode != null && this.editingNode.id == node.id) {
+        if (this.editingNode != null && this.editingNode.id === node.id) {
             node._data.view.element.removeChild(this.eEditor);
             this.editingNode = null;
         }
@@ -568,7 +568,7 @@ export class ViewProvider {
 
             }
             // hide expander while all children have been removed
-            if (!node.isroot && node.children.length == 0) {
+            if (!node.isroot && node.children.length === 0) {
                 expander.style.display = 'none';
                 expander.style.visibility = 'hidden';
             }
@@ -637,8 +637,8 @@ export class ViewProvider {
 
     clearNodeCustomStyle(node) {
         const node_element = node._data.view.element;
-        node_element.style.backgroundColor = "";
-        node_element.style.color = "";
+        node_element.style.backgroundColor = '';
+        node_element.style.color = '';
     }
 
     clearLines(canvas_ctx?) {
@@ -655,8 +655,8 @@ export class ViewProvider {
         const _offset = this.getViewOffset();
         for (let nodeid in nodes) {
             node = nodes[nodeid];
-            if (!!node.isroot) {continue;}
-            if (('visible' in node._data.layout) && !node._data.layout.visible) {continue;}
+            if (!!node.isroot) {continue; }
+            if (('visible' in node._data.layout) && !node._data.layout.visible) {continue; }
             pin = this.layout.getNodePointIn(node);
             pout = this.layout.getNodePointOut(node.parent);
             this.drawLine(pout, pin, _offset, canvas_ctx);
