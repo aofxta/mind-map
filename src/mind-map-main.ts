@@ -6,9 +6,9 @@ import { MindMapDataProvider } from './data-provider';
 import { LayoutProvider } from './layout-provider';
 import { customizeFormat } from './customize-format';
 import { ViewProvider } from './view-provider';
-import { Subject } from 'rxjs';
 import { MindMapMind } from './mind-map-mind';
 import { Draggable } from './plugin/draggable';
+import { Subject } from './utils/subject'
 
 export interface MindMapModuleOptsView {
     hmargin: number;
@@ -56,8 +56,8 @@ export class MindMapMain {
     layout: LayoutProvider;
     view: ViewProvider;
     shortcut;
-    mindMapDataTransporter = new Subject<any>();
-    mindMapDataReceiver = new Subject<any>();
+    mindMapDataTransporter = new Subject();
+    mindMapDataReceiver = new Subject();
 
     static plugin;
     static plugins;
